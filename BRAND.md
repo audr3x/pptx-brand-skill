@@ -2,6 +2,8 @@
 
 Extracted from the Workday Corporate Template (16:9). Use these tokens only. Do not invent colors, fonts, or chrome.
 
+Surfaces: PowerPoint via `.cursor/skills/workday-pptx`, Google Slides via `.cursor/skills/workday-google-slides`. Same tokens on both.
+
 The reference deck is a corporate template plus color-usage slides, not a customer narrative. This file records the brand system. It does not reproduce any confidential slide copy.
 
 ## Canvas

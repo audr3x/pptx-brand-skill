@@ -7,6 +7,8 @@ description: Generate on-brand Workday PowerPoint (.pptx) decks from a brief or 
 
 Build new decks from the Workday Corporate Template that lives in this repo. Read [BRAND.md](../../../BRAND.md) before drawing a slide. Start from [assets/template.pptx](../../../assets/template.pptx). Prefer [scripts/build_deck.py](../../../scripts/build_deck.py) over a blank `Presentation()`.
 
+For Google Slides, use [workday-google-slides](../workday-google-slides/SKILL.md) instead of converting a finished `.pptx` by hand.
+
 ## Quick path
 
 1. Turn the brief into a short slide list. One idea per slide.

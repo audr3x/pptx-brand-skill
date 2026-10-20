@@ -1,8 +1,8 @@
-# Workday PPTX brand skill
+# Workday brand skills (PowerPoint and Google Slides)
 
-A reusable Cursor skill that builds on-brand PowerPoint decks from the Workday Corporate Template.
+Reusable Cursor skills that build on-brand decks from the Workday Corporate Template. PowerPoint is the native surface. Google Slides is the same brand system after you import `assets/template.pptx` once (or pass a template deck ID).
 
-This repository is the brand system plus a small builder. It is not a dump of a real presentation. Sample copy in `examples/` is generic placeholder text.
+This repository is the brand system plus two small builders. It is not a dump of a real presentation. Sample copy in `examples/` is generic placeholder text.
 
 | Path | What it is |
 | --- | --- |
@@ -10,14 +10,17 @@ This repository is the brand system plus a small builder. It is not a dump of a 
 | [assets/template.pptx](assets/template.pptx) | Masters and layouts only, no sample slides |
 | [assets/logos/](assets/logos) | Smile mark and decorative gradients |
 | [assets/brand-tokens.json](assets/brand-tokens.json) | Machine-readable tokens |
-| [.cursor/skills/workday-pptx/SKILL.md](.cursor/skills/workday-pptx/SKILL.md) | Instructions Cursor follows to make a deck |
+| [.cursor/skills/workday-pptx/SKILL.md](.cursor/skills/workday-pptx/SKILL.md) | How Cursor builds a `.pptx` |
+| [.cursor/skills/workday-google-slides/SKILL.md](.cursor/skills/workday-google-slides/SKILL.md) | How Cursor builds a Google Slides deck |
 | [scripts/build_deck.py](scripts/build_deck.py) | Outline to `.pptx` |
-| [examples/outline.yaml](examples/outline.yaml) | Example outline |
-| [examples/example-deck.pptx](examples/example-deck.pptx) | Example output from that outline |
+| [scripts/build_slides.py](scripts/build_slides.py) | Outline to Slides API / `gws` (or a dry-run request plan) |
+| [examples/outline.yaml](examples/outline.yaml) | Shared example outline |
+| [examples/example-deck.pptx](examples/example-deck.pptx) | Example PowerPoint from that outline |
+| [examples/example-slides-requests.json](examples/example-slides-requests.json) | Example Slides `batchUpdate` plan from the same outline |
 
-## Install the skill in Cursor
+## Install the skills in Cursor
 
-The skill is the folder `.cursor/skills/workday-pptx/`. Cursor loads project skills from `.cursor/skills/` and personal skills from `~/.cursor/skills/`.
+The skills are the folders under `.cursor/skills/`. Cursor loads project skills from `.cursor/skills/` and personal skills from `~/.cursor/skills/`.
 
 ### Project skill (recommended for Workday repos)
 
@@ -25,6 +28,7 @@ Copy this repository's `.cursor/skills` directory into the repo that should prod
 
 ```bash
 cp -R .cursor/skills/workday-pptx <your-repo>/.cursor/skills/workday-pptx
+cp -R .cursor/skills/workday-google-slides <your-repo>/.cursor/skills/workday-google-slides
 cp -R BRAND.md assets scripts examples <your-repo>/
 ```
 
@@ -35,11 +39,12 @@ Or add this repository as a subtree / submodule and point the skill paths at it.
 ```bash
 mkdir -p ~/.cursor/skills
 cp -R .cursor/skills/workday-pptx ~/.cursor/skills/workday-pptx
+cp -R .cursor/skills/workday-google-slides ~/.cursor/skills/workday-google-slides
 ```
 
-A personal copy still needs the template and `BRAND.md`. Keep the rest of this repo on disk and either leave the relative links as-is (if you cloned the whole repo into `~/.cursor/skills/workday-pptx-repo`) or edit the skill to use absolute paths to `BRAND.md` and `assets/template.pptx`.
+A personal copy still needs the template and `BRAND.md`. Keep the rest of this repo on disk and either leave the relative links as-is (if you cloned the whole repo into `~/.cursor/skills/workday-pptx-repo`) or edit the skills to use absolute paths to `BRAND.md` and `assets/template.pptx`.
 
-After a copy, restart Cursor or reopen the folder so the skill is indexed. Ask Cursor to "make a Workday deck" or "use the workday-pptx skill".
+After a copy, restart Cursor or reopen the folder so the skills are indexed. Ask Cursor to "make a Workday deck", "use the workday-pptx skill", or "make this as Google Slides".
 
 ## Use the builder directly
 
@@ -67,13 +72,41 @@ slides:
 
 The builder opens `assets/template.pptx`, adds slides from the real Workday layouts, and paints tables and charts with the named tokens. It refuses unknown hex colors.
 
+## Use the Google Slides builder
+
+Same outline. Copy a Workday Slides template (never a blank theme), then fill layouts through `gws` or the Slides API.
+
+```bash
+# No Google account required. Writes the batchUpdate plan:
+python3 scripts/build_slides.py examples/outline.yaml --dry-run \
+  -o examples/example-slides-requests.json
+
+# First time: import the PPTX so Workday masters exist in Drive
+python3 scripts/build_slides.py examples/outline.yaml \
+  --import-pptx assets/template.pptx --backend gws
+
+# Later decks: copy that template ID
+export WORKDAY_SLIDES_TEMPLATE_ID=...   # not committed
+python3 scripts/build_slides.py examples/outline.yaml \
+  --template-id "$WORKDAY_SLIDES_TEMPLATE_ID" --backend gws
+```
+
+Auth options (never commit the files):
+
+1. Cursor **Google Drive** + **Google Slides** plugins, signed in as the Workday user. The skill then uses `copy_file` and `update_presentation`.
+2. [Google Workspace CLI](https://github.com/googleworkspace/cli): `gws auth setup` then `gws auth login -s drive,slides`.
+3. `--backend api` with Application Default Credentials or `GOOGLE_APPLICATION_CREDENTIALS` pointing outside the repo.
+
+Details, layout map, and `batchUpdate` recipes are in the [Google Slides skill](.cursor/skills/workday-google-slides/SKILL.md).
+
 ## Fonts
 
 Designed type is **Archivo** and **Archivo Light**. The Office theme fallback is Arial. Archivo is not embedded in the template. Install it from [Google Fonts](https://fonts.google.com/specimen/Archivo) on any machine that will author or render decks. If Archivo Light is missing, use Archivo. Do not substitute Proxima Nova (licensed, not bundled) or Calibri.
 
 ## Rules of the road
 
-- Start from `assets/template.pptx`. Do not build a Workday deck from a blank theme.
+- Start from `assets/template.pptx` (PowerPoint) or a copy of the imported Slides template. Do not build a Workday deck from a blank theme.
 - Use only colors in `BRAND.md`.
 - Leave `Workday Confidential` in the footer placeholder.
 - Do not put confidential customer copy into this repo.
+- Do not commit Google credentials, `gws` tokens, or `.env` files.
