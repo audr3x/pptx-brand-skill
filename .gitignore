@@ -10,3 +10,4 @@ credentials.json
 client_secret*.json
 token.json
 token_cache*.json
+workday-slide-assets.json
