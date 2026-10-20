@@ -226,7 +226,7 @@ def fill_footer(slide, text: str | None, layout_name: str):
                 for run in para.runs:
                     set_run_font(run, name=FONT_TITLE, size=8, bold=False, color=color)
         return
-    left = 0.36 if layout_name == "Layout 1" else 0.03
+    left = 0.50
     add_textbox(
         slide,
         left,

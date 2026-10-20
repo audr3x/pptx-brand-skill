@@ -102,8 +102,11 @@ PREDEFINED_FALLBACK = {
 NO_FOOTER = {"Title Slide", "Bumper Slide"}
 MAX_BULLETS = 6
 FONT_TITLE = "Archivo"
-FONT_BODY = "Archivo Light"
+FONT_BODY = "Archivo Light"  # logical role; the API gets Archivo + weight 300
 EMU_PER_INCH = 914400
+FOOTER_LEFT_IN = 0.50
+SECTION_RAIL_WIDTH_IN = 2.743
+TITLE_PLACEHOLDER_TYPES = ("TITLE", "CENTERED_TITLE", "CENTER_TITLE")
 
 
 def hex_of(name_or_hex: str) -> str:
@@ -179,6 +182,33 @@ def load_outline(path: Path) -> dict[str, Any]:
     return data
 
 
+def font_style(font: str, size: float, bold: bool, color: str) -> tuple[dict[str, Any], str]:
+    """Archivo Light is not a Google family. Send Archivo + weight 300 instead."""
+    if bold:
+        weight = 700
+    elif font in {FONT_BODY, "Archivo Light"}:
+        weight = 300
+    else:
+        weight = 400
+    style = {
+        "fontFamily": FONT_TITLE,
+        "weightedFontFamily": {"fontFamily": FONT_TITLE, "weight": weight},
+        "fontSize": {"magnitude": size, "unit": "PT"},
+        "bold": bold,
+        "foregroundColor": opaque(color),
+    }
+    return style, "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+
+
+def shape_has_text(element: dict[str, Any]) -> bool:
+    text = ((element.get("shape") or {}).get("text") or {})
+    for te in text.get("textElements") or []:
+        content = ((te.get("textRun") or {}).get("content") or "")
+        if content.strip():
+            return True
+    return False
+
+
 def flatten_bullets(items: list[Any]) -> list[tuple[str, int]]:
     rows: list[tuple[str, int]] = []
 
@@ -214,24 +244,25 @@ def text_ops(
     color: str,
     align: str | None = None,
     bullets: bool = False,
+    has_text: bool = False,
 ) -> list[dict[str, Any]]:
-    ops: list[dict[str, Any]] = [
-        {"deleteText": {"objectId": object_id, "textRange": {"type": "ALL"}}},
-        {"insertText": {"objectId": object_id, "text": text, "insertionIndex": 0}},
-        {
-            "updateTextStyle": {
-                "objectId": object_id,
-                "style": {
-                    "fontFamily": font,
-                    "fontSize": {"magnitude": size, "unit": "PT"},
-                    "bold": bold,
-                    "foregroundColor": opaque(color),
-                },
-                "textRange": {"type": "ALL"},
-                "fields": "fontFamily,fontSize,bold,foregroundColor",
-            }
-        },
-    ]
+    style, fields = font_style(font, size, bold, color)
+    ops: list[dict[str, Any]] = []
+    if has_text:
+        ops.append({"deleteText": {"objectId": object_id, "textRange": {"type": "ALL"}}})
+    ops.extend(
+        [
+            {"insertText": {"objectId": object_id, "text": text, "insertionIndex": 0}},
+            {
+                "updateTextStyle": {
+                    "objectId": object_id,
+                    "style": style,
+                    "textRange": {"type": "ALL"},
+                    "fields": fields,
+                }
+            },
+        ]
+    )
     if align:
         ops.append(
             {
@@ -302,19 +333,15 @@ def create_box(
             }
         )
     # New shapes are empty; insert only (deleteText on empty fails).
+    style, fields = font_style(font, size, bold, color)
     ops.append({"insertText": {"objectId": object_id, "text": text, "insertionIndex": 0}})
     ops.append(
         {
             "updateTextStyle": {
                 "objectId": object_id,
-                "style": {
-                    "fontFamily": font,
-                    "fontSize": {"magnitude": size, "unit": "PT"},
-                    "bold": bold,
-                    "foregroundColor": opaque(color),
-                },
+                "style": style,
                 "textRange": {"type": "ALL"},
-                "fields": "fontFamily,fontSize,bold,foregroundColor",
+                "fields": fields,
             }
         }
     )
@@ -355,14 +382,14 @@ def create_rect(object_id: str, page: str, x: float, y: float, w: float, h: floa
 
 
 def footer_ops(slide_id: str, idx: int, text: str, layout: str) -> list[dict[str, Any]]:
+    """Always draw a new box. Google does not copy PPTX footer placeholders onto new slides."""
     if layout in NO_FOOTER:
         return []
     color = "ink" if layout in {"Section Title", "Layout 1"} else "staple"
-    left = 0.36 if layout == "Layout 1" else 0.03
     return create_box(
         f"{slide_id}_footer",
         slide_id,
-        left,
+        FOOTER_LEFT_IN,
         5.27,
         3.375,
         0.30,
@@ -372,6 +399,31 @@ def footer_ops(slide_id: str, idx: int, text: str, layout: str) -> list[dict[str
         bold=False,
         color=color,
     )
+
+
+def section_rail_ops(slide_id: str) -> list[dict[str, Any]]:
+    """PPTX Section Title carries a 2.743 in warm gradient rail. Slides often drops it."""
+    # Approximate Day_Crop_1 with named tokens only: Tack → Keyboard → Lunch Break.
+    bands = (
+        ("tack", 0.00, 1.875),
+        ("keyboard", 1.875, 1.875),
+        ("lunch_break", 3.75, 1.875),
+    )
+    ops: list[dict[str, Any]] = []
+    rail_ids = []
+    for i, (fill, top, height) in enumerate(bands):
+        oid = f"{slide_id}_rail_{i}"
+        rail_ids.append(oid)
+        ops.extend(create_rect(oid, slide_id, 0.0, top, SECTION_RAIL_WIDTH_IN, height, fill))
+    ops.append(
+        {
+            "updatePageElementsZOrder": {
+                "pageElementObjectIds": rail_ids,
+                "operation": "SEND_TO_BACK",
+            }
+        }
+    )
+    return ops
 
 
 def table_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
@@ -410,29 +462,39 @@ def table_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
                 "updateTableCellProperties": {
                     "objectId": table_id,
                     "tableRange": rng,
-                    "tableCellProperties": {"tableCellBackgroundFill": solid(fill)},
-                    "fields": "tableCellBackgroundFill",
+                    "tableCellProperties": {
+                        "tableCellBackgroundFill": solid(fill),
+                        "contentAlignment": "MIDDLE",
+                    },
+                    "fields": "tableCellBackgroundFill,contentAlignment",
                 }
             }
         )
+        style, fields = font_style(font, size, bold, color)
         ops.append({"insertText": {"objectId": table_id, "cellLocation": loc, "text": text, "insertionIndex": 0}})
         ops.append(
             {
                 "updateTextStyle": {
                     "objectId": table_id,
                     "cellLocation": loc,
-                    "style": {
-                        "fontFamily": font,
-                        "fontSize": {"magnitude": size, "unit": "PT"},
-                        "bold": bold,
-                        "foregroundColor": opaque(color),
-                    },
+                    "style": style,
                     "textRange": {"type": "ALL"},
-                    "fields": "fontFamily,fontSize,bold,foregroundColor",
+                    "fields": fields,
                 }
             }
         )
 
+    row_h = {"magnitude": (height / n_rows) * 72, "unit": "PT"}
+    ops.append(
+        {
+            "updateTableRowProperties": {
+                "objectId": table_id,
+                "rowIndices": list(range(n_rows)),
+                "tableRowProperties": {"minRowHeight": row_h},
+                "fields": "minRowHeight",
+            }
+        }
+    )
     for c, header in enumerate(headers):
         cell(0, c, header, "water_cooler", FONT_TITLE, 12, True, "paper")
     for r, row in enumerate(normalized, start=1):
@@ -587,10 +649,9 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
     requests: list[dict[str, Any]] = []
     mappings = [
         {"layoutPlaceholder": {"type": "TITLE", "index": 0}, "objectId": f"{slide_id}_title"},
-        {"layoutPlaceholder": {"type": "CENTER_TITLE", "index": 0}, "objectId": f"{slide_id}_ctitle"},
+        {"layoutPlaceholder": {"type": "CENTERED_TITLE", "index": 0}, "objectId": f"{slide_id}_ctitle"},
         {"layoutPlaceholder": {"type": "SUBTITLE", "index": 0}, "objectId": f"{slide_id}_sub"},
         {"layoutPlaceholder": {"type": "BODY", "index": 0}, "objectId": f"{slide_id}_body"},
-        {"layoutPlaceholder": {"type": "FOOTER", "index": 0}, "objectId": f"{slide_id}_ph_footer"},
     ]
     create: dict[str, Any] = {
         "objectId": slide_id,
@@ -604,6 +665,8 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
 
     title = spec.get("title")
     subtitle = spec.get("subtitle") or spec.get("subhead")
+    # Imported title layouts render the navy/blue of the Day Crop under the type.
+    cover_color = "paper" if layout == "Title Slide" else "ink"
     if title and layout not in {"Section Title", "Bumper Slide"}:
         requests.extend(
             text_ops(
@@ -612,7 +675,7 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
                 font=FONT_TITLE,
                 size=36 if layout == "Title Slide" else 28,
                 bold=layout != "Title Slide",
-                color="ink",
+                color=cover_color,
             )
         )
     if subtitle is not None and layout == "Title Slide":
@@ -623,7 +686,7 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
                 font=FONT_TITLE,
                 size=16,
                 bold=False,
-                color="ink",
+                color=cover_color,
             )
         )
     if layout == "Title Slide" and spec.get("date"):
@@ -639,10 +702,11 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
                 font=FONT_TITLE,
                 size=12,
                 bold=False,
-                color="ink",
+                color=cover_color,
             )
         )
     if layout == "Section Title":
+        requests.extend(section_rail_ops(slide_id))
         eyebrow = spec.get("eyebrow") or spec.get("kicker")
         if eyebrow:
             requests.extend(
@@ -742,7 +806,13 @@ def build_plan(outline: dict[str, Any]) -> dict[str, Any]:
             "height": emu(5.625),
             "note": "16:9 Workday canvas (10.00 x 5.625 in)",
         },
-        "fonts": {"title": FONT_TITLE, "body": FONT_BODY, "fallback": "Arial"},
+        "fonts": {
+            "title": FONT_TITLE,
+            "body": FONT_TITLE,
+            "bodyWeight": 300,
+            "fallback": "Arial",
+            "note": "Never send fontFamily Archivo Light. Use Archivo + weightedFontFamily.weight 300.",
+        },
         "slides": [
             {"slideId": s["slideId"], "layout": s["layout"], "intent": s["intent"]}
             for s in slides
@@ -752,7 +822,13 @@ def build_plan(outline: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def resolve_create_slide(request: dict[str, Any], layouts: dict[str, str], allow_predefined: bool) -> dict[str, Any]:
+def resolve_create_slide(
+    request: dict[str, Any],
+    layouts: dict[str, str],
+    allow_predefined: bool,
+    *,
+    require_id: bool = False,
+) -> dict[str, Any]:
     create = request.get("createSlide")
     if not create:
         return request
@@ -760,6 +836,7 @@ def resolve_create_slide(request: dict[str, Any], layouts: dict[str, str], allow
     name = (ref.get("layoutName") or "").strip()
     resolved = dict(create)
     fallback = resolved.pop("predefinedLayoutFallback", None)
+    resolved.pop("placeholderIdMappings", None)
     if name and name.lower() in layouts:
         resolved["slideLayoutReference"] = {"layoutId": layouts[name.lower()]}
     elif allow_predefined and fallback:
@@ -768,7 +845,7 @@ def resolve_create_slide(request: dict[str, Any], layouts: dict[str, str], allow
             file=sys.stderr,
         )
         resolved["slideLayoutReference"] = {"predefinedLayout": fallback}
-    elif name:
+    elif require_id and name:
         raise SystemExit(
             f"Workday layout {name!r} is not on this presentation. Import assets/template.pptx or pass --template-id."
         )
@@ -878,23 +955,118 @@ def batch_update(backend: str, presentation_id: str, requests: list[dict[str, An
     return slides.presentations().batchUpdate(presentationId=presentation_id, body=body).execute()
 
 
-def bind_requests(requests: list[dict[str, Any]], layouts: dict[str, str], allow_predefined: bool) -> list[dict[str, Any]]:
-    bound = []
-    for req in requests:
-        if "createSlide" in req:
-            bound.append(resolve_create_slide(req, layouts, allow_predefined))
-        else:
-            bound.append(req)
-    return bound
-
-
 def placeholder_id(slide: dict[str, Any], *types: str) -> str | None:
     wanted = {t.upper() for t in types}
+    aliases = set(wanted)
+    if wanted & {"TITLE", "CENTERED_TITLE", "CENTER_TITLE"}:
+        aliases.update(TITLE_PLACEHOLDER_TYPES)
     for el in slide.get("pageElements") or []:
         ph = ((el.get("shape") or {}).get("placeholder") or {})
-        if str(ph.get("type") or "").upper() in wanted:
+        if str(ph.get("type") or "").upper() in aliases:
             return el.get("objectId")
     return None
+
+
+def load_presentation_json(path: Path) -> dict[str, Any]:
+    data = json.loads(path.read_text())
+    # Cursor Slides MCP sometimes wraps the presentation.
+    if "presentation" in data and isinstance(data["presentation"], dict):
+        return data["presentation"]
+    return data
+
+
+def create_phase_requests(
+    plan: dict[str, Any],
+    layouts: dict[str, str] | None,
+    allow_predefined: bool,
+) -> list[dict[str, Any]]:
+    require_id = bool(layouts)
+    creates = []
+    for req in plan["requests"]:
+        if "createSlide" not in req:
+            continue
+        creates.append(
+            resolve_create_slide(
+                req,
+                layouts or {},
+                allow_predefined,
+                require_id=require_id,
+            )
+        )
+    return creates
+
+
+def remap_request(
+    req: dict[str, Any],
+    planned_id: str,
+    live_id: str,
+    ph_map: dict[str, str],
+) -> dict[str, Any]:
+    def walk(obj):
+        if isinstance(obj, dict):
+            out = {}
+            for key, value in obj.items():
+                if key in {"objectId", "pageObjectId"} and isinstance(value, str):
+                    if value == planned_id:
+                        out[key] = live_id
+                    elif value in ph_map:
+                        out[key] = ph_map[value]
+                    else:
+                        out[key] = value
+                else:
+                    out[key] = walk(value)
+            return out
+        if isinstance(obj, list):
+            return [walk(item) for item in obj]
+        return obj
+
+    return walk(req)
+
+
+def bind_fills(plan: dict[str, Any], presentation: dict[str, Any]) -> list[dict[str, Any]]:
+    """Phase 2: bind planned fills to a presentations.get / read_presentation payload."""
+    slides = presentation.get("slides") or []
+    by_id = {s["objectId"]: s for s in slides}
+    fills: list[dict[str, Any]] = []
+    for index, planned in enumerate(plan["slidePlans"]):
+        planned_id = planned["slideId"]
+        live = by_id.get(planned_id)
+        if live is None and index < len(slides):
+            live = slides[index]
+        if live is None:
+            print(f"warning: created slide {planned_id} not in GET response", file=sys.stderr)
+            continue
+        live_id = live["objectId"]
+        title_id = placeholder_id(live, *TITLE_PLACEHOLDER_TYPES)
+        sub_id = placeholder_id(live, "SUBTITLE")
+        body_id = placeholder_id(live, "BODY")
+        ph_map = {}
+        if title_id:
+            ph_map[f"{planned_id}_title"] = title_id
+            ph_map[f"{planned_id}_ctitle"] = title_id
+        if sub_id:
+            ph_map[f"{planned_id}_sub"] = sub_id
+        if body_id:
+            ph_map[f"{planned_id}_body"] = body_id
+        has_text = {el.get("objectId"): shape_has_text(el) for el in live.get("pageElements") or []}
+        for req in planned["requests"]:
+            if "createSlide" in req:
+                continue
+            remapped = remap_request(req, planned_id, live_id, ph_map)
+            if "deleteText" in remapped:
+                oid = remapped["deleteText"].get("objectId")
+                if not has_text.get(oid):
+                    continue
+            fills.append(remapped)
+            if "insertText" in remapped:
+                oid = remapped["insertText"].get("objectId")
+                loc = remapped["insertText"].get("cellLocation")
+                if loc is None and has_text.get(oid) and not any(
+                    "deleteText" in prev and prev["deleteText"].get("objectId") == oid
+                    for prev in fills[-4:]
+                ):
+                    fills.insert(-1, {"deleteText": {"objectId": oid, "textRange": {"type": "ALL"}}})
+    return fills
 
 
 def apply(outline: dict[str, Any], plan: dict[str, Any], args: argparse.Namespace) -> str:
@@ -916,57 +1088,10 @@ def apply(outline: dict[str, Any], plan: dict[str, Any], args: argparse.Namespac
     leftover = [s["objectId"] for s in presentation.get("slides") or []]
     if leftover:
         batch_update(backend, deck_id, [{"deleteObject": {"objectId": sid}} for sid in leftover])
-    creates = []
-    for req in plan["requests"]:
-        if "createSlide" not in req:
-            continue
-        bound = resolve_create_slide(req, layouts, args.allow_predefined)
-        bound["createSlide"].pop("placeholderIdMappings", None)
-        creates.append(bound)
+    creates = create_phase_requests(plan, layouts, args.allow_predefined)
     batch_update(backend, deck_id, creates)
     presentation = get_presentation(backend, deck_id)
-    slides_by_id = {s["objectId"]: s for s in presentation.get("slides") or []}
-    fills: list[dict[str, Any]] = []
-    for planned in plan["slidePlans"]:
-        slide_id = planned["slideId"]
-        live = slides_by_id.get(slide_id)
-        if live is None:
-            print(f"warning: created slide {slide_id} not in GET response", file=sys.stderr)
-            continue
-        title_id = placeholder_id(live, "TITLE", "CENTER_TITLE")
-        sub_id = placeholder_id(live, "SUBTITLE")
-        body_id = placeholder_id(live, "BODY")
-        footer_id = placeholder_id(live, "FOOTER")
-        rewritten: list[dict[str, Any]] = []
-        for req in planned["requests"]:
-            if "createSlide" in req:
-                continue
-            blob = json.dumps(req)
-            if title_id:
-                blob = blob.replace(f"{slide_id}_title", title_id).replace(f"{slide_id}_ctitle", title_id)
-            if sub_id:
-                blob = blob.replace(f"{slide_id}_sub", sub_id)
-            if body_id:
-                blob = blob.replace(f"{slide_id}_body", body_id)
-            if footer_id:
-                blob = blob.replace(f"{slide_id}_ph_footer", footer_id)
-                blob = blob.replace(f'"{slide_id}_footer"', f'"{footer_id}"')
-            rewritten.append(json.loads(blob))
-        if footer_id:
-            rewritten = [r for r in rewritten if f"{slide_id}_footer" not in json.dumps(r)]
-            footer_text = (planned["spec"].get("footer") or outline.get("footer") or "Workday Confidential")
-            color = "ink" if planned["layout"] in {"Section Title", "Layout 1"} else "staple"
-            rewritten.extend(
-                text_ops(
-                    footer_id,
-                    footer_text,
-                    font=FONT_TITLE,
-                    size=8,
-                    bold=False,
-                    color=color,
-                )
-            )
-        fills.extend(rewritten)
+    fills = bind_fills(plan, presentation)
     batch_update(backend, deck_id, fills)
     url = f"https://docs.google.com/presentation/d/{deck_id}/edit"
     print(url)
@@ -977,7 +1102,19 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build a Workday-branded Google Slides deck from an outline.")
     parser.add_argument("outline", type=Path, help="JSON or YAML outline (same shape as build_deck.py)")
     parser.add_argument("-o", "--output", type=Path, default=None, help="Write the request plan JSON here")
-    parser.add_argument("--dry-run", action="store_true", help="Write the plan only. No Google calls.")
+    parser.add_argument("--dry-run", action="store_true", help="Write the full plan, including slidePlans. No Google calls.")
+    parser.add_argument(
+        "--phase",
+        choices=("creates", "fills"),
+        default=None,
+        help="Connector mode: write creates.json, or bind fills.json from a presentations.get JSON.",
+    )
+    parser.add_argument(
+        "--presentation",
+        type=Path,
+        default=None,
+        help="presentations.get / read_presentation JSON. Required for --phase fills; optional for --phase creates to resolve layoutIds.",
+    )
     parser.add_argument("--template-id", default=None, help="Existing Workday Slides template ID")
     parser.add_argument("--import-pptx", type=Path, default=None, help="Upload this PPTX and convert it to Slides")
     parser.add_argument("--backend", choices=("gws", "api"), default=None, help="Live apply via gws or the Slides API")
@@ -992,9 +1129,46 @@ def main(argv: list[str] | None = None) -> int:
     dest = args.output
     if dest is None and args.dry_run:
         dest = args.outline.with_name("example-slides-requests.json")
+    if dest is None and args.phase == "creates":
+        dest = Path("creates.json")
+    if dest is None and args.phase == "fills":
+        dest = Path("fills.json")
+
+    if args.phase == "creates":
+        layouts = index_layouts(load_presentation_json(args.presentation)) if args.presentation else None
+        payload = {
+            "phase": "creates",
+            "title": plan["title"],
+            "note": (
+                "Send these createSlide requests. If slideLayoutReference still has layoutName, "
+                "replace it with layouts[].objectId from presentations.get (match displayName, strip space). "
+                "Keep the planned objectId values (wd_s1, …)."
+            ),
+            "requests": create_phase_requests(plan, layouts, args.allow_predefined),
+        }
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(json.dumps(payload, indent=2) + "\n")
+        print(f"Wrote {dest} ({len(payload['requests'])} createSlide requests)")
+        return 0
+
+    if args.phase == "fills":
+        if not args.presentation:
+            raise SystemExit("--phase fills requires --presentation pointing at presentations.get JSON.")
+        presentation = load_presentation_json(args.presentation)
+        payload = {
+            "phase": "fills",
+            "title": plan["title"],
+            "note": "Send these batchUpdate requests against the copied deck after phase 1.",
+            "requests": bind_fills(plan, presentation),
+        }
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(json.dumps(payload, indent=2) + "\n")
+        print(f"Wrote {dest} ({len(payload['requests'])} fill requests)")
+        return 0
+
     if dest is not None:
         dest.parent.mkdir(parents=True, exist_ok=True)
-        public = {k: v for k, v in plan.items() if k != "slidePlans"}
+        public = dict(plan)
         public["auth"] = "dry-run" if args.dry_run or not args.backend else args.backend
         dest.write_text(json.dumps(public, indent=2) + "\n")
         print(f"Wrote {dest} ({len(plan['slides'])} slides, {len(plan['requests'])} requests)")
@@ -1003,7 +1177,7 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("Live apply needs --backend gws or --backend api.")
         if args.dry_run or dest is not None:
             return 0
-        raise SystemExit("Pass --dry-run, or --backend with --template-id / --import-pptx.")
+        raise SystemExit("Pass --dry-run, --phase creates|fills, or --backend with --template-id / --import-pptx.")
     apply(outline, plan, args)
     return 0
 

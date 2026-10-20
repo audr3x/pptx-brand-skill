@@ -77,9 +77,14 @@ The builder opens `assets/template.pptx`, adds slides from the real Workday layo
 Same outline. Copy a Workday Slides template (never a blank theme), then fill layouts through `gws` or the Slides API.
 
 ```bash
-# No Google account required. Writes the batchUpdate plan:
+# No Google account required. Writes the batchUpdate plan (includes slidePlans):
 python3 scripts/build_slides.py examples/outline.yaml --dry-run \
   -o examples/example-slides-requests.json
+
+# Two-phase connector for the Slides plugin:
+python3 scripts/build_slides.py examples/outline.yaml --phase creates -o creates.json
+python3 scripts/build_slides.py examples/outline.yaml --phase fills \
+  --presentation get.json -o fills.json
 
 # First time: import the PPTX so Workday masters exist in Drive
 python3 scripts/build_slides.py examples/outline.yaml \

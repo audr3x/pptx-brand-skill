@@ -50,9 +50,15 @@ Headless / CI: `GOOGLE_WORKSPACE_CLI_CREDENTIALS_FILE` or `GOOGLE_APPLICATION_CR
 
 ```bash
 pip3 install -r requirements.txt
-# Plan only (no network). Safe to run anywhere:
+# Plan only (no network). Includes slidePlans:
 python3 scripts/build_slides.py examples/outline.yaml --dry-run \
   -o examples/example-slides-requests.json
+
+# Two-phase connector (Drive/Slides plugins, no gws):
+python3 scripts/build_slides.py examples/outline.yaml --phase creates -o creates.json
+# send creates.json via update_presentation, then save read_presentation to get.json
+python3 scripts/build_slides.py examples/outline.yaml --phase fills \
+  --presentation get.json -o fills.json
 
 # Live apply, after auth:
 python3 scripts/build_slides.py examples/outline.yaml \
@@ -96,15 +102,17 @@ Drive plugin: `copy_file` with that `fileId` and the deliverable title.
 
 2. `presentations.get` the copy. Map layout **display names** (strip whitespace, case-insensitive) to `layoutId`.
 
-3. For each outline slide, `createSlide` with `slideLayoutReference.layoutId` (the Workday layout). Prefer this over `predefinedLayout` and over `importSlides` from a blank deck.
+3. For each outline slide, `createSlide` with `slideLayoutReference.layoutId` (the Workday layout). Prefer this over `predefinedLayout` and over `importSlides` from a blank deck. Title placeholders come back as **`CENTERED_TITLE`**, not `CENTER_TITLE`.
 
-4. Fill placeholders (`deleteText` + `insertText` + `updateTextStyle`). Draw missing chrome (section title, half-headline items, footer, cover date, bumper caption) at the inch positions in `BRAND.md`.
+4. Two-phase fill. Phase 1 is only `createSlide`. Then `read_presentation` / `presentations.get`. Phase 2 binds fills to the real object IDs (`scripts/build_slides.py --phase fills --presentation get.json`).
 
-5. Delete leftover `Click to edit` / `Insert slide title` prompts.
+5. Fill placeholders with `insertText` + `updateTextStyle`. Send `deleteText` **only** when the shape already has text. Empty new placeholders error on `deleteText ALL`.
 
-6. Read the deck again. Check fonts, fills, footer, contrast.
+6. Draw missing chrome: section rail (2.743 in Tack / Keyboard / Lunch Break stack — the PPTX picture often does not copy), half-headline items, footer box at **x = 0.50 in**, cover date, bumper caption.
 
-`scripts/build_slides.py` does steps 1–5. Extend it instead of starting from a blank `presentations.create`.
+7. Read the deck again. Check fonts, fills, footer, contrast.
+
+`scripts/build_slides.py` does this. Extend it instead of starting from a blank `presentations.create`. Do not reuse a footer placeholder objectId for a new text box. Google does not copy PPTX footer placeholders onto new slides.
 
 ## Layouts by intent
 
@@ -129,14 +137,16 @@ If a Workday `layoutId` is missing (import dropped it), stop and re-import. Do n
 ## Brand rules
 
 - **Colors.** Only tokens in `BRAND.md` / `assets/brand-tokens.json`. Prefer theme slots on the copied deck (`dk1` = Ink, `accent1` = Water Cooler) when they still match. Otherwise RGB from the token file. If a hex is not in that file, do not use it.
-- **Type.** Archivo titles, Archivo Light body. Google Slides will substitute Arial when Archivo is not in the account. Enable Archivo from Google Fonts in the theme if you can. Never switch to Calibri, Inter, Roboto, or Proxima Nova.
-- **Sizes.** Cover 36 pt. Slide / section title 28 pt bold Ink. Body 18–20 pt. Footer 8 pt Staple `#7D8B99` (Ink on the gold section rail).
+- **Type.** `fontFamily` is always **Archivo**. Body uses `weightedFontFamily: {fontFamily: "Archivo", weight: 300}` (do not send `Archivo Light` — Google falls back to a serif). Titles use weight 400, or 700 when bold. Include `weightedFontFamily` in `fields`. Enable Archivo from Google Fonts if you can. Arial is the last-resort fallback. Never switch to Calibri, Inter, Roboto, or Proxima Nova.
+- **Sizes.** Cover 36 pt. Slide / section title 28 pt bold Ink (Paper on Title Slide). Body 18–20 pt. Footer 8 pt Staple `#7D8B99` at **x = 0.50 in** (Ink on the gold section rail).
+- **Title Slide.** Paper (`#FFFFFF`) for title, subtitle, and date. Ink disappears on the blue Day Crop.
 - **Bullets.** At most about 6. Use `createParagraphBullets` `BULLET_DISC_CIRCLE_SQUARE`. Do not type `•` into the run.
 - **Footer.** `Workday Confidential`. No slide numbers.
 - **Logo.** Title Slide and Bumper Slide already carry the white lockup. Do not recolor it or drop it on Paper.
 - **Tables.** Water Cooler header, Keyboard / Business Card rows, Ink body, Desk rules.
 - **Charts.** Series order: Water Cooler, Lunch Break, Ballpoint, Blue Sky, Ink. No Google default orange / green / purple.
-- **Density.** 0.50 in side inset. Keep copy above y = 5.20 in. One idea per slide. 16:9 (`10.00 × 5.625 in`, 720 × 405 pt).
+- **Density.** 0.50 in side inset, including the footer. Keep copy above y = 5.20 in. One idea per slide. 16:9 (`10.00 × 5.625 in`, 720 × 405 pt).
+- **Section Title.** The PPTX rail is `gradient-day-crop-warm.svg` at 2.743 in. If Slides drops that picture, draw the Tack / Keyboard / Lunch Break stack and send it to the back. Eyebrow and statement stay in the open field at x = 3.32 in.
 
 ## Outline
 
@@ -170,26 +180,35 @@ slides:
 }
 ```
 
-Replace leftover prompt text, then style:
+Fill a placeholder. Skip `deleteText` when the shape is empty. Title type is `CENTERED_TITLE`.
 
 ```json
 [
-  { "deleteText": { "objectId": "wd_s3_title", "textRange": { "type": "ALL" } } },
   { "insertText": { "objectId": "wd_s3_title", "text": "Working agreements", "insertionIndex": 0 } },
   {
     "updateTextStyle": {
       "objectId": "wd_s3_title",
       "style": {
         "fontFamily": "Archivo",
+        "weightedFontFamily": { "fontFamily": "Archivo", "weight": 700 },
         "fontSize": { "magnitude": 28, "unit": "PT" },
         "bold": true,
         "foregroundColor": { "opaqueColor": { "rgbColor": { "red": 0.059, "green": 0.180, "blue": 0.400 } } }
       },
       "textRange": { "type": "ALL" },
-      "fields": "fontFamily,fontSize,bold,foregroundColor"
+      "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
     }
   }
 ]
+```
+
+Body / Archivo Light equivalent:
+
+```json
+{
+  "fontFamily": "Archivo",
+  "weightedFontFamily": { "fontFamily": "Archivo", "weight": 300 }
+}
 ```
 
 `importSlides` from the Workday template is fine when adding slides to an existing copy (`preserveTheme`: `USE_DESTINATION_THEME`). Do not import from a customer deck.
@@ -202,10 +221,14 @@ Charts: the builder draws Water Cooler / Lunch Break columns so a deck does not 
 
 - Do not `batchUpdate` the template ID to "save a copy step"
 - Do not mix blank untemplated slides into a branded deck
+- Do not send placeholder type `CENTER_TITLE` (it is `CENTERED_TITLE`)
+- Do not send `fontFamily: "Archivo Light"`
+- Do not `deleteText` on an empty placeholder
+- Do not reuse a footer placeholder id for a new text box
 - Do not use Inter, Cursor orange, GTM LIGHT2 tiles, or any other company's tokens
 - Do not commit `credentials.json`, `client_secret.json`, `.env`, or `gws` token files
 - Do not copy confidential sentences from a reference deck into examples
 
 ## Visual check
 
-After a live apply, open `https://docs.google.com/presentation/d/<id>/edit` and look at every slide (plugin thumbnail or Drive export PDF). Confirm Ink on Paper, Paper on Ink / Ballpoint, footer clearance, smile on title and bumper only, and no leftover master prompts.
+After a live apply, open `https://docs.google.com/presentation/d/<id>/edit` and look at every slide (plugin thumbnail or Drive export PDF). Confirm Paper type on the title slide, Ink on Paper elsewhere, a visible gold/teal section rail, footer at the 0.50 in inset, Archivo (not a serif fallback), smile on title and bumper only, and no leftover master prompts. On the table slide, check Water Cooler headers, Keyboard / Business Card rows, and a closed Desk rule.

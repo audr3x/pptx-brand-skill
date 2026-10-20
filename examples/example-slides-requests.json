@@ -14,8 +14,10 @@
   },
   "fonts": {
     "title": "Archivo",
-    "body": "Archivo Light",
-    "fallback": "Arial"
+    "body": "Archivo",
+    "bodyWeight": 300,
+    "fallback": "Arial",
+    "note": "Never send fontFamily Archivo Light. Use Archivo + weightedFontFamily.weight 300."
   },
   "slides": [
     {
@@ -69,7 +71,7 @@
           },
           {
             "layoutPlaceholder": {
-              "type": "CENTER_TITLE",
+              "type": "CENTERED_TITLE",
               "index": 0
             },
             "objectId": "wd_s1_ctitle"
@@ -87,27 +89,12 @@
               "index": 0
             },
             "objectId": "wd_s1_body"
-          },
-          {
-            "layoutPlaceholder": {
-              "type": "FOOTER",
-              "index": 0
-            },
-            "objectId": "wd_s1_ph_footer"
           }
         ],
         "slideLayoutReference": {
           "layoutName": "Title Slide"
         },
         "predefinedLayoutFallback": "TITLE"
-      }
-    },
-    {
-      "deleteText": {
-        "objectId": "wd_s1_title",
-        "textRange": {
-          "type": "ALL"
-        }
       }
     },
     {
@@ -122,6 +109,10 @@
         "objectId": "wd_s1_title",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 36,
             "unit": "PT"
@@ -130,9 +121,9 @@
           "foregroundColor": {
             "opaqueColor": {
               "rgbColor": {
-                "red": 0.058823529411764705,
-                "green": 0.1803921568627451,
-                "blue": 0.4
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
               }
             }
           }
@@ -140,15 +131,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
-      }
-    },
-    {
-      "deleteText": {
-        "objectId": "wd_s1_sub",
-        "textRange": {
-          "type": "ALL"
-        }
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -163,6 +146,10 @@
         "objectId": "wd_s1_sub",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 16,
             "unit": "PT"
@@ -171,9 +158,9 @@
           "foregroundColor": {
             "opaqueColor": {
               "rgbColor": {
-                "red": 0.058823529411764705,
-                "green": 0.1803921568627451,
-                "blue": 0.4
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
               }
             }
           }
@@ -181,7 +168,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -235,6 +222,10 @@
         "objectId": "wd_s1_date",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 12,
             "unit": "PT"
@@ -243,9 +234,9 @@
           "foregroundColor": {
             "opaqueColor": {
               "rgbColor": {
-                "red": 0.058823529411764705,
-                "green": 0.1803921568627451,
-                "blue": 0.4
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
               }
             }
           }
@@ -253,7 +244,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -270,7 +261,7 @@
           },
           {
             "layoutPlaceholder": {
-              "type": "CENTER_TITLE",
+              "type": "CENTERED_TITLE",
               "index": 0
             },
             "objectId": "wd_s2_ctitle"
@@ -288,19 +279,172 @@
               "index": 0
             },
             "objectId": "wd_s2_body"
-          },
-          {
-            "layoutPlaceholder": {
-              "type": "FOOTER",
-              "index": 0
-            },
-            "objectId": "wd_s2_ph_footer"
           }
         ],
         "slideLayoutReference": {
           "layoutName": "Section Title"
         },
         "predefinedLayoutFallback": "SECTION_HEADER"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s2_rail_0",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s2",
+          "size": {
+            "width": {
+              "magnitude": 2508199.2,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1714500.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 0.0,
+            "translateY": 0.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s2_rail_0",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.43529411764705883,
+                  "green": 0.788235294117647,
+                  "blue": 0.8274509803921568
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s2_rail_1",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s2",
+          "size": {
+            "width": {
+              "magnitude": 2508199.2,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1714500.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 0.0,
+            "translateY": 1714500.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s2_rail_1",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9882352941176471,
+                  "green": 0.9725490196078431,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s2_rail_2",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s2",
+          "size": {
+            "width": {
+              "magnitude": 2508199.2,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1714500.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 0.0,
+            "translateY": 3429000.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s2_rail_2",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.996078431372549,
+                  "green": 0.7568627450980392,
+                  "blue": 0.043137254901960784
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "updatePageElementsZOrder": {
+        "pageElementObjectIds": [
+          "wd_s2_rail_0",
+          "wd_s2_rail_1",
+          "wd_s2_rail_2"
+        ],
+        "operation": "SEND_TO_BACK"
       }
     },
     {
@@ -354,6 +498,10 @@
         "objectId": "wd_s2_eyebrow",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 14,
             "unit": "PT"
@@ -372,7 +520,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -426,6 +574,10 @@
         "objectId": "wd_s2_statement",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 28,
             "unit": "PT"
@@ -444,7 +596,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -468,7 +620,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 27432.0,
+            "translateX": 457200.0,
             "translateY": 4818888.0,
             "unit": "EMU"
           }
@@ -498,6 +650,10 @@
         "objectId": "wd_s2_footer",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 8,
             "unit": "PT"
@@ -516,7 +672,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -533,7 +689,7 @@
           },
           {
             "layoutPlaceholder": {
-              "type": "CENTER_TITLE",
+              "type": "CENTERED_TITLE",
               "index": 0
             },
             "objectId": "wd_s3_ctitle"
@@ -551,27 +707,12 @@
               "index": 0
             },
             "objectId": "wd_s3_body"
-          },
-          {
-            "layoutPlaceholder": {
-              "type": "FOOTER",
-              "index": 0
-            },
-            "objectId": "wd_s3_ph_footer"
           }
         ],
         "slideLayoutReference": {
           "layoutName": "Title and Content"
         },
         "predefinedLayoutFallback": "TITLE_AND_BODY"
-      }
-    },
-    {
-      "deleteText": {
-        "objectId": "wd_s3_title",
-        "textRange": {
-          "type": "ALL"
-        }
       }
     },
     {
@@ -586,6 +727,10 @@
         "objectId": "wd_s3_title",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 28,
             "unit": "PT"
@@ -604,15 +749,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
-      }
-    },
-    {
-      "deleteText": {
-        "objectId": "wd_s3_body",
-        "textRange": {
-          "type": "ALL"
-        }
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -626,7 +763,11 @@
       "updateTextStyle": {
         "objectId": "wd_s3_body",
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 20,
             "unit": "PT"
@@ -645,7 +786,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -678,7 +819,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 27432.0,
+            "translateX": 457200.0,
             "translateY": 4818888.0,
             "unit": "EMU"
           }
@@ -708,6 +849,10 @@
         "objectId": "wd_s3_footer",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 8,
             "unit": "PT"
@@ -726,7 +871,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -743,7 +888,7 @@
           },
           {
             "layoutPlaceholder": {
-              "type": "CENTER_TITLE",
+              "type": "CENTERED_TITLE",
               "index": 0
             },
             "objectId": "wd_s4_ctitle"
@@ -761,27 +906,12 @@
               "index": 0
             },
             "objectId": "wd_s4_body"
-          },
-          {
-            "layoutPlaceholder": {
-              "type": "FOOTER",
-              "index": 0
-            },
-            "objectId": "wd_s4_ph_footer"
           }
         ],
         "slideLayoutReference": {
           "layoutName": "1/2_Headline"
         },
         "predefinedLayoutFallback": "TITLE_AND_TWO_COLUMNS"
-      }
-    },
-    {
-      "deleteText": {
-        "objectId": "wd_s4_title",
-        "textRange": {
-          "type": "ALL"
-        }
       }
     },
     {
@@ -796,6 +926,10 @@
         "objectId": "wd_s4_title",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 28,
             "unit": "PT"
@@ -814,7 +948,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -868,6 +1002,10 @@
         "objectId": "wd_s4_n0",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 20,
             "unit": "PT"
@@ -886,7 +1024,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -940,6 +1078,10 @@
         "objectId": "wd_s4_h0",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 15,
             "unit": "PT"
@@ -958,7 +1100,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1011,7 +1153,11 @@
       "updateTextStyle": {
         "objectId": "wd_s4_b0",
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 13,
             "unit": "PT"
@@ -1030,7 +1176,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1084,6 +1230,10 @@
         "objectId": "wd_s4_n1",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 20,
             "unit": "PT"
@@ -1102,7 +1252,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1156,6 +1306,10 @@
         "objectId": "wd_s4_h1",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 15,
             "unit": "PT"
@@ -1174,7 +1328,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1227,7 +1381,11 @@
       "updateTextStyle": {
         "objectId": "wd_s4_b1",
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 13,
             "unit": "PT"
@@ -1246,7 +1404,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1300,6 +1458,10 @@
         "objectId": "wd_s4_n2",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 20,
             "unit": "PT"
@@ -1318,7 +1480,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1372,6 +1534,10 @@
         "objectId": "wd_s4_h2",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 15,
             "unit": "PT"
@@ -1390,7 +1556,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1443,7 +1609,11 @@
       "updateTextStyle": {
         "objectId": "wd_s4_b2",
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 13,
             "unit": "PT"
@@ -1462,7 +1632,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1486,7 +1656,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 27432.0,
+            "translateX": 457200.0,
             "translateY": 4818888.0,
             "unit": "EMU"
           }
@@ -1516,6 +1686,10 @@
         "objectId": "wd_s4_footer",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 8,
             "unit": "PT"
@@ -1534,7 +1708,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1551,7 +1725,7 @@
           },
           {
             "layoutPlaceholder": {
-              "type": "CENTER_TITLE",
+              "type": "CENTERED_TITLE",
               "index": 0
             },
             "objectId": "wd_s5_ctitle"
@@ -1569,27 +1743,12 @@
               "index": 0
             },
             "objectId": "wd_s5_body"
-          },
-          {
-            "layoutPlaceholder": {
-              "type": "FOOTER",
-              "index": 0
-            },
-            "objectId": "wd_s5_ph_footer"
           }
         ],
         "slideLayoutReference": {
           "layoutName": "Title Only"
         },
         "predefinedLayoutFallback": "TITLE_ONLY"
-      }
-    },
-    {
-      "deleteText": {
-        "objectId": "wd_s5_title",
-        "textRange": {
-          "type": "ALL"
-        }
       }
     },
     {
@@ -1604,6 +1763,10 @@
         "objectId": "wd_s5_title",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 28,
             "unit": "PT"
@@ -1622,7 +1785,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1655,6 +1818,24 @@
       }
     },
     {
+      "updateTableRowProperties": {
+        "objectId": "wd_s5_table",
+        "rowIndices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "tableRowProperties": {
+          "minRowHeight": {
+            "magnitude": 34.56,
+            "unit": "PT"
+          }
+        },
+        "fields": "minRowHeight"
+      }
+    },
+    {
       "updateTableCellProperties": {
         "objectId": "wd_s5_table",
         "tableRange": {
@@ -1676,9 +1857,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -1701,6 +1883,10 @@
         },
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 12,
             "unit": "PT"
@@ -1719,7 +1905,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1744,9 +1930,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -1769,6 +1956,10 @@
         },
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 12,
             "unit": "PT"
@@ -1787,7 +1978,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1812,9 +2003,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -1837,6 +2029,10 @@
         },
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 12,
             "unit": "PT"
@@ -1855,7 +2051,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1880,9 +2076,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -1904,7 +2101,11 @@
           "columnIndex": 0
         },
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 11,
             "unit": "PT"
@@ -1923,7 +2124,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -1948,9 +2149,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -1972,7 +2174,11 @@
           "columnIndex": 1
         },
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 11,
             "unit": "PT"
@@ -1991,7 +2197,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2016,9 +2222,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -2040,7 +2247,11 @@
           "columnIndex": 2
         },
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 11,
             "unit": "PT"
@@ -2059,7 +2270,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2084,9 +2295,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -2108,7 +2320,11 @@
           "columnIndex": 0
         },
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 11,
             "unit": "PT"
@@ -2127,7 +2343,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2152,9 +2368,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -2176,7 +2393,11 @@
           "columnIndex": 1
         },
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 11,
             "unit": "PT"
@@ -2195,7 +2416,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2220,9 +2441,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -2244,7 +2466,11 @@
           "columnIndex": 2
         },
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 11,
             "unit": "PT"
@@ -2263,7 +2489,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2288,9 +2514,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -2312,7 +2539,11 @@
           "columnIndex": 0
         },
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 11,
             "unit": "PT"
@@ -2331,7 +2562,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2356,9 +2587,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -2380,7 +2612,11 @@
           "columnIndex": 1
         },
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 11,
             "unit": "PT"
@@ -2399,7 +2635,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2424,9 +2660,10 @@
                 }
               }
             }
-          }
+          },
+          "contentAlignment": "MIDDLE"
         },
-        "fields": "tableCellBackgroundFill"
+        "fields": "tableCellBackgroundFill,contentAlignment"
       }
     },
     {
@@ -2448,7 +2685,11 @@
           "columnIndex": 2
         },
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 11,
             "unit": "PT"
@@ -2467,7 +2708,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2516,7 +2757,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 27432.0,
+            "translateX": 457200.0,
             "translateY": 4818888.0,
             "unit": "EMU"
           }
@@ -2546,6 +2787,10 @@
         "objectId": "wd_s5_footer",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 8,
             "unit": "PT"
@@ -2564,7 +2809,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2581,7 +2826,7 @@
           },
           {
             "layoutPlaceholder": {
-              "type": "CENTER_TITLE",
+              "type": "CENTERED_TITLE",
               "index": 0
             },
             "objectId": "wd_s6_ctitle"
@@ -2599,27 +2844,12 @@
               "index": 0
             },
             "objectId": "wd_s6_body"
-          },
-          {
-            "layoutPlaceholder": {
-              "type": "FOOTER",
-              "index": 0
-            },
-            "objectId": "wd_s6_ph_footer"
           }
         ],
         "slideLayoutReference": {
           "layoutName": "Title Only"
         },
         "predefinedLayoutFallback": "TITLE_ONLY"
-      }
-    },
-    {
-      "deleteText": {
-        "objectId": "wd_s6_title",
-        "textRange": {
-          "type": "ALL"
-        }
       }
     },
     {
@@ -2634,6 +2864,10 @@
         "objectId": "wd_s6_title",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
           "fontSize": {
             "magnitude": 28,
             "unit": "PT"
@@ -2652,7 +2886,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2705,7 +2939,11 @@
       "updateTextStyle": {
         "objectId": "wd_s6_cat_0",
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 10,
             "unit": "PT"
@@ -2724,7 +2962,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -2889,7 +3127,11 @@
       "updateTextStyle": {
         "objectId": "wd_s6_cat_1",
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 10,
             "unit": "PT"
@@ -2908,7 +3150,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -3073,7 +3315,11 @@
       "updateTextStyle": {
         "objectId": "wd_s6_cat_2",
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 10,
             "unit": "PT"
@@ -3092,7 +3338,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -3257,7 +3503,11 @@
       "updateTextStyle": {
         "objectId": "wd_s6_cat_3",
         "style": {
-          "fontFamily": "Archivo Light",
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
           "fontSize": {
             "magnitude": 10,
             "unit": "PT"
@@ -3276,7 +3526,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -3492,6 +3742,10 @@
         "objectId": "wd_s6_leg_0",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 10,
             "unit": "PT"
@@ -3510,7 +3764,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -3614,6 +3868,10 @@
         "objectId": "wd_s6_leg_1",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 10,
             "unit": "PT"
@@ -3632,7 +3890,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -3656,7 +3914,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 27432.0,
+            "translateX": 457200.0,
             "translateY": 4818888.0,
             "unit": "EMU"
           }
@@ -3686,6 +3944,10 @@
         "objectId": "wd_s6_footer",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 8,
             "unit": "PT"
@@ -3704,7 +3966,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -3721,7 +3983,7 @@
           },
           {
             "layoutPlaceholder": {
-              "type": "CENTER_TITLE",
+              "type": "CENTERED_TITLE",
               "index": 0
             },
             "objectId": "wd_s7_ctitle"
@@ -3739,13 +4001,6 @@
               "index": 0
             },
             "objectId": "wd_s7_body"
-          },
-          {
-            "layoutPlaceholder": {
-              "type": "FOOTER",
-              "index": 0
-            },
-            "objectId": "wd_s7_ph_footer"
           }
         ],
         "slideLayoutReference": {
@@ -3805,6 +4060,10 @@
         "objectId": "wd_s7_caption",
         "style": {
           "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
           "fontSize": {
             "magnitude": 16,
             "unit": "PT"
@@ -3823,7 +4082,7 @@
         "textRange": {
           "type": "ALL"
         },
-        "fields": "fontFamily,fontSize,bold,foregroundColor"
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     },
     {
@@ -3837,6 +4096,4214 @@
         },
         "fields": "alignment"
       }
+    }
+  ],
+  "slidePlans": [
+    {
+      "slideId": "wd_s1",
+      "layout": "Title Slide",
+      "intent": "title",
+      "spec": {
+        "layout": "title",
+        "title": "Planning workshop",
+        "subtitle": "Sample deck for the Workday PPTX skill",
+        "date": "October 2026",
+        "notes": "Cover. Gradient and smile come from the Title Slide layout."
+      },
+      "notes": "Cover. Gradient and smile come from the Title Slide layout.",
+      "requests": [
+        {
+          "createSlide": {
+            "objectId": "wd_s1",
+            "insertionIndex": 0,
+            "placeholderIdMappings": [
+              {
+                "layoutPlaceholder": {
+                  "type": "TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s1_title"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "CENTERED_TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s1_ctitle"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "SUBTITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s1_sub"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "BODY",
+                  "index": 0
+                },
+                "objectId": "wd_s1_body"
+              }
+            ],
+            "slideLayoutReference": {
+              "layoutName": "Title Slide"
+            },
+            "predefinedLayoutFallback": "TITLE"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s1_title",
+            "text": "Planning workshop",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s1_title",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 36,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 1.0,
+                    "green": 1.0,
+                    "blue": 1.0
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s1_sub",
+            "text": "Sample deck for the Workday PPTX skill",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s1_sub",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 16,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 1.0,
+                    "green": 1.0,
+                    "blue": 1.0
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s1_date",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s1",
+              "size": {
+                "width": {
+                  "magnitude": 3657600.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 274320.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 466344.0,
+                "translateY": 4535424.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s1_date",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s1_date",
+            "text": "October 2026",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s1_date",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 12,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 1.0,
+                    "green": 1.0,
+                    "blue": 1.0
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        }
+      ]
+    },
+    {
+      "slideId": "wd_s2",
+      "layout": "Section Title",
+      "intent": "section",
+      "spec": {
+        "layout": "section",
+        "eyebrow": "Agenda",
+        "title": "What we will cover",
+        "notes": "Section Title layout. Title is drawn in the open field beside the rail."
+      },
+      "notes": "Section Title layout. Title is drawn in the open field beside the rail.",
+      "requests": [
+        {
+          "createSlide": {
+            "objectId": "wd_s2",
+            "insertionIndex": 1,
+            "placeholderIdMappings": [
+              {
+                "layoutPlaceholder": {
+                  "type": "TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s2_title"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "CENTERED_TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s2_ctitle"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "SUBTITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s2_sub"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "BODY",
+                  "index": 0
+                },
+                "objectId": "wd_s2_body"
+              }
+            ],
+            "slideLayoutReference": {
+              "layoutName": "Section Title"
+            },
+            "predefinedLayoutFallback": "SECTION_HEADER"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s2_rail_0",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s2",
+              "size": {
+                "width": {
+                  "magnitude": 2508199.2,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 1714500.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 0.0,
+                "translateY": 0.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s2_rail_0",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.43529411764705883,
+                      "green": 0.788235294117647,
+                      "blue": 0.8274509803921568
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s2_rail_1",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s2",
+              "size": {
+                "width": {
+                  "magnitude": 2508199.2,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 1714500.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 0.0,
+                "translateY": 1714500.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s2_rail_1",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9882352941176471,
+                      "green": 0.9725490196078431,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s2_rail_2",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s2",
+              "size": {
+                "width": {
+                  "magnitude": 2508199.2,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 1714500.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 0.0,
+                "translateY": 3429000.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s2_rail_2",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.996078431372549,
+                      "green": 0.7568627450980392,
+                      "blue": 0.043137254901960784
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "updatePageElementsZOrder": {
+            "pageElementObjectIds": [
+              "wd_s2_rail_0",
+              "wd_s2_rail_1",
+              "wd_s2_rail_2"
+            ],
+            "operation": "SEND_TO_BACK"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s2_eyebrow",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s2",
+              "size": {
+                "width": {
+                  "magnitude": 3968496.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 374904.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 3035808.0,
+                "translateY": 987552.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s2_eyebrow",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s2_eyebrow",
+            "text": "AGENDA",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s2_eyebrow",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 14,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.10980392156862745,
+                    "green": 0.596078431372549,
+                    "blue": 0.9098039215686274
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s2_statement",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s2",
+              "size": {
+                "width": {
+                  "magnitude": 5129784.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 2011680.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 3035808.0,
+                "translateY": 1335024.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s2_statement",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s2_statement",
+            "text": "What we will cover",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s2_statement",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 28,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s2_footer",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s2",
+              "size": {
+                "width": {
+                  "magnitude": 3086100.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 274320.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 457200.0,
+                "translateY": 4818888.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s2_footer",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s2_footer",
+            "text": "Workday Confidential",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s2_footer",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 8,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        }
+      ]
+    },
+    {
+      "slideId": "wd_s3",
+      "layout": "Title and Content",
+      "intent": "content",
+      "spec": {
+        "layout": "content",
+        "title": "Working agreements",
+        "bullets": [
+          "One idea per slide",
+          "Six bullets at most",
+          "Core palette first, secondary colors rarely",
+          "Archivo for titles, Archivo Light for body",
+          "Leave the footer band clear"
+        ],
+        "notes": "Title and Content layout. Bullets use the layout list style."
+      },
+      "notes": "Title and Content layout. Bullets use the layout list style.",
+      "requests": [
+        {
+          "createSlide": {
+            "objectId": "wd_s3",
+            "insertionIndex": 2,
+            "placeholderIdMappings": [
+              {
+                "layoutPlaceholder": {
+                  "type": "TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s3_title"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "CENTERED_TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s3_ctitle"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "SUBTITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s3_sub"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "BODY",
+                  "index": 0
+                },
+                "objectId": "wd_s3_body"
+              }
+            ],
+            "slideLayoutReference": {
+              "layoutName": "Title and Content"
+            },
+            "predefinedLayoutFallback": "TITLE_AND_BODY"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s3_title",
+            "text": "Working agreements",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s3_title",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 28,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s3_body",
+            "text": "One idea per slide\nSix bullets at most\nCore palette first, secondary colors rarely\nArchivo for titles, Archivo Light for body\nLeave the footer band clear",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s3_body",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 20,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createParagraphBullets": {
+            "objectId": "wd_s3_body",
+            "textRange": {
+              "type": "ALL"
+            },
+            "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s3_footer",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s3",
+              "size": {
+                "width": {
+                  "magnitude": 3086100.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 274320.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 457200.0,
+                "translateY": 4818888.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s3_footer",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s3_footer",
+            "text": "Workday Confidential",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s3_footer",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 8,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.49019607843137253,
+                    "green": 0.5450980392156862,
+                    "blue": 0.6
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        }
+      ]
+    },
+    {
+      "slideId": "wd_s4",
+      "layout": "1/2_Headline",
+      "intent": "two-column",
+      "spec": {
+        "layout": "two-column",
+        "title": "Delivery model",
+        "items": [
+          {
+            "title": "Discover",
+            "body": "Frame the problem, the users, and the outcome before anything is built."
+          },
+          {
+            "title": "Build",
+            "body": "Ship a thin slice, review it with the team, and keep the scope honest."
+          },
+          {
+            "title": "Adopt",
+            "body": "Train the people who will run it and measure whether they actually use it."
+          }
+        ],
+        "notes": "Half-width title on the left. Numbered items on the right."
+      },
+      "notes": "Half-width title on the left. Numbered items on the right.",
+      "requests": [
+        {
+          "createSlide": {
+            "objectId": "wd_s4",
+            "insertionIndex": 3,
+            "placeholderIdMappings": [
+              {
+                "layoutPlaceholder": {
+                  "type": "TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s4_title"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "CENTERED_TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s4_ctitle"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "SUBTITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s4_sub"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "BODY",
+                  "index": 0
+                },
+                "objectId": "wd_s4_body"
+              }
+            ],
+            "slideLayoutReference": {
+              "layoutName": "1/2_Headline"
+            },
+            "predefinedLayoutFallback": "TITLE_AND_TWO_COLUMNS"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_title",
+            "text": "Delivery model",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_title",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 28,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_n0",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 484632.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 402336.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 4572000.0,
+                "translateY": 694944.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_n0",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_n0",
+            "text": "01",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_n0",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 20,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.10980392156862745,
+                    "green": 0.596078431372549,
+                    "blue": 0.9098039215686274
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_h0",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 3300984.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 320040.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 5093208.0,
+                "translateY": 694944.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_h0",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_h0",
+            "text": "Discover",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_h0",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 15,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_b0",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 3300984.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 694944.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 5093208.0,
+                "translateY": 987552.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_b0",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_b0",
+            "text": "Frame the problem, the users, and the outcome before anything is built.",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_b0",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 13,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_n1",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 484632.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 402336.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 4572000.0,
+                "translateY": 1865376.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_n1",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_n1",
+            "text": "02",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_n1",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 20,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.10980392156862745,
+                    "green": 0.596078431372549,
+                    "blue": 0.9098039215686274
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_h1",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 3300984.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 320040.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 5093208.0,
+                "translateY": 1865376.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_h1",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_h1",
+            "text": "Build",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_h1",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 15,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_b1",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 3300984.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 694944.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 5093208.0,
+                "translateY": 2157984.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_b1",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_b1",
+            "text": "Ship a thin slice, review it with the team, and keep the scope honest.",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_b1",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 13,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_n2",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 484632.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 402336.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 4572000.0,
+                "translateY": 3035808.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_n2",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_n2",
+            "text": "03",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_n2",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 20,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.10980392156862745,
+                    "green": 0.596078431372549,
+                    "blue": 0.9098039215686274
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_h2",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 3300984.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 320040.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 5093208.0,
+                "translateY": 3035808.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_h2",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_h2",
+            "text": "Adopt",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_h2",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 15,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_b2",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 3300984.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 694944.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 5093208.0,
+                "translateY": 3328416.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_b2",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_b2",
+            "text": "Train the people who will run it and measure whether they actually use it.",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_b2",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 13,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s4_footer",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s4",
+              "size": {
+                "width": {
+                  "magnitude": 3086100.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 274320.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 457200.0,
+                "translateY": 4818888.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s4_footer",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s4_footer",
+            "text": "Workday Confidential",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s4_footer",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 8,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.49019607843137253,
+                    "green": 0.5450980392156862,
+                    "blue": 0.6
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        }
+      ]
+    },
+    {
+      "slideId": "wd_s5",
+      "layout": "Title Only",
+      "intent": "table",
+      "spec": {
+        "layout": "table",
+        "title": "Sample timeline",
+        "headers": [
+          "Phase",
+          "Owner",
+          "Status"
+        ],
+        "rows": [
+          [
+            "Discover",
+            "Research",
+            "Complete"
+          ],
+          [
+            "Build",
+            "Product",
+            "In progress"
+          ],
+          [
+            "Adopt",
+            "Operations",
+            "Next"
+          ]
+        ],
+        "notes": "Title Only layout plus an on-brand table in the content well."
+      },
+      "notes": "Title Only layout plus an on-brand table in the content well.",
+      "requests": [
+        {
+          "createSlide": {
+            "objectId": "wd_s5",
+            "insertionIndex": 4,
+            "placeholderIdMappings": [
+              {
+                "layoutPlaceholder": {
+                  "type": "TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s5_title"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "CENTERED_TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s5_ctitle"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "SUBTITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s5_sub"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "BODY",
+                  "index": 0
+                },
+                "objectId": "wd_s5_body"
+              }
+            ],
+            "slideLayoutReference": {
+              "layoutName": "Title Only"
+            },
+            "predefinedLayoutFallback": "TITLE_ONLY"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_title",
+            "text": "Sample timeline",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_title",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 28,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createTable": {
+            "objectId": "wd_s5_table",
+            "rows": 4,
+            "columns": 3,
+            "elementProperties": {
+              "pageObjectId": "wd_s5",
+              "size": {
+                "width": {
+                  "magnitude": 8229600.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 1755648.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 457200.0,
+                "translateY": 1225296.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateTableRowProperties": {
+            "objectId": "wd_s5_table",
+            "rowIndices": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "tableRowProperties": {
+              "minRowHeight": {
+                "magnitude": 34.56,
+                "unit": "PT"
+              }
+            },
+            "fields": "minRowHeight"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 0,
+                "columnIndex": 0
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.10980392156862745,
+                      "green": 0.596078431372549,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 0,
+              "columnIndex": 0
+            },
+            "text": "Phase",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 0,
+              "columnIndex": 0
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 12,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 1.0,
+                    "green": 1.0,
+                    "blue": 1.0
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 0,
+                "columnIndex": 1
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.10980392156862745,
+                      "green": 0.596078431372549,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 0,
+              "columnIndex": 1
+            },
+            "text": "Owner",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 0,
+              "columnIndex": 1
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 12,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 1.0,
+                    "green": 1.0,
+                    "blue": 1.0
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 0,
+                "columnIndex": 2
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.10980392156862745,
+                      "green": 0.596078431372549,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 0,
+              "columnIndex": 2
+            },
+            "text": "Status",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 0,
+              "columnIndex": 2
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 12,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 1.0,
+                    "green": 1.0,
+                    "blue": 1.0
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 1,
+                "columnIndex": 0
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9882352941176471,
+                      "green": 0.9725490196078431,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 1,
+              "columnIndex": 0
+            },
+            "text": "Discover",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 1,
+              "columnIndex": 0
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 11,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 1,
+                "columnIndex": 1
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9882352941176471,
+                      "green": 0.9725490196078431,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 1,
+              "columnIndex": 1
+            },
+            "text": "Research",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 1,
+              "columnIndex": 1
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 11,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 1,
+                "columnIndex": 2
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9882352941176471,
+                      "green": 0.9725490196078431,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 1,
+              "columnIndex": 2
+            },
+            "text": "Complete",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 1,
+              "columnIndex": 2
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 11,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 2,
+                "columnIndex": 0
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9450980392156862,
+                      "green": 0.9529411764705882,
+                      "blue": 0.9647058823529412
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 2,
+              "columnIndex": 0
+            },
+            "text": "Build",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 2,
+              "columnIndex": 0
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 11,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 2,
+                "columnIndex": 1
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9450980392156862,
+                      "green": 0.9529411764705882,
+                      "blue": 0.9647058823529412
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 2,
+              "columnIndex": 1
+            },
+            "text": "Product",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 2,
+              "columnIndex": 1
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 11,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 2,
+                "columnIndex": 2
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9450980392156862,
+                      "green": 0.9529411764705882,
+                      "blue": 0.9647058823529412
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 2,
+              "columnIndex": 2
+            },
+            "text": "In progress",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 2,
+              "columnIndex": 2
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 11,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 3,
+                "columnIndex": 0
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9882352941176471,
+                      "green": 0.9725490196078431,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 3,
+              "columnIndex": 0
+            },
+            "text": "Adopt",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 3,
+              "columnIndex": 0
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 11,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 3,
+                "columnIndex": 1
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9882352941176471,
+                      "green": 0.9725490196078431,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 3,
+              "columnIndex": 1
+            },
+            "text": "Operations",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 3,
+              "columnIndex": 1
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 11,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableCellProperties": {
+            "objectId": "wd_s5_table",
+            "tableRange": {
+              "location": {
+                "rowIndex": 3,
+                "columnIndex": 2
+              },
+              "rowSpan": 1,
+              "columnSpan": 1
+            },
+            "tableCellProperties": {
+              "tableCellBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.9882352941176471,
+                      "green": 0.9725490196078431,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "contentAlignment": "MIDDLE"
+            },
+            "fields": "tableCellBackgroundFill,contentAlignment"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 3,
+              "columnIndex": 2
+            },
+            "text": "Next",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_table",
+            "cellLocation": {
+              "rowIndex": 3,
+              "columnIndex": 2
+            },
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 11,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateTableBorderProperties": {
+            "objectId": "wd_s5_table",
+            "borderPosition": "ALL",
+            "tableBorderProperties": {
+              "tableBorderFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.7137254901960784,
+                      "green": 0.7568627450980392,
+                      "blue": 0.8
+                    }
+                  }
+                }
+              },
+              "weight": {
+                "magnitude": 0.75,
+                "unit": "PT"
+              },
+              "dashStyle": "SOLID"
+            },
+            "fields": "tableBorderFill,weight,dashStyle"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s5_footer",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s5",
+              "size": {
+                "width": {
+                  "magnitude": 3086100.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 274320.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 457200.0,
+                "translateY": 4818888.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s5_footer",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s5_footer",
+            "text": "Workday Confidential",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s5_footer",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 8,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.49019607843137253,
+                    "green": 0.5450980392156862,
+                    "blue": 0.6
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        }
+      ]
+    },
+    {
+      "slideId": "wd_s6",
+      "layout": "Title Only",
+      "intent": "chart",
+      "spec": {
+        "layout": "chart",
+        "title": "Sample volume",
+        "chart": {
+          "type": "column",
+          "categories": [
+            "January",
+            "February",
+            "March",
+            "April"
+          ],
+          "series": [
+            {
+              "name": "Requests",
+              "values": [
+                12,
+                18,
+                15,
+                22
+              ]
+            },
+            {
+              "name": "Completed",
+              "values": [
+                9,
+                14,
+                13,
+                19
+              ]
+            }
+          ]
+        },
+        "notes": "Column chart using Water Cooler then Lunch Break."
+      },
+      "notes": "Column chart using Water Cooler then Lunch Break.",
+      "requests": [
+        {
+          "createSlide": {
+            "objectId": "wd_s6",
+            "insertionIndex": 5,
+            "placeholderIdMappings": [
+              {
+                "layoutPlaceholder": {
+                  "type": "TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s6_title"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "CENTERED_TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s6_ctitle"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "SUBTITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s6_sub"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "BODY",
+                  "index": 0
+                },
+                "objectId": "wd_s6_body"
+              }
+            ],
+            "slideLayoutReference": {
+              "layoutName": "Title Only"
+            },
+            "predefinedLayoutFallback": "TITLE_ONLY"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s6_title",
+            "text": "Sample volume",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s6_title",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 700
+              },
+              "fontSize": {
+                "magnitude": 28,
+                "unit": "PT"
+              },
+              "bold": true,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_cat_0",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 1691640.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 457200.0,
+                "translateY": 4242816.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_cat_0",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s6_cat_0",
+            "text": "January",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s6_cat_0",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 10,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateParagraphStyle": {
+            "objectId": "wd_s6_cat_0",
+            "style": {
+              "alignment": "CENTER"
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "alignment"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_bar_0_0",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 1546167.27,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 603504.0,
+                "translateY": 2660072.73,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_bar_0_0",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.10980392156862745,
+                      "green": 0.596078431372549,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_bar_0_1",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 1159625.45,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 914400.0,
+                "translateY": 3046614.55,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_bar_0_1",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.996078431372549,
+                      "green": 0.7568627450980392,
+                      "blue": 0.043137254901960784
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_cat_1",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 1691640.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 2148840.0,
+                "translateY": 4242816.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_cat_1",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s6_cat_1",
+            "text": "February",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s6_cat_1",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 10,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateParagraphStyle": {
+            "objectId": "wd_s6_cat_1",
+            "style": {
+              "alignment": "CENTER"
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "alignment"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_bar_1_0",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 2319250.91,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 2295144.0,
+                "translateY": 1886989.09,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_bar_1_0",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.10980392156862745,
+                      "green": 0.596078431372549,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_bar_1_1",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 1803861.82,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 2606040.0,
+                "translateY": 2402378.18,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_bar_1_1",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.996078431372549,
+                      "green": 0.7568627450980392,
+                      "blue": 0.043137254901960784
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_cat_2",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 1691640.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 3840480.0,
+                "translateY": 4242816.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_cat_2",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s6_cat_2",
+            "text": "March",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s6_cat_2",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 10,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateParagraphStyle": {
+            "objectId": "wd_s6_cat_2",
+            "style": {
+              "alignment": "CENTER"
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "alignment"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_bar_2_0",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 1932709.09,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 3986784.0,
+                "translateY": 2273530.91,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_bar_2_0",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.10980392156862745,
+                      "green": 0.596078431372549,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_bar_2_1",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 1675014.55,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 4297680.0,
+                "translateY": 2531225.45,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_bar_2_1",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.996078431372549,
+                      "green": 0.7568627450980392,
+                      "blue": 0.043137254901960784
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_cat_3",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 1691640.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 5532120.0,
+                "translateY": 4242816.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_cat_3",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s6_cat_3",
+            "text": "April",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s6_cat_3",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 300
+              },
+              "fontSize": {
+                "magnitude": 10,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateParagraphStyle": {
+            "objectId": "wd_s6_cat_3",
+            "style": {
+              "alignment": "CENTER"
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "alignment"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_bar_3_0",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 2834640.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 5678424.0,
+                "translateY": 1371600.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_bar_3_0",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.10980392156862745,
+                      "green": 0.596078431372549,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_bar_3_1",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 256032.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 2448098.18,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 5989320.0,
+                "translateY": 1758141.82,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_bar_3_1",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.996078431372549,
+                      "green": 0.7568627450980392,
+                      "blue": 0.043137254901960784
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_legsw_0",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 164592.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 164592.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 7406640.0,
+                "translateY": 1609344.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_legsw_0",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.10980392156862745,
+                      "green": 0.596078431372549,
+                      "blue": 0.9098039215686274
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_leg_0",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 1280160.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 274320.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 7644384.0,
+                "translateY": 1554480.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_leg_0",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s6_leg_0",
+            "text": "Requests",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s6_leg_0",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 10,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_legsw_1",
+            "shapeType": "RECTANGLE",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 164592.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 164592.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 7406640.0,
+                "translateY": 1938528.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_legsw_1",
+            "shapeProperties": {
+              "shapeBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.996078431372549,
+                      "green": 0.7568627450980392,
+                      "blue": 0.043137254901960784
+                    }
+                  }
+                }
+              },
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "shapeBackgroundFill,outline"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_leg_1",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 1280160.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 274320.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 7644384.0,
+                "translateY": 1883664.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_leg_1",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s6_leg_1",
+            "text": "Completed",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s6_leg_1",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 10,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.058823529411764705,
+                    "green": 0.1803921568627451,
+                    "blue": 0.4
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s6_footer",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s6",
+              "size": {
+                "width": {
+                  "magnitude": 3086100.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 274320.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 457200.0,
+                "translateY": 4818888.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s6_footer",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s6_footer",
+            "text": "Workday Confidential",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s6_footer",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 8,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 0.49019607843137253,
+                    "green": 0.5450980392156862,
+                    "blue": 0.6
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        }
+      ]
+    },
+    {
+      "slideId": "wd_s7",
+      "layout": "Bumper Slide",
+      "intent": "closing",
+      "spec": {
+        "layout": "closing",
+        "title": "Thank you",
+        "notes": "Bumper Slide. Centered smile on Ink. Optional Paper caption."
+      },
+      "notes": "Bumper Slide. Centered smile on Ink. Optional Paper caption.",
+      "requests": [
+        {
+          "createSlide": {
+            "objectId": "wd_s7",
+            "insertionIndex": 6,
+            "placeholderIdMappings": [
+              {
+                "layoutPlaceholder": {
+                  "type": "TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s7_title"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "CENTERED_TITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s7_ctitle"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "SUBTITLE",
+                  "index": 0
+                },
+                "objectId": "wd_s7_sub"
+              },
+              {
+                "layoutPlaceholder": {
+                  "type": "BODY",
+                  "index": 0
+                },
+                "objectId": "wd_s7_body"
+              }
+            ],
+            "slideLayoutReference": {
+              "layoutName": "Bumper Slide"
+            },
+            "predefinedLayoutFallback": "BLANK"
+          }
+        },
+        {
+          "createShape": {
+            "objectId": "wd_s7_caption",
+            "shapeType": "TEXT_BOX",
+            "elementProperties": {
+              "pageObjectId": "wd_s7",
+              "size": {
+                "width": {
+                  "magnitude": 6400800.0,
+                  "unit": "EMU"
+                },
+                "height": {
+                  "magnitude": 365760.0,
+                  "unit": "EMU"
+                }
+              },
+              "transform": {
+                "scaleX": 1,
+                "scaleY": 1,
+                "shearX": 0,
+                "shearY": 0,
+                "translateX": 1371600.0,
+                "translateY": 3273552.0,
+                "unit": "EMU"
+              }
+            }
+          }
+        },
+        {
+          "updateShapeProperties": {
+            "objectId": "wd_s7_caption",
+            "shapeProperties": {
+              "outline": {
+                "propertyState": "NOT_RENDERED"
+              }
+            },
+            "fields": "outline"
+          }
+        },
+        {
+          "insertText": {
+            "objectId": "wd_s7_caption",
+            "text": "Thank you",
+            "insertionIndex": 0
+          }
+        },
+        {
+          "updateTextStyle": {
+            "objectId": "wd_s7_caption",
+            "style": {
+              "fontFamily": "Archivo",
+              "weightedFontFamily": {
+                "fontFamily": "Archivo",
+                "weight": 400
+              },
+              "fontSize": {
+                "magnitude": 16,
+                "unit": "PT"
+              },
+              "bold": false,
+              "foregroundColor": {
+                "opaqueColor": {
+                  "rgbColor": {
+                    "red": 1.0,
+                    "green": 1.0,
+                    "blue": 1.0
+                  }
+                }
+              }
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+          }
+        },
+        {
+          "updateParagraphStyle": {
+            "objectId": "wd_s7_caption",
+            "style": {
+              "alignment": "CENTER"
+            },
+            "textRange": {
+              "type": "ALL"
+            },
+            "fields": "alignment"
+          }
+        }
+      ]
     }
   ],
   "auth": "dry-run"
