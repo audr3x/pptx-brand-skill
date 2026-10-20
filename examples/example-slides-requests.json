@@ -1,6 +1,14 @@
 {
   "title": "Planning workshop",
   "footer": "Workday Confidential",
+  "chrome": {
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png when a Drive ID/URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper."
+  },
   "pageSize": {
     "width": {
       "magnitude": 9144000.0,

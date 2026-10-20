@@ -73,7 +73,8 @@
   },
   "logo": {
     "smile": "assets/logos/workday-smile.png",
-    "smile_hex": "FC5B05"
+    "smile_hex": "FC5B05",
+    "cover_gradient": "assets/logos/cover-gradient.png"
   },
   "chart_series": [
     "1C98E8",

@@ -254,6 +254,7 @@ Extracted to `assets/logos/`. The template already embeds the same files on the 
 | File | What it is | Where the template uses it |
 | --- | --- | --- |
 | `workday-smile.png` | Full lockup: white "workday" wordmark plus orange smile `#FC5B05`. The wordmark is white, so it only reads on dark grounds (title and bumper). | Title Slide (top left), Bumper Slide (center) |
+| `cover-gradient.png` | 16:9 raster of `Day_Crop_5` (blue → cream → gold). Use this with Slides `createImage`. | Title Slide full bleed |
 | `gradient-day-crop.svg` | Yellow-to-navy vertical wash (`Day_Crop_5`) | Title Slide full bleed |
 | `gradient-day-crop-warm.svg` | Yellow-to-teal wash (`Day_Crop_1`) | Section Title wide rail, Layout 1 thin rail |
 | `glow-keyboard.svg` | Cream / gold intro glow (`Night_Glow_on_Keyboard`) | Intro layouts |

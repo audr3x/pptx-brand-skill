@@ -8,7 +8,7 @@ This repository is the brand system plus two small builders. It is not a dump of
 | --- | --- |
 | [BRAND.md](BRAND.md) | Colors, type, layouts, footer, table and chart rules |
 | [assets/template.pptx](assets/template.pptx) | Masters and layouts only, no sample slides |
-| [assets/logos/](assets/logos) | Smile mark and decorative gradients |
+| [assets/logos/](assets/logos) | Smile mark, `cover-gradient.png`, and decorative SVGs |
 | [assets/brand-tokens.json](assets/brand-tokens.json) | Machine-readable tokens |
 | [.cursor/skills/workday-pptx/SKILL.md](.cursor/skills/workday-pptx/SKILL.md) | How Cursor builds a `.pptx` |
 | [.cursor/skills/workday-google-slides/SKILL.md](.cursor/skills/workday-google-slides/SKILL.md) | How Cursor builds a Google Slides deck |
@@ -81,10 +81,18 @@ Same outline. Copy a Workday Slides template (never a blank theme), then fill la
 python3 scripts/build_slides.py examples/outline.yaml --dry-run \
   -o examples/example-slides-requests.json
 
+# One-time: upload cover-gradient.png and the smile lockup
+python3 scripts/build_slides.py --upload-assets --backend gws
+export WORKDAY_COVER_IMAGE_ID=...   # printed; also written to workday-slide-assets.json
+export WORKDAY_SMILE_IMAGE_ID=...
+
 # Two-phase connector for the Slides plugin:
 python3 scripts/build_slides.py examples/outline.yaml --phase creates -o creates.json
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
-  --presentation get.json -o fills.json
+  --presentation get.json \
+  --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
+  --smile-image-id "$WORKDAY_SMILE_IMAGE_ID" \
+  -o fills.json
 
 # First time: import the PPTX so Workday masters exist in Drive
 python3 scripts/build_slides.py examples/outline.yaml \

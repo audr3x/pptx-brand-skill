@@ -3,8 +3,8 @@
 
 Usage:
     python3 scripts/build_slides.py examples/outline.yaml --dry-run -o examples/example-slides-requests.json
-    python3 scripts/build_slides.py examples/outline.yaml --template-id "$WORKDAY_SLIDES_TEMPLATE_ID" --backend gws
-    python3 scripts/build_slides.py examples/outline.yaml --import-pptx assets/template.pptx --backend api
+    python3 scripts/build_slides.py --upload-assets --backend gws
+    python3 scripts/build_slides.py examples/outline.yaml --cover-image-id "$WORKDAY_COVER_IMAGE_ID" --backend gws
 """
 from __future__ import annotations
 
@@ -107,6 +107,10 @@ EMU_PER_INCH = 914400
 FOOTER_LEFT_IN = 0.50
 SECTION_RAIL_WIDTH_IN = 2.743
 TITLE_PLACEHOLDER_TYPES = ("TITLE", "CENTERED_TITLE", "CENTER_TITLE")
+COVER_PNG = ROOT / "assets" / "logos" / "cover-gradient.png"
+SMILE_PNG = ROOT / "assets" / "logos" / "workday-smile.png"
+SMILE_TITLE_BOX = (0.669, 0.515, 1.343, 0.635)
+SMILE_BUMPER_BOX = (3.392, 1.793, 3.216, 1.521)
 
 
 def hex_of(name_or_hex: str) -> str:
@@ -360,7 +364,7 @@ def create_box(
 
 
 def page_background_ops(slide_id: str, color: str) -> list[dict[str, Any]]:
-    """Slides drops layout pictures; set the slide fill so cream Keyboard cannot show through."""
+    """Solid fill under a dropped layout picture. Ballpoint on the cover, Ink on the bumper."""
     return [
         {
             "updatePageProperties": {
@@ -370,6 +374,42 @@ def page_background_ops(slide_id: str, color: str) -> list[dict[str, Any]]:
             }
         }
     ]
+
+
+def drive_download_url(file_id: str) -> str:
+    return f"https://drive.google.com/uc?export=download&id={file_id}"
+
+
+def create_image_ops(
+    object_id: str,
+    page: str,
+    url: str,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    *,
+    send_back: bool = False,
+) -> list[dict[str, Any]]:
+    ops: list[dict[str, Any]] = [
+        {
+            "createImage": {
+                "objectId": object_id,
+                "url": url,
+                "elementProperties": element_props(page, x, y, w, h),
+            }
+        }
+    ]
+    if send_back:
+        ops.append(
+            {
+                "updatePageElementsZOrder": {
+                    "pageElementObjectIds": [object_id],
+                    "operation": "SEND_TO_BACK",
+                }
+            }
+        )
+    return ops
 
 
 def create_rect(object_id: str, page: str, x: float, y: float, w: float, h: float, fill: str) -> list[dict[str, Any]]:
@@ -658,7 +698,7 @@ def two_column_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
     return ops
 
 
-def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
+def slide_plan(index: int, spec: dict[str, Any], footer: str, chrome: dict[str, Any] | None = None) -> dict[str, Any]:
     intent = spec.get("layout") or spec.get("intent") or "content"
     layout = layout_name(intent)
     slide_id = f"wd_s{index + 1}"
@@ -678,16 +718,25 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
     if layout in PREDEFINED_FALLBACK:
         create["predefinedLayoutFallback"] = PREDEFINED_FALLBACK[layout]
     requests.append({"createSlide": create})
-    # Layout pictures (Day Crop, smile) often do not copy. Paint the brand surface on the slide.
+    chrome = chrome or {}
+    cover_url = chrome.get("cover_url")
+    smile_url = chrome.get("smile_url")
+    # Layout pictures often do not copy. Solid fill is the fallback; createImage is the cover.
     if layout == "Title Slide":
         requests.extend(page_background_ops(slide_id, "ballpoint"))
+        if cover_url:
+            requests.extend(create_image_ops(f"{slide_id}_cover", slide_id, cover_url, 0.0, 0.0, 10.0, 5.625, send_back=True))
+        if smile_url:
+            requests.extend(create_image_ops(f"{slide_id}_smile", slide_id, smile_url, *SMILE_TITLE_BOX))
     elif layout == "Bumper Slide":
         requests.extend(page_background_ops(slide_id, "ink"))
+        if smile_url:
+            requests.extend(create_image_ops(f"{slide_id}_smile", slide_id, smile_url, *SMILE_BUMPER_BOX))
 
     title = spec.get("title")
     subtitle = spec.get("subtitle") or spec.get("subhead")
-    # Imported title layouts render the navy/blue of the Day Crop under the type.
-    cover_color = "paper" if layout == "Title Slide" else "ink"
+    # Reference cover: Ink on the cream/gold of Day Crop. Paper only on the flat Ballpoint fallback.
+    cover_color = "ink" if layout == "Title Slide" and cover_url else ("paper" if layout == "Title Slide" else "ink")
     if title and layout not in {"Section Title", "Bumper Slide"}:
         requests.extend(
             text_ops(
@@ -813,15 +862,27 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
     }
 
 
-def build_plan(outline: dict[str, Any]) -> dict[str, Any]:
+def build_plan(outline: dict[str, Any], chrome: dict[str, Any] | None = None) -> dict[str, Any]:
     footer = outline.get("footer", "Workday Confidential")
-    slides = [slide_plan(i, spec, footer) for i, spec in enumerate(outline.get("slides") or [])]
+    chrome = chrome or {}
+    slides = [slide_plan(i, spec, footer, chrome) for i, spec in enumerate(outline.get("slides") or [])]
     requests: list[dict[str, Any]] = []
     for slide in slides:
         requests.extend(slide["requests"])
     return {
         "title": outline.get("title") or "Workday presentation",
         "footer": footer,
+        "chrome": {
+            "coverImageId": chrome.get("cover_id"),
+            "smileImageId": chrome.get("smile_id"),
+            "coverImageUrl": chrome.get("cover_url"),
+            "smileImageUrl": chrome.get("smile_url"),
+            "coverText": "ink" if chrome.get("cover_url") else "paper",
+            "note": (
+                "Title Slide uses createImage of cover-gradient.png when a Drive ID/URL is set; "
+                "otherwise pageBackgroundFill is Ballpoint and cover type is Paper."
+            ),
+        },
         "pageSize": {
             "width": emu(10.0),
             "height": emu(5.625),
@@ -1090,6 +1151,93 @@ def bind_fills(plan: dict[str, Any], presentation: dict[str, Any]) -> list[dict[
     return fills
 
 
+def resolve_chrome(args: argparse.Namespace) -> dict[str, Any]:
+    cover_id = getattr(args, "cover_image_id", None) or os.environ.get("WORKDAY_COVER_IMAGE_ID")
+    smile_id = getattr(args, "smile_image_id", None) or os.environ.get("WORKDAY_SMILE_IMAGE_ID")
+    cover_url = getattr(args, "cover_image_url", None) or os.environ.get("WORKDAY_COVER_IMAGE_URL")
+    smile_url = getattr(args, "smile_image_url", None) or os.environ.get("WORKDAY_SMILE_IMAGE_URL")
+    ids_path = getattr(args, "assets_ids", None)
+    if ids_path:
+        data = json.loads(Path(ids_path).read_text())
+        cover_id = cover_id or data.get("WORKDAY_COVER_IMAGE_ID") or data.get("coverImageId")
+        smile_id = smile_id or data.get("WORKDAY_SMILE_IMAGE_ID") or data.get("smileImageId")
+        cover_url = cover_url or data.get("coverImageUrl")
+        smile_url = smile_url or data.get("smileImageUrl")
+    if cover_id and not cover_url:
+        cover_url = drive_download_url(cover_id)
+    if smile_id and not smile_url:
+        smile_url = drive_download_url(smile_id)
+    return {
+        "cover_id": cover_id,
+        "smile_id": smile_id,
+        "cover_url": cover_url,
+        "smile_url": smile_url,
+    }
+
+
+def share_anyone(backend: str, file_id: str) -> None:
+    body = {"type": "anyone", "role": "reader"}
+    if backend == "gws":
+        run_gws(["drive", "permissions", "create"], params={"fileId": file_id}, body=body)
+        return
+    drive, _, _ = api_services()
+    drive.permissions().create(fileId=file_id, body=body).execute()
+
+
+def upload_drive_png(backend: str, path: Path, name: str) -> str:
+    if not path.is_file():
+        raise SystemExit(f"Asset not found: {path}. Run python3 scripts/export_cover_assets.py")
+    if backend == "gws":
+        created = run_gws(
+            ["drive", "files", "create"],
+            body={"name": name, "mimeType": "image/png"},
+            upload=path,
+        )
+        file_id = created.get("id") or created.get("fileId")
+        if not file_id:
+            raise SystemExit(f"gws upload did not return an id: {created}")
+        return file_id
+    drive, _, MediaFileUpload = api_services()
+    media = MediaFileUpload(str(path), mimetype="image/png", resumable=True)
+    created = drive.files().create(body={"name": name, "mimeType": "image/png"}, media_body=media, fields="id").execute()
+    return created["id"]
+
+
+def upload_assets(args: argparse.Namespace) -> dict[str, str]:
+    backend = args.backend or "gws"
+    cover_id = upload_drive_png(backend, COVER_PNG, "Workday cover gradient")
+    smile_id = upload_drive_png(backend, SMILE_PNG, "Workday smile lockup")
+    if not args.keep_private:
+        try:
+            share_anyone(backend, cover_id)
+            share_anyone(backend, smile_id)
+        except SystemExit:
+            raise
+        except Exception as exc:
+            print(
+                f"warning: could not share the PNGs as anyone-with-link ({exc}). "
+                "createImage needs a URL Slides can fetch. Share the files or pass a public --cover-image-url.",
+                file=sys.stderr,
+            )
+    payload = {
+        "WORKDAY_COVER_IMAGE_ID": cover_id,
+        "WORKDAY_SMILE_IMAGE_ID": smile_id,
+        "coverImageId": cover_id,
+        "smileImageId": smile_id,
+        "coverImageUrl": drive_download_url(cover_id),
+        "smileImageUrl": drive_download_url(smile_id),
+        "note": "createImage needs anyone-with-link (or a public URL). These IDs are brand assets, not deck copy.",
+    }
+    dest = args.output or Path("workday-slide-assets.json")
+    dest.write_text(json.dumps(payload, indent=2) + "\n")
+    print(f"Uploaded cover {cover_id}")
+    print(f"Uploaded smile {smile_id}")
+    print(f"Wrote {dest}")
+    print(f'export WORKDAY_COVER_IMAGE_ID="{cover_id}"')
+    print(f'export WORKDAY_SMILE_IMAGE_ID="{smile_id}"')
+    return payload
+
+
 def apply(outline: dict[str, Any], plan: dict[str, Any], args: argparse.Namespace) -> str:
     backend = args.backend
     template_id = args.template_id or os.environ.get("WORKDAY_SLIDES_TEMPLATE_ID")
@@ -1121,7 +1269,7 @@ def apply(outline: dict[str, Any], plan: dict[str, Any], args: argparse.Namespac
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build a Workday-branded Google Slides deck from an outline.")
-    parser.add_argument("outline", type=Path, help="JSON or YAML outline (same shape as build_deck.py)")
+    parser.add_argument("outline", type=Path, nargs="?", help="JSON or YAML outline (same shape as build_deck.py)")
     parser.add_argument("-o", "--output", type=Path, default=None, help="Write the request plan JSON here")
     parser.add_argument("--dry-run", action="store_true", help="Write the full plan, including slidePlans. No Google calls.")
     parser.add_argument(
@@ -1144,9 +1292,37 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="If a Workday layout is missing, fall back to a Google predefined layout (off-brand chrome).",
     )
+    parser.add_argument(
+        "--upload-assets",
+        action="store_true",
+        help="One-time: upload cover-gradient.png and workday-smile.png to Drive and write their IDs.",
+    )
+    parser.add_argument(
+        "--keep-private",
+        action="store_true",
+        help="With --upload-assets, do not set anyone-with-link. createImage will fail unless you pass a public URL.",
+    )
+    parser.add_argument("--cover-image-id", default=None, help="Drive file ID for assets/logos/cover-gradient.png")
+    parser.add_argument("--smile-image-id", default=None, help="Drive file ID for assets/logos/workday-smile.png")
+    parser.add_argument("--cover-image-url", default=None, help="Public URL for the cover PNG (overrides the Drive ID URL)")
+    parser.add_argument("--smile-image-url", default=None, help="Public URL for the smile PNG")
+    parser.add_argument(
+        "--assets-ids",
+        type=Path,
+        default=None,
+        help="JSON from --upload-assets (WORKDAY_COVER_IMAGE_ID / WORKDAY_SMILE_IMAGE_ID).",
+    )
     args = parser.parse_args(argv)
+    if args.upload_assets:
+        if not args.backend:
+            raise SystemExit("--upload-assets needs --backend gws or --backend api.")
+        upload_assets(args)
+        return 0
+    if args.outline is None:
+        raise SystemExit("Pass an outline, or --upload-assets.")
     outline = load_outline(args.outline)
-    plan = build_plan(outline)
+    chrome = resolve_chrome(args)
+    plan = build_plan(outline, chrome)
     dest = args.output
     if dest is None and args.dry_run:
         dest = args.outline.with_name("example-slides-requests.json")
@@ -1160,10 +1336,11 @@ def main(argv: list[str] | None = None) -> int:
         payload = {
             "phase": "creates",
             "title": plan["title"],
+            "chrome": plan.get("chrome"),
             "note": (
                 "Send these createSlide requests. If slideLayoutReference still has layoutName, "
                 "replace it with layouts[].objectId from presentations.get (match displayName, strip space). "
-                "Keep the planned objectId values (wd_s1, …)."
+                "Keep the planned objectId values (wd_s1, …). Cover createImage requests are in --phase fills."
             ),
             "requests": create_phase_requests(plan, layouts, args.allow_predefined),
         }
@@ -1179,7 +1356,11 @@ def main(argv: list[str] | None = None) -> int:
         payload = {
             "phase": "fills",
             "title": plan["title"],
-            "note": "Send these batchUpdate requests against the copied deck after phase 1.",
+            "chrome": plan.get("chrome"),
+            "note": (
+                "Send these batchUpdate requests against the copied deck after phase 1. "
+                "Pass --cover-image-id / --smile-image-id (or --assets-ids) so Title Slide gets the Day Crop PNG."
+            ),
             "requests": bind_fills(plan, presentation),
         }
         dest.parent.mkdir(parents=True, exist_ok=True)
