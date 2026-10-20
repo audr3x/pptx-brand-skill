@@ -1,0 +1,65 @@
+title: Planning workshop
+subtitle: Sample deck for the Workday PPTX skill
+date: October 2026
+author: Workday
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Planning workshop
+    subtitle: Sample deck for the Workday PPTX skill
+    date: October 2026
+    notes: Cover. Gradient and smile come from the Title Slide layout.
+
+  - layout: section
+    eyebrow: Agenda
+    title: What we will cover
+    notes: Section Title layout. Title is drawn in the open field beside the rail.
+
+  - layout: content
+    title: Working agreements
+    bullets:
+      - One idea per slide
+      - Six bullets at most
+      - Core palette first, secondary colors rarely
+      - Archivo for titles, Archivo Light for body
+      - Leave the footer band clear
+    notes: Title and Content layout. Bullets use the layout list style.
+
+  - layout: two-column
+    title: Delivery model
+    items:
+      - title: Discover
+        body: Frame the problem, the users, and the outcome before anything is built.
+      - title: Build
+        body: Ship a thin slice, review it with the team, and keep the scope honest.
+      - title: Adopt
+        body: Train the people who will run it and measure whether they actually use it.
+    notes: Half-width title on the left. Numbered items on the right.
+
+  - layout: table
+    title: Sample timeline
+    headers:
+      - Phase
+      - Owner
+      - Status
+    rows:
+      - [Discover, Research, Complete]
+      - [Build, Product, In progress]
+      - [Adopt, Operations, Next]
+    notes: Title Only layout plus an on-brand table in the content well.
+
+  - layout: chart
+    title: Sample volume
+    chart:
+      type: column
+      categories: [January, February, March, April]
+      series:
+        - name: Requests
+          values: [12, 18, 15, 22]
+        - name: Completed
+          values: [9, 14, 13, 19]
+    notes: Column chart using Water Cooler then Lunch Break.
+
+  - layout: closing
+    title: Thank you
+    notes: Bumper Slide. Centered smile on Ink. Optional Paper caption.
