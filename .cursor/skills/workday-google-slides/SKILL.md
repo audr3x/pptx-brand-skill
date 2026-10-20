@@ -108,7 +108,7 @@ Drive plugin: `copy_file` with that `fileId` and the deliverable title.
 
 5. Fill placeholders with `insertText` + `updateTextStyle`. Send `deleteText` **only** when the shape already has text. Empty new placeholders error on `deleteText ALL`.
 
-6. Draw missing chrome: section rail (2.743 in Tack / Keyboard / Lunch Break stack — the PPTX picture often does not copy), half-headline items, footer box at **x = 0.50 in**, cover date, bumper caption.
+6. Draw missing chrome: `updatePageProperties` page fill on Title Slide (**Ballpoint**) and Bumper Slide (**Ink**) — Slides drops the Day Crop / Ink pictures and Keyboard cream shows through. Section rail (2.743 in Tack / Keyboard / Lunch Break stack), half-headline items, footer box at **x = 0.50 in**, cover date, bumper caption.
 
 7. Read the deck again. Check fonts, fills, footer, contrast.
 
@@ -139,7 +139,8 @@ If a Workday `layoutId` is missing (import dropped it), stop and re-import. Do n
 - **Colors.** Only tokens in `BRAND.md` / `assets/brand-tokens.json`. Prefer theme slots on the copied deck (`dk1` = Ink, `accent1` = Water Cooler) when they still match. Otherwise RGB from the token file. If a hex is not in that file, do not use it.
 - **Type.** `fontFamily` is always **Archivo**. Body uses `weightedFontFamily: {fontFamily: "Archivo", weight: 300}` (do not send `Archivo Light` — Google falls back to a serif). Titles use weight 400, or 700 when bold. Include `weightedFontFamily` in `fields`. Enable Archivo from Google Fonts if you can. Arial is the last-resort fallback. Never switch to Calibri, Inter, Roboto, or Proxima Nova.
 - **Sizes.** Cover 36 pt. Slide / section title 28 pt bold Ink (Paper on Title Slide). Body 18–20 pt. Footer 8 pt Staple `#7D8B99` at **x = 0.50 in** (Ink on the gold section rail).
-- **Title Slide.** Paper (`#FFFFFF`) for title, subtitle, and date. Ink disappears on the blue Day Crop.
+- **Title Slide.** Set `pageBackgroundFill` to Ballpoint (`#0057AE`) on the slide itself. The PPTX Day Crop picture often does not copy, and the leftover theme fill is Keyboard cream. Paper (`#FFFFFF`) for title, subtitle, and date.
+- **Bumper Slide.** Set `pageBackgroundFill` to Ink (`#0F2E66`). Paper caption under the smile.
 - **Bullets.** At most about 6. Use `createParagraphBullets` `BULLET_DISC_CIRCLE_SQUARE`. Do not type `•` into the run.
 - **Footer.** `Workday Confidential`. No slide numbers.
 - **Logo.** Title Slide and Bumper Slide already carry the white lockup. Do not recolor it or drop it on Paper.
@@ -231,4 +232,4 @@ Charts: the builder draws Water Cooler / Lunch Break columns so a deck does not 
 
 ## Visual check
 
-After a live apply, open `https://docs.google.com/presentation/d/<id>/edit` and look at every slide (plugin thumbnail or Drive export PDF). Confirm Paper type on the title slide, Ink on Paper elsewhere, a visible gold/teal section rail, footer at the 0.50 in inset, Archivo (not a serif fallback), smile on title and bumper only, and no leftover master prompts. On the table slide, check Water Cooler headers, Keyboard / Business Card rows, and a closed Desk rule.
+After a live apply, open `https://docs.google.com/presentation/d/<id>/edit` and look at every slide (plugin thumbnail or Drive export PDF). Confirm the title slide is Ballpoint/blue (not Keyboard cream) with Paper type, the bumper is Ink, Ink on Paper elsewhere, a visible gold/teal section rail, footer at the 0.50 in inset, Archivo (not a serif fallback), smile on title and bumper only, and no leftover master prompts. On the table slide, check Water Cooler headers, Keyboard / Business Card rows, and a closed Desk rule. Chart month labels should sit under their bar pair.

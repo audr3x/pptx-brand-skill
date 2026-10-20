@@ -98,6 +98,25 @@
       }
     },
     {
+      "updatePageProperties": {
+        "objectId": "wd_s1",
+        "pageProperties": {
+          "pageBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.0,
+                  "green": 0.3411764705882353,
+                  "blue": 0.6823529411764706
+                }
+              }
+            }
+          }
+        },
+        "fields": "pageBackgroundFill"
+      }
+    },
+    {
       "insertText": {
         "objectId": "wd_s1_title",
         "text": "Planning workshop",
@@ -2998,7 +3017,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 603504.0,
+            "translateX": 1019556.0,
             "translateY": 2660072.73,
             "unit": "EMU"
           }
@@ -3048,7 +3067,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 914400.0,
+            "translateX": 1330452.0,
             "translateY": 3046614.55,
             "unit": "EMU"
           }
@@ -3186,7 +3205,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 2295144.0,
+            "translateX": 2711196.0,
             "translateY": 1886989.09,
             "unit": "EMU"
           }
@@ -3236,7 +3255,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 2606040.0,
+            "translateX": 3022092.0,
             "translateY": 2402378.18,
             "unit": "EMU"
           }
@@ -3374,7 +3393,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 3986784.0,
+            "translateX": 4402836.0,
             "translateY": 2273530.91,
             "unit": "EMU"
           }
@@ -3424,7 +3443,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 4297680.0,
+            "translateX": 4713732.0,
             "translateY": 2531225.45,
             "unit": "EMU"
           }
@@ -3562,7 +3581,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 5678424.0,
+            "translateX": 6094476.0,
             "translateY": 1371600.0,
             "unit": "EMU"
           }
@@ -3612,7 +3631,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 5989320.0,
+            "translateX": 6405372.0,
             "translateY": 1758141.82,
             "unit": "EMU"
           }
@@ -4010,6 +4029,25 @@
       }
     },
     {
+      "updatePageProperties": {
+        "objectId": "wd_s7",
+        "pageProperties": {
+          "pageBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.058823529411764705,
+                  "green": 0.1803921568627451,
+                  "blue": 0.4
+                }
+              }
+            }
+          }
+        },
+        "fields": "pageBackgroundFill"
+      }
+    },
+    {
       "createShape": {
         "objectId": "wd_s7_caption",
         "shapeType": "TEXT_BOX",
@@ -4150,6 +4188,25 @@
               "layoutName": "Title Slide"
             },
             "predefinedLayoutFallback": "TITLE"
+          }
+        },
+        {
+          "updatePageProperties": {
+            "objectId": "wd_s1",
+            "pageProperties": {
+              "pageBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.0,
+                      "green": 0.3411764705882353,
+                      "blue": 0.6823529411764706
+                    }
+                  }
+                }
+              }
+            },
+            "fields": "pageBackgroundFill"
           }
         },
         {
@@ -7191,7 +7248,7 @@
                 "scaleY": 1,
                 "shearX": 0,
                 "shearY": 0,
-                "translateX": 603504.0,
+                "translateX": 1019556.0,
                 "translateY": 2660072.73,
                 "unit": "EMU"
               }
@@ -7241,7 +7298,7 @@
                 "scaleY": 1,
                 "shearX": 0,
                 "shearY": 0,
-                "translateX": 914400.0,
+                "translateX": 1330452.0,
                 "translateY": 3046614.55,
                 "unit": "EMU"
               }
@@ -7379,7 +7436,7 @@
                 "scaleY": 1,
                 "shearX": 0,
                 "shearY": 0,
-                "translateX": 2295144.0,
+                "translateX": 2711196.0,
                 "translateY": 1886989.09,
                 "unit": "EMU"
               }
@@ -7429,7 +7486,7 @@
                 "scaleY": 1,
                 "shearX": 0,
                 "shearY": 0,
-                "translateX": 2606040.0,
+                "translateX": 3022092.0,
                 "translateY": 2402378.18,
                 "unit": "EMU"
               }
@@ -7567,7 +7624,7 @@
                 "scaleY": 1,
                 "shearX": 0,
                 "shearY": 0,
-                "translateX": 3986784.0,
+                "translateX": 4402836.0,
                 "translateY": 2273530.91,
                 "unit": "EMU"
               }
@@ -7617,7 +7674,7 @@
                 "scaleY": 1,
                 "shearX": 0,
                 "shearY": 0,
-                "translateX": 4297680.0,
+                "translateX": 4713732.0,
                 "translateY": 2531225.45,
                 "unit": "EMU"
               }
@@ -7755,7 +7812,7 @@
                 "scaleY": 1,
                 "shearX": 0,
                 "shearY": 0,
-                "translateX": 5678424.0,
+                "translateX": 6094476.0,
                 "translateY": 1371600.0,
                 "unit": "EMU"
               }
@@ -7805,7 +7862,7 @@
                 "scaleY": 1,
                 "shearX": 0,
                 "shearY": 0,
-                "translateX": 5989320.0,
+                "translateX": 6405372.0,
                 "translateY": 1758141.82,
                 "unit": "EMU"
               }
@@ -8213,6 +8270,25 @@
               "layoutName": "Bumper Slide"
             },
             "predefinedLayoutFallback": "BLANK"
+          }
+        },
+        {
+          "updatePageProperties": {
+            "objectId": "wd_s7",
+            "pageProperties": {
+              "pageBackgroundFill": {
+                "solidFill": {
+                  "color": {
+                    "rgbColor": {
+                      "red": 0.058823529411764705,
+                      "green": 0.1803921568627451,
+                      "blue": 0.4
+                    }
+                  }
+                }
+              }
+            },
+            "fields": "pageBackgroundFill"
           }
         },
         {

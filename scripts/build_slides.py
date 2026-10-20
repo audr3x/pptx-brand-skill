@@ -359,6 +359,19 @@ def create_box(
     return ops
 
 
+def page_background_ops(slide_id: str, color: str) -> list[dict[str, Any]]:
+    """Slides drops layout pictures; set the slide fill so cream Keyboard cannot show through."""
+    return [
+        {
+            "updatePageProperties": {
+                "objectId": slide_id,
+                "pageProperties": {"pageBackgroundFill": solid(color)},
+                "fields": "pageBackgroundFill",
+            }
+        }
+    ]
+
+
 def create_rect(object_id: str, page: str, x: float, y: float, w: float, h: float, fill: str) -> list[dict[str, Any]]:
     return [
         {
@@ -532,8 +545,11 @@ def chart_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
     n_ser = len(series_list)
     group_w = plot_w / n_cat
     bar_w = min(0.28, (group_w * 0.6) / max(n_ser, 1))
+    bar_gap = 0.06
+    cluster_w = n_ser * bar_w + max(n_ser - 1, 0) * bar_gap
     for i, cat in enumerate(categories):
         gx = plot_x + i * group_w
+        cluster_left = gx + (group_w - cluster_w) / 2
         ops.extend(
             create_box(
                 f"{slide_id}_cat_{i}",
@@ -554,7 +570,7 @@ def chart_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
             values = series.get("values") or []
             val = float(values[i]) if i < len(values) else 0
             h = max(0.06, plot_h * (val / max_val))
-            x = gx + 0.16 + s * (bar_w + 0.06)
+            x = cluster_left + s * (bar_w + bar_gap)
             y = plot_y + plot_h - h
             ops.extend(create_rect(f"{slide_id}_bar_{i}_{s}", slide_id, x, y, bar_w, h, CHART_SERIES[s % len(CHART_SERIES)]))
     legend_x = 8.10
@@ -662,6 +678,11 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
     if layout in PREDEFINED_FALLBACK:
         create["predefinedLayoutFallback"] = PREDEFINED_FALLBACK[layout]
     requests.append({"createSlide": create})
+    # Layout pictures (Day Crop, smile) often do not copy. Paint the brand surface on the slide.
+    if layout == "Title Slide":
+        requests.extend(page_background_ops(slide_id, "ballpoint"))
+    elif layout == "Bumper Slide":
+        requests.extend(page_background_ops(slide_id, "ink"))
 
     title = spec.get("title")
     subtitle = spec.get("subtitle") or spec.get("subhead")
