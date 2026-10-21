@@ -202,6 +202,47 @@ class BrandSystemTests(unittest.TestCase):
         self.assertIn('"wd_s3_speaker_2_company"', requests)
         self.assertIn('"wd_s4_speaker_3_company"', requests)
 
+    def test_agenda_numbers_fallback_and_title_clears_items(self):
+        outline = {
+            "title": "Agenda test",
+            "footer": "Workday Confidential",
+            "slides": [
+                {
+                    "layout": "agenda",
+                    "title": "Agenda",
+                    "items": [
+                        {"title": "Discover", "body": "Frame the problem"},
+                        {"title": "Build", "body": "Ship a thin slice"},
+                        "Adopt",
+                    ],
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "agenda.pptx"
+            build(outline, ROOT / "assets" / "template.pptx", output)
+            slide = Presentation(str(output)).slides[0]
+            labeled = {
+                shape.text: shape
+                for shape in slide.shapes
+                if getattr(shape, "has_text_frame", False) and shape.text
+            }
+            self.assertIn("01", labeled)
+            self.assertIn("02", labeled)
+            self.assertIn("03", labeled)
+            self.assertNotIn("None", labeled)
+            title = labeled["AGENDA"]
+            first_number = labeled["01"]
+            first_heading = labeled["Discover\nFrame the problem"]
+            self.assertLessEqual(title.top + title.height, first_number.top)
+            self.assertLessEqual(title.top + title.height, first_heading.top)
+
+        plan = json.dumps(build_plan(outline)["requests"])
+        self.assertIn('"text": "01"', plan)
+        self.assertIn('"text": "02"', plan)
+        self.assertIn('"text": "03"', plan)
+        self.assertNotIn('"text": "None"', plan)
+
     def test_live_request_binding_preserves_connector_ids(self):
         outline = {
             "slides": [

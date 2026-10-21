@@ -662,7 +662,7 @@ def add_photo_right_items(slide, items: list[Any]):
 
 
 def add_agenda(slide, spec: Mapping[str, Any]):
-    left, top, width, height = BRAND.region("section_eyebrow")
+    left, top, width, height = BRAND.region("agenda_title")
     add_textbox(
         slide,
         left,
@@ -676,7 +676,9 @@ def add_agenda(slide, spec: Mapping[str, Any]):
     )
     for i, item in enumerate(spec.get("items") or []):
         heading, body = item_copy(item)
-        number = str(item.get("number") if isinstance(item, dict) else i + 1)
+        number = str(
+            (item.get("number") if isinstance(item, dict) else None) or i + 1
+        )
         left, top, width, height = BRAND.stack_region(
             "agenda_items", "number", i
         )

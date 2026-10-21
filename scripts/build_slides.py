@@ -990,7 +990,7 @@ def freeform_ops(slide_id: str, normalized: NormalizedSlide) -> list[dict[str, A
 
 
 def agenda_ops(slide_id: str, spec: Mapping[str, Any]) -> list[dict[str, Any]]:
-    x, y, w, h = BRAND.region("section_eyebrow")
+    x, y, w, h = BRAND.region("agenda_title")
     ops = create_box(
         f"{slide_id}_agenda_title",
         slide_id,
@@ -1006,7 +1006,9 @@ def agenda_ops(slide_id: str, spec: Mapping[str, Any]) -> list[dict[str, Any]]:
     )
     for i, item in enumerate(spec.get("items") or []):
         heading, body = item_copy(item)
-        number = str(item.get("number") if isinstance(item, dict) else i + 1)
+        number = str(
+            (item.get("number") if isinstance(item, dict) else None) or i + 1
+        )
         x, y, w, h = BRAND.stack_region("agenda_items", "number", i)
         ops.extend(
             create_box(
