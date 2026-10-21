@@ -5,7 +5,7 @@ description: Generate on-brand Workday Google Slides decks from a brief or outli
 
 # Workday Google Slides
 
-Same brand system as [workday-pptx](../workday-pptx/SKILL.md), on Google Slides. Read [BRAND.md](../../../BRAND.md) first. Do not invent colors, fonts, or chrome.
+Same brand system as [workday-pptx](../workday-pptx/SKILL.md), on Google Slides. Team setup is in [GETTING_STARTED.md](../../../GETTING_STARTED.md). Read [BRAND.md](../../../BRAND.md) first. Do not invent colors, fonts, or chrome.
 
 Workday has no canonical public Slides ID in this repo. You either import [assets/template.pptx](../../../assets/template.pptx) once, or the user hands you a template deck ID. After that, **copy the template and edit only the copy**.
 

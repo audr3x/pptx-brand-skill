@@ -99,6 +99,19 @@ PREDEFINED_FALLBACK = {
     "3-Photos": "TITLE_ONLY",
 }
 
+# Only map placeholders that exist on that Workday layout. Extra types fail createSlide.
+LAYOUT_PLACEHOLDERS = {
+    "Title Slide": (("CENTERED_TITLE", "title"), ("SUBTITLE", "sub")),
+    "Title and Content": (("TITLE", "title"), ("BODY", "body")),
+    "Title Only": (("TITLE", "title"),),
+    "Title Only_Alt": (("TITLE", "title"),),
+    "1/2_Headline": (("TITLE", "title"),),
+    "1/2 Headline_Alt": (("TITLE", "title"),),
+    "Photo-Right": (("TITLE", "title"),),
+    "3-Photos": (("TITLE", "title"),),
+    "Intro_One": (("TITLE", "title"),),
+}
+
 NO_FOOTER = {"Title Slide", "Bumper Slide"}
 MAX_BULLETS = 6
 FONT_TITLE = "Archivo"
@@ -704,10 +717,8 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str, chrome: dict[str, 
     slide_id = f"wd_s{index + 1}"
     requests: list[dict[str, Any]] = []
     mappings = [
-        {"layoutPlaceholder": {"type": "TITLE", "index": 0}, "objectId": f"{slide_id}_title"},
-        {"layoutPlaceholder": {"type": "CENTERED_TITLE", "index": 0}, "objectId": f"{slide_id}_ctitle"},
-        {"layoutPlaceholder": {"type": "SUBTITLE", "index": 0}, "objectId": f"{slide_id}_sub"},
-        {"layoutPlaceholder": {"type": "BODY", "index": 0}, "objectId": f"{slide_id}_body"},
+        {"layoutPlaceholder": {"type": ph_type, "index": 0}, "objectId": f"{slide_id}_{suffix}"}
+        for ph_type, suffix in LAYOUT_PLACEHOLDERS.get(layout, ())
     ]
     create: dict[str, Any] = {
         "objectId": slide_id,
@@ -918,7 +929,8 @@ def resolve_create_slide(
     name = (ref.get("layoutName") or "").strip()
     resolved = dict(create)
     fallback = resolved.pop("predefinedLayoutFallback", None)
-    resolved.pop("placeholderIdMappings", None)
+    if not resolved.get("placeholderIdMappings"):
+        resolved.pop("placeholderIdMappings", None)
     if name and name.lower() in layouts:
         resolved["slideLayoutReference"] = {"layoutId": layouts[name.lower()]}
     elif allow_predefined and fallback:
@@ -1350,18 +1362,26 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.phase == "fills":
-        if not args.presentation:
-            raise SystemExit("--phase fills requires --presentation pointing at presentations.get JSON.")
-        presentation = load_presentation_json(args.presentation)
+        if args.presentation:
+            presentation = load_presentation_json(args.presentation)
+            fill_requests = bind_fills(plan, presentation)
+            fill_note = (
+                "Send these batchUpdate requests against the copied deck after phase 1. "
+                "IDs are bound to the GET payload."
+            )
+        else:
+            fill_requests = [req for req in plan["requests"] if "createSlide" not in req]
+            fill_note = (
+                "Send these after the createSlide batch. Slide IDs are the planned wd_sN values. "
+                "Placeholder mappings in creates.json pin title, subtitle, and body to wd_sN_title / _sub / _body. "
+                "If createSlide assigned different IDs, re-run with --presentation get.json."
+            )
         payload = {
             "phase": "fills",
             "title": plan["title"],
             "chrome": plan.get("chrome"),
-            "note": (
-                "Send these batchUpdate requests against the copied deck after phase 1. "
-                "Pass --cover-image-id / --smile-image-id (or --assets-ids) so Title Slide gets the Day Crop PNG."
-            ),
-            "requests": bind_fills(plan, presentation),
+            "note": fill_note,
+            "requests": fill_requests,
         }
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(json.dumps(payload, indent=2) + "\n")
