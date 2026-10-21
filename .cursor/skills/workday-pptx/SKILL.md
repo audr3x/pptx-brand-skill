@@ -14,9 +14,10 @@ For Google Slides, use [workday-google-slides](../workday-google-slides/SKILL.md
 1. Turn the brief into a short slide list. One idea per slide.
 2. Pick a layout by intent (table below). Do not invent a new master.
 3. Write a JSON or YAML outline (see [examples/outline.yaml](../../../examples/outline.yaml)).
-4. Build:
+4. Validate the template and registry, then build:
 
 ```bash
+python3 scripts/validate_brand.py
 python3 scripts/build_deck.py examples/outline.yaml -o out/deck.pptx
 ```
 
@@ -35,13 +36,21 @@ If the outline is the wrong tool (heavy custom drawing on `Title Only`), still s
 | Table | `table` | Title Only | `title`, `headers`, `rows` |
 | Chart | `chart` | Title Only | `title`, `chart.type/categories/series` |
 | Closing | `closing` | Bumper Slide | optional `title` under the smile |
-| Intro | `intro` | Intro_One | `name`, `role`, `company`, optional `image` |
-| Photo right | `photo-right` | Photo-Right | `title`, `image` |
-| Blank | `blank` | Blank White Background | last resort |
+| One speaker | `intro` / `intro-one` | Intro_One | one entry in `speakers`, or the legacy `name` / `role` / `company` fields |
+| Three speakers | `intro-three` | Intro_Three | exactly 3 `speakers` |
+| Four speakers | `intro-four` | Intro_Four | exactly 4 `speakers` |
+| Warm feature grid | `feature-grid` | Title Only_Alt | `title`, optional `subtitle`, 3 `items` |
+| Compact half-headline | `two-column-alt` | 1/2 Headline_Alt | `title`, up to 6 `items` |
+| Agenda | `agenda` | Section Title | `title`, up to 6 `items` |
+| Rail content | `rail` | Layout 1 | `title`, `body` |
+| Three photos | `three-photos` | 3-Photos | `title`, exactly 3 `images` |
+| Photo right | `photo-right` | Photo-Right | `title`, `image`, optional `items` |
+| Timeline | `timeline` | Title Only | `title`, up to 7 `items` |
+| Blank | `blank` | Blank White Background | optional `title` and `body`; last resort |
 
-Exact names, indexes, and geometry are in `BRAND.md`. The content layout's XML name is `Title and Content ` (trailing space). The builder matches names case-insensitively and strips whitespace.
+`assets/brand-tokens.json` is the programmatic source for colors, exact layout names, placeholder indexes, limits, and geometry. `scripts/brand.py` validates that registry and normalizes outlines for both builders. Do not copy those values into a builder.
 
-Many layouts are chrome only. `Section Title` has a footer and a left gradient, not a title placeholder. `1/2_Headline` has a left title only. `Bumper Slide` has the smile and nothing else. Draw the missing copy in the positions from `BRAND.md`.
+The content layout's XML name is `Title and Content ` with a trailing space. The registry keeps the exact template name. The builder strips whitespace only when it locates the layout.
 
 ## Outline shape
 
@@ -66,11 +75,13 @@ slides:
 
 Supported slide fields: `layout` (or `intent`), `title`, `subtitle` / `subhead`, `date`, `eyebrow`, `bullets` / `body`, `items` (`title` + `body`), `headers`, `rows`, `chart`, `name`, `role`, `company`, `image`, `footer`, `notes`.
 
+Intro layouts accept `speakers`. Each speaker can contain `name`, `role`, `company`, and optional `image`. `three-photos` accepts `images`.
+
 Chart types: `column`, `bar`, `line`, `pie`.
 
 ## Brand rules the agent must keep
 
-- **Colors.** Only tokens in `BRAND.md` / `assets/brand-tokens.json`. Core palette first. Secondary palette rarely. If a hex is not in that file, do not use it.
+- **Colors.** Only tokens in `assets/brand-tokens.json`. Core palette first. Secondary palette rarely. Blue Sky is `#9ECFFF`; do not copy the conflicting sample swatch fill.
 - **Type.** Archivo for titles, Archivo Light for body. Arial is the theme fallback. Never switch to Calibri, Inter, Roboto, or Proxima Nova.
 - **Sizes.** Cover title 36 pt. Slide / section title 28 pt bold Ink. Body 18 to 20 pt. Footer 8 pt Staple `#7D8B99`.
 - **Bullets.** At most about 6. Ink `•` from the placeholder style. Do not type a unicode bullet into the run.

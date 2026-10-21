@@ -10,6 +10,8 @@ This repository is the brand system plus two small builders. It is not a dump of
 | [assets/template.pptx](assets/template.pptx) | Masters and layouts only, no sample slides |
 | [assets/logos/](assets/logos) | Smile mark and decorative gradients |
 | [assets/brand-tokens.json](assets/brand-tokens.json) | Machine-readable tokens |
+| [scripts/brand.py](scripts/brand.py) | Validated brand registry and outline normalizer |
+| [scripts/validate_brand.py](scripts/validate_brand.py) | Template, registry, and skill validator |
 | [.cursor/skills/workday-pptx/SKILL.md](.cursor/skills/workday-pptx/SKILL.md) | How Cursor builds a `.pptx` |
 | [.cursor/skills/workday-google-slides/SKILL.md](.cursor/skills/workday-google-slides/SKILL.md) | How Cursor builds a Google Slides deck |
 | [scripts/build_deck.py](scripts/build_deck.py) | Outline to `.pptx` |
@@ -70,7 +72,9 @@ slides:
       - Six bullets at most
 ```
 
-The builder opens `assets/template.pptx`, adds slides from the real Workday layouts, and paints tables and charts with the named tokens. It refuses unknown hex colors.
+The builder opens `assets/template.pptx`, adds slides from the real Workday layouts, and paints tables and charts with the named tokens. It refuses unknown hex colors and invalid layout payloads.
+
+The shared registry supports all 15 template layouts. It also defines reusable patterns for multi-speaker intros, feature grids, compact half-headlines, agendas, rail content, photo stories, timelines, tables, and charts.
 
 ## Use the Google Slides builder
 
@@ -106,7 +110,21 @@ Designed type is **Archivo** and **Archivo Light**. The Office theme fallback is
 ## Rules of the road
 
 - Start from `assets/template.pptx` (PowerPoint) or a copy of the imported Slides template. Do not build a Workday deck from a blank theme.
-- Use only colors in `BRAND.md`.
+- Treat `assets/brand-tokens.json` as the programmatic source. Do not copy its values into a builder.
 - Leave `Workday Confidential` in the footer placeholder.
 - Do not put confidential customer copy into this repo.
 - Do not commit Google credentials, `gws` tokens, or `.env` files.
+
+## Verify changes
+
+```bash
+python3 scripts/validate_brand.py
+python3 -m unittest discover -s tests -v
+```
+
+To compare the registry with the extraction source, pass the original deck explicitly:
+
+```bash
+python3 scripts/validate_brand.py \
+  --source "/path/to/Workday Corporate PowerPoint Template 2.pptx"
+```

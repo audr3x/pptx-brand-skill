@@ -6,6 +6,8 @@ Surfaces: PowerPoint via `.cursor/skills/workday-pptx`, Google Slides via `.curs
 
 The reference deck is a corporate template plus color-usage slides, not a customer narrative. This file records the brand system. It does not reproduce any confidential slide copy.
 
+`assets/brand-tokens.json` is the programmatic source. It stores the exact theme values, template layouts, placeholder slots, outline patterns, limits, and named regions. Run `python3 scripts/validate_brand.py` after changing the template, the registry, either builder, or either skill.
+
 ## Canvas
 
 | Token | Value |
@@ -167,7 +169,13 @@ Match intent to layout. Do not rebuild chrome on a blank slide when a layout alr
 | Chart | `Title Only` | Title placeholder. Draw the chart in the content well |
 | Closing | `Bumper Slide` | Leave the smile. Optional one-line Paper caption under the mark |
 | Intro | `Intro_One` / `_Three` / `_Four` | Name, title, company placeholders |
-| Photo story | `Photo-Right` or `3-Photos` | Title + picture placeholders |
+| Warm feature grid | `Title Only_Alt` | Optional subhead plus three item stacks |
+| Compact half-headline | `1/2 Headline_Alt` | Up to six compact items on the right |
+| Agenda | `Section Title` | Agenda title plus up to six rows beside the rail |
+| Rail content | `Layout 1` | Draw title and body to the right of the thin rail |
+| Photo story | `Photo-Right` or `3-Photos` | Fill the native picture slots; Photo-Right can add up to three item stacks |
+| Timeline | `Title Only` | Draw up to seven dated items in the content well |
+| Blank | `Blank White Background` | Draw optional title and body only when no branded layout fits |
 
 ### Key geometry (inches)
 

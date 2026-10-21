@@ -98,7 +98,7 @@ Drive plugin: `copy_file` with that `fileId` and the deliverable title.
 
 3. For each outline slide, `createSlide` with `slideLayoutReference.layoutId` (the Workday layout). Prefer this over `predefinedLayout` and over `importSlides` from a blank deck.
 
-4. Fill placeholders (`deleteText` + `insertText` + `updateTextStyle`). Draw missing chrome (section title, half-headline items, footer, cover date, bumper caption) at the inch positions in `BRAND.md`.
+4. Fill placeholders (`deleteText` + `insertText` + `updateTextStyle`). Draw missing copy from the named regions in `assets/brand-tokens.json`.
 
 5. Delete leftover `Click to edit` / `Insert slide title` prompts.
 
@@ -120,9 +120,20 @@ Same map as the PPTX skill. Google remaps placeholder object IDs on import; reso
 | Chart | `chart` | Title Only | `title` + on-brand columns (or a Sheets chart) |
 | Closing | `closing` | Bumper Slide | optional caption under the smile |
 | Intro | `intro` | Intro_One | `name`, `role`, `company` |
+| Three speakers | `intro-three` | Intro_Three | exactly 3 `speakers` |
+| Four speakers | `intro-four` | Intro_Four | exactly 4 `speakers` |
+| Warm feature grid | `feature-grid` | Title Only_Alt | `title`, optional `subtitle`, 3 `items` |
+| Compact half-headline | `two-column-alt` | 1/2 Headline_Alt | `title`, up to 6 `items` |
+| Agenda | `agenda` | Section Title | `title`, up to 6 `items` |
+| Rail content | `rail` | Layout 1 | `title`, `body` |
+| Three photos | `three-photos` | 3-Photos | `title`, exactly 3 `images` |
+| Photo right | `photo-right` | Photo-Right | `title`, `image`, optional `items` |
+| Timeline | `timeline` | Title Only | `title`, up to 7 `items` |
 | Blank | `blank` | Blank White Background | last resort |
 
 Content layout XML name is `Title and Content ` (trailing space). Match after strip.
+
+`assets/brand-tokens.json` owns colors, exact layout names, placeholder indexes, limits, and geometry. `scripts/brand.py` validates and loads it. Both builders consume the same normalized outline.
 
 If a Workday `layoutId` is missing (import dropped it), stop and re-import. Do not silently switch to `TITLE_AND_BODY` except as a last-resort fallback the user approved.
 
@@ -194,7 +205,7 @@ Replace leftover prompt text, then style:
 
 `importSlides` from the Workday template is fine when adding slides to an existing copy (`preserveTheme`: `USE_DESTINATION_THEME`). Do not import from a customer deck.
 
-Images: `createImage` needs a public URL. Drive uploads of the smile PNG are already on the title and bumper layouts. Do not re-place them.
+Images: use a public `http` or `https` URL in each `image` field. `createImage` rejects local paths. Drive uploads of the smile PNG are already on the title and bumper layouts. Do not re-place them.
 
 Charts: the builder draws Water Cooler / Lunch Break columns so a deck does not depend on Sheets. For a live data chart, create a Sheets chart with those series colors and `createSheetsChart` / `refreshSheetsChart`.
 
