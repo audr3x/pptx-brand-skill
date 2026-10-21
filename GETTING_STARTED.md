@@ -70,6 +70,10 @@ Open the file in PowerPoint or Keynote. Confirm Ink titles, the cover gradient (
 If LibreOffice is installed:
 
 ```bash
+# Debian / Ubuntu (once):
+# sudo apt-get update && sudo apt-get install -y libreoffice-impress poppler-utils
+# macOS (once): brew install --cask libreoffice && brew install poppler
+
 mkdir -p docs/proof/pptx
 soffice --headless --convert-to pdf --outdir docs/proof docs/proof/planning-workshop.pptx
 pdftoppm -png -r 140 docs/proof/planning-workshop.pdf docs/proof/pptx/slide
