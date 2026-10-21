@@ -393,6 +393,92 @@ def drive_download_url(file_id: str) -> str:
     return f"https://drive.google.com/uc?export=download&id={file_id}"
 
 
+def is_github_raw_url(url: str | None) -> bool:
+    if not url:
+        return False
+    lower = url.lower()
+    return "raw.githubusercontent.com" in lower or ("github.com/" in lower and "/raw/" in lower)
+
+
+def prefer_drive_image_url(drive_id: str | None, url: str | None) -> str | None:
+    """Drive IDs win. GitHub raw URLs 404 on a private repo and are dropped."""
+    if is_github_raw_url(url):
+        url = None
+    if drive_id:
+        return drive_download_url(drive_id)
+    return url
+
+
+def drop_github_image_urls(requests: list[dict[str, Any]], chrome: dict[str, Any]) -> list[dict[str, Any]]:
+    """When Drive IDs are set, never leave a GitHub raw URL in createImage."""
+    cover_id = chrome.get("cover_id")
+    smile_id = chrome.get("smile_id")
+    cleaned: list[dict[str, Any]] = []
+    drop_zorder_for: set[str] = set()
+    for req in requests:
+        img = req.get("createImage")
+        if img and is_github_raw_url(img.get("url")):
+            oid = img.get("objectId") or ""
+            replacement = None
+            if "smile" in oid and smile_id:
+                replacement = drive_download_url(smile_id)
+            elif cover_id:
+                replacement = drive_download_url(cover_id)
+            elif smile_id:
+                replacement = drive_download_url(smile_id)
+            if replacement:
+                img = dict(img)
+                img["url"] = replacement
+                cleaned.append({"createImage": img})
+            else:
+                drop_zorder_for.add(oid)
+            continue
+        z = req.get("updatePageElementsZOrder")
+        if z and drop_zorder_for.intersection(z.get("pageElementObjectIds") or []):
+            continue
+        cleaned.append(req)
+    return cleaned
+
+
+def write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2) + "\n")
+
+
+def write_request_chunks(
+    dest: Path,
+    requests: list[dict[str, Any]],
+    *,
+    size: int,
+    meta: dict[str, Any],
+) -> list[Path]:
+    """Write dest plus dest-01.json, dest-02.json, ... Send chunks in order."""
+    write_json(dest, {**meta, "requests": requests})
+    written = [dest]
+    if size <= 0:
+        return written
+    chunks = [requests[i : i + size] for i in range(0, len(requests), size)] or [[]]
+    count = len(chunks)
+    names = [f"{dest.stem}-{i:02d}.json" for i in range(1, count + 1)]
+    for i, chunk in enumerate(chunks, 1):
+        chunk_path = dest.with_name(names[i - 1])
+        write_json(
+            chunk_path,
+            {
+                **meta,
+                "chunk": i,
+                "chunkCount": count,
+                "note": (
+                    f"Chunk {i} of {count}. Send only the requests array to update_presentation. "
+                    f"Send chunks in order: {', '.join(names)}."
+                ),
+                "requests": chunk,
+            },
+        )
+        written.append(chunk_path)
+    return written
+
+
 def create_image_ops(
     object_id: str,
     page: str,
@@ -1175,10 +1261,15 @@ def resolve_chrome(args: argparse.Namespace) -> dict[str, Any]:
         smile_id = smile_id or data.get("WORKDAY_SMILE_IMAGE_ID") or data.get("smileImageId")
         cover_url = cover_url or data.get("coverImageUrl")
         smile_url = smile_url or data.get("smileImageUrl")
-    if cover_id and not cover_url:
-        cover_url = drive_download_url(cover_id)
-    if smile_id and not smile_url:
-        smile_url = drive_download_url(smile_id)
+    if is_github_raw_url(cover_url) or is_github_raw_url(smile_url):
+        print(
+            "warning: GitHub raw URLs 404 on a private repo. "
+            "Upload the PNGs to Drive and share Anyone with the link: Viewer. "
+            "--cover-image-url is not a substitute.",
+            file=sys.stderr,
+        )
+    cover_url = prefer_drive_image_url(cover_id, cover_url)
+    smile_url = prefer_drive_image_url(smile_id, smile_url)
     return {
         "cover_id": cover_id,
         "smile_id": smile_id,
@@ -1228,7 +1319,9 @@ def upload_assets(args: argparse.Namespace) -> dict[str, str]:
         except Exception as exc:
             print(
                 f"warning: could not share the PNGs as anyone-with-link ({exc}). "
-                "createImage needs a URL Slides can fetch. Share the files or pass a public --cover-image-url.",
+                "Open each file in the Drive UI and share Anyone with the link: Viewer. "
+                "The Cursor Drive connector cannot create that share. "
+                "Do not use a GitHub raw URL (private repos 404).",
                 file=sys.stderr,
             )
     payload = {
@@ -1238,7 +1331,10 @@ def upload_assets(args: argparse.Namespace) -> dict[str, str]:
         "smileImageId": smile_id,
         "coverImageUrl": drive_download_url(cover_id),
         "smileImageUrl": drive_download_url(smile_id),
-        "note": "createImage needs anyone-with-link (or a public URL). These IDs are brand assets, not deck copy.",
+        "note": (
+            "createImage needs Anyone with the link: Viewer. Share both PNGs in the Drive UI. "
+            "The Cursor Drive connector cannot create that share. These IDs are brand chrome, not deck copy."
+        ),
     }
     dest = args.output or Path("workday-slide-assets.json")
     dest.write_text(json.dumps(payload, indent=2) + "\n")
@@ -1258,17 +1354,27 @@ def apply(outline: dict[str, Any], plan: dict[str, Any], args: argparse.Namespac
         if not pptx.is_file():
             raise SystemExit(f"PPTX not found: {pptx}")
         template_id = import_pptx(backend, pptx, "Workday Corporate Template")
-        print(f"Imported {pptx} → template {template_id}")
-        print("Store this as WORKDAY_SLIDES_TEMPLATE_ID and copy it for later decks.")
+        print(f"Imported {pptx} → {template_id}")
+        print(
+            "On a first run you can fill this imported file. "
+            "Copying it is optional. Store the ID as WORKDAY_SLIDES_TEMPLATE_ID for later decks."
+        )
     if not template_id:
         raise SystemExit("Pass --template-id, --import-pptx, or set WORKDAY_SLIDES_TEMPLATE_ID.")
-    deck_id = copy_template(backend, template_id, plan["title"])
-    print(f"Copied template {template_id} → {deck_id}")
+    first_run_import = bool(args.import_pptx) and not args.template_id
+    if first_run_import:
+        deck_id = template_id
+        print(f"Using the imported file as the deck {deck_id} (copy is optional on a first run).")
+    else:
+        deck_id = copy_template(backend, template_id, plan["title"])
+        print(f"Copied template {template_id} → {deck_id}")
     presentation = get_presentation(backend, deck_id)
     layouts = index_layouts(presentation)
     leftover = [s["objectId"] for s in presentation.get("slides") or []]
     if leftover:
         batch_update(backend, deck_id, [{"deleteObject": {"objectId": sid}} for sid in leftover])
+    else:
+        print("No leftover slides on this file (a clean PPTX import has none). Skipping delete.")
     creates = create_phase_requests(plan, layouts, args.allow_predefined)
     batch_update(backend, deck_id, creates)
     presentation = get_presentation(backend, deck_id)
@@ -1294,7 +1400,19 @@ def main(argv: list[str] | None = None) -> int:
         "--presentation",
         type=Path,
         default=None,
-        help="presentations.get / read_presentation JSON. Required for --phase fills; optional for --phase creates to resolve layoutIds.",
+        help="presentations.get / read_presentation JSON. Use it on --phase fills so IDs bind. Optional for --phase creates to resolve layoutIds.",
+    )
+    parser.add_argument(
+        "--chunk",
+        nargs="?",
+        const=40,
+        type=int,
+        default=None,
+        metavar="N",
+        help=(
+            "With --phase fills, also write dest-01.json, dest-02.json, ... with N requests each "
+            "(default 40). Send only the requests array to update_presentation, in order."
+        ),
     )
     parser.add_argument("--template-id", default=None, help="Existing Workday Slides template ID")
     parser.add_argument("--import-pptx", type=Path, default=None, help="Upload this PPTX and convert it to Slides")
@@ -1316,8 +1434,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--cover-image-id", default=None, help="Drive file ID for assets/logos/cover-gradient.png")
     parser.add_argument("--smile-image-id", default=None, help="Drive file ID for assets/logos/workday-smile.png")
-    parser.add_argument("--cover-image-url", default=None, help="Public URL for the cover PNG (overrides the Drive ID URL)")
-    parser.add_argument("--smile-image-url", default=None, help="Public URL for the smile PNG")
+    parser.add_argument(
+        "--cover-image-url",
+        default=None,
+        help="Public URL for the cover PNG. Ignored when --cover-image-id is set. GitHub raw URLs 404 on a private repo.",
+    )
+    parser.add_argument(
+        "--smile-image-url",
+        default=None,
+        help="Public URL for the smile PNG. Ignored when --smile-image-id is set. GitHub raw URLs 404 on a private repo.",
+    )
     parser.add_argument(
         "--assets-ids",
         type=Path,
@@ -1356,8 +1482,7 @@ def main(argv: list[str] | None = None) -> int:
             ),
             "requests": create_phase_requests(plan, layouts, args.allow_predefined),
         }
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_text(json.dumps(payload, indent=2) + "\n")
+        write_json(dest, payload)
         print(f"Wrote {dest} ({len(payload['requests'])} createSlide requests)")
         return 0
 
@@ -1366,26 +1491,34 @@ def main(argv: list[str] | None = None) -> int:
             presentation = load_presentation_json(args.presentation)
             fill_requests = bind_fills(plan, presentation)
             fill_note = (
-                "Send these batchUpdate requests against the copied deck after phase 1. "
-                "IDs are bound to the GET payload."
+                "Send only the requests array to update_presentation after phase 1. "
+                "IDs are bound to the GET payload. If you used --chunk, send fills-01, fills-02, ... in order."
             )
         else:
             fill_requests = [req for req in plan["requests"] if "createSlide" not in req]
             fill_note = (
-                "Send these after the createSlide batch. Slide IDs are the planned wd_sN values. "
-                "Placeholder mappings in creates.json pin title, subtitle, and body to wd_sN_title / _sub / _body. "
-                "If createSlide assigned different IDs, re-run with --presentation get.json."
+                "Send only the requests array to update_presentation after the createSlide batch. "
+                "Slide IDs are the planned wd_sN values. Re-run with --presentation get.json if IDs differ. "
+                "If you used --chunk, send fills-01, fills-02, ... in order."
             )
+        fill_requests = drop_github_image_urls(fill_requests, chrome)
         payload = {
             "phase": "fills",
             "title": plan["title"],
             "chrome": plan.get("chrome"),
             "note": fill_note,
-            "requests": fill_requests,
         }
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_text(json.dumps(payload, indent=2) + "\n")
-        print(f"Wrote {dest} ({len(payload['requests'])} fill requests)")
+        chunk = args.chunk
+        if chunk:
+            paths = write_request_chunks(dest, fill_requests, size=chunk, meta=payload)
+            print(
+                f"Wrote {dest} ({len(fill_requests)} fill requests) and "
+                f"{len(paths) - 1} chunks of {chunk}: "
+                + ", ".join(p.name for p in paths[1:])
+            )
+        else:
+            write_json(dest, {**payload, "requests": fill_requests})
+            print(f"Wrote {dest} ({len(fill_requests)} fill requests)")
         return 0
 
     if dest is not None:

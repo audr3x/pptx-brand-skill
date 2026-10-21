@@ -25,11 +25,14 @@ This repository is the brand system plus two small builders. It is not a dump of
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+# managed Python / PEP 668: use the venv. Fallback: pip3 install --break-system-packages -r requirements.txt
 
 python3 scripts/build_deck.py examples/outline.yaml -o out/planning-workshop.pptx
 
-python3 scripts/build_slides.py examples/outline.yaml --phase creates -o docs/proof/slides/creates.json
-python3 scripts/build_slides.py examples/outline.yaml --phase fills -o docs/proof/slides/fills.json
+python3 scripts/build_slides.py examples/outline.yaml --phase creates \
+  --presentation get.json -o docs/proof/slides/creates.json
+python3 scripts/build_slides.py examples/outline.yaml --phase fills \
+  --presentation get.json --chunk 40 -o docs/proof/slides/fills.json
 ```
 
 Full auth, `--upload-assets`, and Cursor chat examples are in [GETTING_STARTED.md](GETTING_STARTED.md).

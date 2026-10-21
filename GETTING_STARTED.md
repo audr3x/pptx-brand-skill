@@ -33,6 +33,8 @@ cd pptx-brand-skill
 
 You should see `GETTING_STARTED.md`, `BRAND.md`, `assets/template.pptx`, and `.cursor/skills/`. If those files are missing, the default branch is older than this guide. Check out the branch your team is using, then continue.
 
+A venv is required. Managed Python (PEP 668) blocks `pip install` on the system interpreter.
+
 ```bash
 # Debian / Ubuntu, if `python3 -m venv` errors:
 # sudo apt-get update && sudo apt-get install -y python3.12-venv python3-pip
@@ -43,6 +45,8 @@ pip install -r requirements.txt
 ```
 
 On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`.
+
+If you cannot create a venv and pip says `externally-managed-environment`, the fallback is `pip3 install --break-system-packages -r requirements.txt`. Prefer the venv.
 
 Open the `pptx-brand-skill` folder as the Cursor project. The skills live in `.cursor/skills/workday-pptx` and `.cursor/skills/workday-google-slides`. Cursor loads them from that folder. Restart Cursor or reopen the folder if a skill does not appear.
 
@@ -91,28 +95,36 @@ PNGs land in `docs/proof/pptx/` as `slide-1.png`, `slide-2.png`, and so on.
 
 ## Google Slides (`workday-google-slides`)
 
-Google Slides does not keep every layout picture when you add a new slide. You must copy a Workday template (never a blank theme), then fill it. The cover gradient and smile are PNGs you upload once.
+Google Slides does not keep every layout picture when you add a new slide. Start from a Workday template (never a blank theme). The cover gradient and smile are PNGs you upload once.
 
-### One-time: import the template
+### First run: import the template (this file can be the deck)
 
-Upload `assets/template.pptx` to Drive and open it with Google Slides, or:
+Convert `assets/template.pptx` to Google Slides. That imported file has the Workday masters and layouts. On a clean import there are no leftover slides. You can build the first deck on this file. Copying it is optional. Copy later when you want a clean template and a separate deliverable.
+
+How to convert:
+
+- Drive UI: upload `assets/template.pptx`, then **File > Open** with Google Slides (or right-click, Open with, Google Slides).
+- Drive plugin: upload the PPTX with `convertToGoogleFormat=true` so it becomes a presentation, not a binary PPTX sitting in Drive.
+- `gws` / builder:
 
 ```bash
 python3 scripts/build_slides.py examples/outline.yaml \
   --import-pptx assets/template.pptx --backend gws
 ```
 
-Save the new file ID as `WORKDAY_SLIDES_TEMPLATE_ID`. Do not commit it. Every new deck is a **copy** of that file. Never run `batchUpdate` on the template itself.
-
-Drive plugin: upload the PPTX, open with Google Slides, then use that file ID.
+Save the file ID as `WORKDAY_SLIDES_TEMPLATE_ID`. Do not commit it. Do not start from a blank Slides theme.
 
 ### One-time: upload the cover and smile images
 
-`createImage` needs a URL Google Slides can fetch. The upload step shares each PNG as **anyone with the link, Viewer**. These files are brand chrome (the cover wash and the lockup), not deck copy.
+`createImage` needs a URL Google Slides can fetch. Share each PNG in the **Drive UI** as **Anyone with the link: Viewer**. The Cursor Google Drive connector cannot create that share. These files are brand chrome (the cover wash and the lockup), not deck copy.
+
+Do not pass a GitHub raw URL (`raw.githubusercontent.com` or `github.com/.../raw/...`). This repo is private, so those URLs 404. `--cover-image-url` will not work for that. Upload the PNGs to Drive and use the file IDs.
 
 ```bash
 python3 scripts/build_slides.py --upload-assets --backend gws -o workday-slide-assets.json
 ```
+
+`--upload-assets` only uploads. If sharing fails (or you used the Drive plugin), open each PNG in Drive and set Anyone with the link: Viewer yourself.
 
 The command prints:
 
@@ -127,7 +139,7 @@ Drive plugin (no `gws`):
 
 1. Upload `assets/logos/cover-gradient.png` as a PNG.
 2. Upload `assets/logos/workday-smile.png` as a PNG.
-3. Share both as anyone with the link, Viewer.
+3. In the Drive UI (not the connector), share both as Anyone with the link: Viewer.
 4. Save the two file IDs, or put them in `workday-slide-assets.json` as `WORKDAY_COVER_IMAGE_ID` and `WORKDAY_SMILE_IMAGE_ID`.
 
 If you skip this step, the title slide is flat Ballpoint blue with white type. After the IDs are set, the cover is the real blue-to-gold gradient with navy type, and the white lockup is placed on the title and closing slides.
@@ -136,54 +148,42 @@ If you skip this step, the title slide is flat Ballpoint blue with white type. A
 
 Connect the Google Drive and Google Slides plugins first. Example:
 
-> Use the workday-google-slides skill. I have Drive and Slides connected. Copy the Workday template, then build examples/outline.yaml into a new deck. Follow GETTING_STARTED.md: two-phase creates then fills, and use WORKDAY_COVER_IMAGE_ID and WORKDAY_SMILE_IMAGE_ID for the cover.
+> Use the workday-google-slides skill. I have Drive and Slides connected. I imported assets/template.pptx (convertToGoogleFormat). Build examples/outline.yaml on that file. Follow GETTING_STARTED.md: two-phase creates then fills, share the PNGs in the Drive UI, and use WORKDAY_COVER_IMAGE_ID and WORKDAY_SMILE_IMAGE_ID for the cover.
 
 ### Two-phase flow (plugins or `gws`)
 
-Phase 1 creates slides. Phase 2 fills them. Do not send both in one all-or-nothing batch if you are still learning the IDs.
+Phase 1 creates slides. Phase 2 fills them. `update_presentation` takes the `requests` array only. Do not send the wrapper keys (`phase`, `note`, `chrome`).
 
 **Phase 1, write create requests**
 
 ```bash
 python3 scripts/build_slides.py examples/outline.yaml --phase creates \
-  -o docs/proof/slides/creates.json
-```
-
-If you already have a `presentations.get` / `read_presentation` JSON from the **copied** deck (so layout IDs are known):
-
-```bash
-python3 scripts/build_slides.py examples/outline.yaml --phase creates \
   --presentation get.json \
   -o docs/proof/slides/creates.json
 ```
 
-That replaces each `layoutName` with the real `layoutId`. If `creates.json` still has `layoutName`, match it to `layouts[].layoutProperties.displayName` (strip spaces, ignore case) and put `layoutId` in `slideLayoutReference` before you send the batch.
+`get.json` is `read_presentation` / `presentations.get` on the imported file (or a copy). That replaces each `layoutName` with the real `layoutId`. If `creates.json` still has `layoutName`, match it to `layouts[].layoutProperties.displayName` (strip spaces, ignore case) and put `layoutId` in `slideLayoutReference` before you send the batch.
 
-Send only the `requests` array to `presentations.batchUpdate` / `update_presentation` on the **copy**. Keep the planned slide IDs (`wd_s1`, `wd_s2`, …). Delete leftover template slides first.
+Send only the `requests` array to `update_presentation` on that file. Keep the planned slide IDs (`wd_s1`, `wd_s2`, ...).
+
+A clean PPTX import has no leftover slides. There is nothing to delete. Only delete leftover slides if you started from a finished deck that already had pages.
 
 **Phase 2, write fill requests**
 
-After the create batch, or using the planned `wd_sN` IDs:
-
-```bash
-python3 scripts/build_slides.py examples/outline.yaml --phase fills \
-  --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
-  --smile-image-id "$WORKDAY_SMILE_IMAGE_ID" \
-  -o docs/proof/slides/fills.json
-```
-
-If Google assigned different object IDs, save `read_presentation` to `get.json` and bind them:
+Save a fresh `read_presentation` after the create batch as `get.json`, then:
 
 ```bash
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
   --presentation get.json \
-  --assets-ids workday-slide-assets.json \
+  --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
+  --smile-image-id "$WORKDAY_SMILE_IMAGE_ID" \
+  --chunk 40 \
   -o docs/proof/slides/fills.json
 ```
 
-Send the `requests` array in `fills.json` to the same copied deck.
+`--chunk 40` writes `fills.json` plus ordered paste files `fills-01.json`, `fills-02.json`, and so on (about 40 requests each). Send those chunks **in order**. Each call to `update_presentation` gets that file's `requests` array only.
 
-Without image IDs, omit `--cover-image-id` and `--smile-image-id`. The fill batch still runs. The cover stays flat Ballpoint.
+Without image IDs, omit `--cover-image-id` and `--smile-image-id`. The fill batch still runs. The cover stays flat Ballpoint. When IDs are set, the builder uses Drive download URLs only. It drops GitHub raw URLs.
 
 ### Live apply in one step (`gws` or API)
 
@@ -198,14 +198,15 @@ python3 scripts/build_slides.py examples/outline.yaml \
   --backend gws
 ```
 
-The command copies the template, creates slides, fills them, and prints the deck URL.
+`--template-id` copies that file, then fills the copy. On a first run, pass `--import-pptx assets/template.pptx` instead of `--template-id`. The builder then fills the imported file and does not copy it.
 
 ### Where Slides output lands
 
 | File | What it is |
 | --- | --- |
 | `docs/proof/slides/creates.json` | Phase 1 `createSlide` requests |
-| `docs/proof/slides/fills.json` | Phase 2 text, shapes, tables, charts, images |
+| `docs/proof/slides/fills.json` | Full phase 2 batch |
+| `docs/proof/slides/fills-01.json` and up | Phase 2 split for `update_presentation` (send in order) |
 | `docs/proof/slides/STEPS.md` | Click-by-click plugin steps for the worked example |
 | `workday-slide-assets.json` | Your Drive image IDs (local only) |
 | Google Slides URL | Printed after a live `--backend` run |
@@ -235,7 +236,9 @@ slides:
 
 **A skill does not run.** Open this repository as the Cursor project folder. Reopen the folder after a clone. Ask for the skill by name (`workday-pptx` or `workday-google-slides`).
 
-**`ensurepip is not available` / venv fails.** On Debian or Ubuntu: `sudo apt-get install -y python3.12-venv python3-pip`. Recreate `.venv`. Or skip the venv and run `pip3 install --user -r requirements.txt`.
+**`ensurepip is not available` / venv fails.** On Debian or Ubuntu: `sudo apt-get install -y python3.12-venv python3-pip`. Recreate `.venv`.
+
+**`externally-managed-environment` (PEP 668).** Do not pip-install into the system Python. Use the venv. Fallback only: `pip3 install --break-system-packages -r requirements.txt`.
 
 **`PyYAML is required`.** Activate the venv and run `pip install -r requirements.txt`.
 
@@ -249,7 +252,9 @@ slides:
 
 **`Archivo Light` looks like a serif.** Google Slides does not have that family name. The builder sends `Archivo` plus `weightedFontFamily.weight` 300. Enable Archivo from Google Fonts in the theme if you can.
 
-**`createImage` fails.** The Drive file must be anyone with the link, Viewer. Confirm the ID. Try the URL `https://drive.google.com/uc?export=download&id=FILE_ID` in a private window.
+**`createImage` fails.** Share each PNG in the Drive UI as Anyone with the link: Viewer. The Cursor Drive connector cannot set that. Confirm the ID. Try `https://drive.google.com/uc?export=download&id=FILE_ID` in a private window. A GitHub raw URL from this repo will 404.
+
+**`update_presentation` rejects the file.** Send the `requests` array only, not the whole JSON. If the array is too large to paste, use `--chunk 40` and send `fills-01.json`, `fills-02.json`, ... in order.
 
 **Layout not found.** Import `assets/template.pptx` again. Do not start from a blank Slides theme. Match layout names after stripping spaces (`Title and Content` has a trailing space in the PPTX).
 

@@ -7,12 +7,12 @@ description: Generate on-brand Workday Google Slides decks from a brief or outli
 
 Same brand system as [workday-pptx](../workday-pptx/SKILL.md), on Google Slides. Team setup is in [GETTING_STARTED.md](../../../GETTING_STARTED.md). Read [BRAND.md](../../../BRAND.md) first. Do not invent colors, fonts, or chrome.
 
-Workday has no canonical public Slides ID in this repo. You either import [assets/template.pptx](../../../assets/template.pptx) once, or the user hands you a template deck ID. After that, **copy the template and edit only the copy**.
+Workday has no canonical public Slides ID in this repo. Import [assets/template.pptx](../../../assets/template.pptx) once (Drive upload with `convertToGoogleFormat=true`, or File > Open with Google Slides), or use a template deck ID the user hands you. On a first run you may fill that imported file. Copying it is optional. Later decks should copy the unused template.
 
 ```
 Workday Slides compliance:
 - [ ] Read this skill and BRAND.md
-- [ ] Template is a copy (or a first-time PPTX import), never the master
+- [ ] First run may fill the imported PPTX. Later decks copy the unused template. Never start from a blank theme
 - [ ] Layout picked by intent (no blank slide when a Workday layout exists)
 - [ ] Tokens only (core palette first). Archivo, Arial fallback
 - [ ] Footer is Workday Confidential. About 6 bullets max
@@ -21,13 +21,14 @@ Workday Slides compliance:
 
 ## Auth (pick one). Never commit credentials
 
-### A. Cursor Google plugins (closest to Anina's GTM skill)
+### A. Cursor Google plugins
 
 Install and sign in to the **Google Drive** and **Google Slides** plugins with the Workday Google account. Then:
 
-1. Drive `copy_file` on the template ID
-2. Slides `read_presentation` / `update_presentation` (`batchUpdate`) on the **new** ID only
-3. `read_presentation` again to verify
+1. Drive: upload `assets/template.pptx` with `convertToGoogleFormat=true` (or File > Open in the Drive UI). First run: this file is the deck. Copy only if you want a spare template.
+2. Drive: upload the two PNGs. **Share both in the Drive UI** as Anyone with the link: Viewer. The Drive connector cannot create that share. Do not use a GitHub raw URL (private repo 404).
+3. Slides `read_presentation` / `update_presentation` on that file. `update_presentation` takes the `requests` array only. Send fill chunks in order.
+4. `read_presentation` again to verify
 
 If either plugin is missing or unauthenticated, stop and ask the user to connect it. Do not invent a Runtime Secret.
 
@@ -61,13 +62,16 @@ python3 scripts/build_slides.py --upload-assets --backend gws
 #   export WORKDAY_SMILE_IMAGE_ID=...
 
 # Two-phase connector (Drive/Slides plugins, no gws):
-python3 scripts/build_slides.py examples/outline.yaml --phase creates -o creates.json
-# send creates.json via update_presentation, then save read_presentation to get.json
+python3 scripts/build_slides.py examples/outline.yaml --phase creates \
+  --presentation get.json -o creates.json
+# send creates.json requests via update_presentation, then save read_presentation to get.json
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
   --presentation get.json \
   --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
   --smile-image-id "$WORKDAY_SMILE_IMAGE_ID" \
+  --chunk 40 \
   -o fills.json
+# send fills-01.json, fills-02.json, ... in order (requests array only)
 
 # Live apply, after auth:
 python3 scripts/build_slides.py examples/outline.yaml \
@@ -76,9 +80,9 @@ python3 scripts/build_slides.py examples/outline.yaml \
 # or --backend api   (ADC / GOOGLE_APPLICATION_CREDENTIALS)
 ```
 
-`--import-pptx assets/template.pptx` uploads the PPTX and converts it to a Google Slides template (first-time only). Save that ID as `WORKDAY_SLIDES_TEMPLATE_ID` and copy it for every new deck.
+`--import-pptx assets/template.pptx` uploads the PPTX and converts it to a Google Slides file (first-time only). On that first run you may fill the imported file. Copying is optional. Save the ID as `WORKDAY_SLIDES_TEMPLATE_ID` for later copies.
 
-`--upload-assets` uploads [cover-gradient.png](../../../assets/logos/cover-gradient.png) and [workday-smile.png](../../../assets/logos/workday-smile.png). Save those IDs as `WORKDAY_COVER_IMAGE_ID` and `WORKDAY_SMILE_IMAGE_ID`. Slides `createImage` fetches a URL, so the files must be **anyone with the link** (reader). They are brand chrome, not deck copy. Drive plugin: `create_file` each PNG, share the same way, then pass the IDs into `--phase fills`.
+`--upload-assets` uploads [cover-gradient.png](../../../assets/logos/cover-gradient.png) and [workday-smile.png](../../../assets/logos/workday-smile.png). Save those IDs as `WORKDAY_COVER_IMAGE_ID` and `WORKDAY_SMILE_IMAGE_ID`. Slides `createImage` fetches a URL, so share each PNG in the **Drive UI** as Anyone with the link: Viewer. The Drive connector cannot create that share. Do not pass a GitHub raw URL. They are brand chrome, not deck copy.
 
 ## Seed the Workday template
 
@@ -95,7 +99,7 @@ python3 scripts/build_slides.py examples/outline.yaml \
   --import-pptx assets/template.pptx --backend gws
 ```
 
-In the Drive UI: upload `assets/template.pptx` → Open with Google Slides. That conversion keeps the Workday master and the 15 layouts.
+In the Drive UI: upload `assets/template.pptx`, then File > Open with Google Slides. Drive plugin: upload with `convertToGoogleFormat=true`. That conversion keeps the Workday master and the 15 layouts. A clean import has no leftover slides.
 
 If the user already has a branded Slides file, use that ID. Do not start from `presentations.create` (blank theme) unless import failed and they said so.
 
@@ -115,14 +119,14 @@ Drive plugin (no gws):
 
 1. `create_file` [assets/logos/cover-gradient.png](../../../assets/logos/cover-gradient.png) as `image/png`
 2. `create_file` [assets/logos/workday-smile.png](../../../assets/logos/workday-smile.png)
-3. Share both **anyone with the link**, reader (required for `createImage`)
-4. Save the IDs as `WORKDAY_COVER_IMAGE_ID` and `WORKDAY_SMILE_IMAGE_ID`, or write `workday-slide-assets.json` and pass `--assets-ids`
+3. In the Drive UI, share both as Anyone with the link: Viewer. The connector cannot do this.
+4. Save the IDs as `WORKDAY_COVER_IMAGE_ID` and `WORKDAY_SMILE_IMAGE_ID`, or write `workday-slide-assets.json` and pass `--assets-ids`. Do not use `--cover-image-url` with a GitHub raw link.
 
 Do not commit those IDs or the JSON.
 
 ## Create a deck
 
-1. Copy the template. Never `batchUpdate` the template ID.
+1. First run: use the imported file. Later: copy the unused template. Never start from a blank theme.
 
 ```bash
 gws drive files copy \
@@ -136,7 +140,7 @@ Drive plugin: `copy_file` with that `fileId` and the deliverable title.
 
 3. For each outline slide, `createSlide` with `slideLayoutReference.layoutId` (the Workday layout). Prefer this over `predefinedLayout` and over `importSlides` from a blank deck. Title placeholders come back as **`CENTERED_TITLE`**, not `CENTER_TITLE`.
 
-4. Two-phase fill. Phase 1 is only `createSlide`. Then `read_presentation` / `presentations.get`. Phase 2 binds fills to the real object IDs (`scripts/build_slides.py --phase fills --presentation get.json`).
+4. Two-phase fill. Phase 1 is only `createSlide`. Then `read_presentation` / `presentations.get`. Phase 2 binds fills (`--phase fills --presentation get.json --chunk 40`). Send `fills-01.json`, `fills-02.json`, ... in order. `update_presentation` takes the `requests` array only.
 
 5. Fill placeholders with `insertText` + `updateTextStyle`. Send `deleteText` **only** when the shape already has text. Empty new placeholders error on `deleteText ALL`.
 
@@ -246,7 +250,7 @@ Body / Archivo Light equivalent:
 
 `importSlides` from the Workday template is fine when adding slides to an existing copy (`preserveTheme`: `USE_DESTINATION_THEME`). Do not import from a customer deck.
 
-Images: `createImage` needs a URL Slides can fetch (Drive file shared anyone-with-link, or another public URL).
+Images: `createImage` needs a URL Slides can fetch. Share the Drive PNGs in the Drive UI as Anyone with the link: Viewer. The Drive connector cannot create that share. When image IDs are set, use the Drive download URL only. Drop GitHub raw URLs (private repos 404). `--cover-image-url` is not a workaround for that.
 
 ```json
 {
@@ -271,7 +275,7 @@ Charts: the builder draws Water Cooler / Lunch Break columns so a deck does not 
 
 ## Do not
 
-- Do not `batchUpdate` the template ID to "save a copy step"
+- Do not `batchUpdate` a template you want to keep unused. First run may fill the imported PPTX.
 - Do not mix blank untemplated slides into a branded deck
 - Do not send placeholder type `CENTER_TITLE` (it is `CENTERED_TITLE`)
 - Do not send `fontFamily: "Archivo Light"`

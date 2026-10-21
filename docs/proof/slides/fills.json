@@ -9,7 +9,7 @@
     "coverText": "ink",
     "note": "Title Slide uses createImage of cover-gradient.png when a Drive ID/URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper."
   },
-  "note": "Send these after the createSlide batch. Slide IDs are the planned wd_sN values. Placeholder mappings in creates.json pin title, subtitle, and body to wd_sN_title / _sub / _body. If createSlide assigned different IDs, re-run with --presentation get.json.",
+  "note": "Send only the requests array to update_presentation after the createSlide batch. Slide IDs are the planned wd_sN values. Re-run with --presentation get.json if IDs differ. If you used --chunk, send fills-01, fills-02, ... in order.",
   "requests": [
     {
       "updatePageProperties": {
