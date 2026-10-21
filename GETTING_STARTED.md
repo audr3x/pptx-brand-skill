@@ -8,7 +8,7 @@ Read this file first. Then use [BRAND.md](BRAND.md) if you need a color, layout,
 
 - [Cursor](https://cursor.com) (the desktop app)
 - Git
-- Python 3.10 or newer
+- Python 3.10 or newer (`python3-venv` and `python3-pip` on Debian or Ubuntu)
 - The [Archivo](https://fonts.google.com/specimen/Archivo) font family on your computer (Regular and Light). Arial is the fallback if Archivo is missing. Do not substitute Calibri, Inter, Roboto, or Proxima Nova.
 
 Optional, for a visual check of a `.pptx`:
@@ -29,6 +29,14 @@ Never commit `credentials.json`, `client_secret.json`, `.env`, or `gws` token fi
 ```bash
 git clone https://github.com/audr3x/pptx-brand-skill.git
 cd pptx-brand-skill
+```
+
+You should see `GETTING_STARTED.md`, `BRAND.md`, `assets/template.pptx`, and `.cursor/skills/`. If those files are missing, the default branch is older than this guide. Check out the branch your team is using, then continue.
+
+```bash
+# Debian / Ubuntu, if `python3 -m venv` errors:
+# sudo apt-get update && sudo apt-get install -y python3.12-venv python3-pip
+
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -227,6 +235,8 @@ slides:
 
 **A skill does not run.** Open this repository as the Cursor project folder. Reopen the folder after a clone. Ask for the skill by name (`workday-pptx` or `workday-google-slides`).
 
+**`ensurepip is not available` / venv fails.** On Debian or Ubuntu: `sudo apt-get install -y python3.12-venv python3-pip`. Recreate `.venv`. Or skip the venv and run `pip3 install --user -r requirements.txt`.
+
 **`PyYAML is required`.** Activate the venv and run `pip install -r requirements.txt`.
 
 **Cover is cream or flat blue.** Cream means the layout picture dropped and no page fill ran. Flat blue means fills ran without `WORKDAY_COVER_IMAGE_ID`. Upload the PNGs, share them anyone-with-link Viewer, and re-run phase 2 with the IDs.
@@ -246,5 +256,11 @@ slides:
 **Footer sits on the left edge.** The builder draws the footer at x = 0.50 in. Do not reuse a footer placeholder object ID for a new text box.
 
 **Fonts look like Arial in LibreOffice.** Install Archivo on that machine and render again. The Office theme fallback is Arial.
+
+**LibreOffice PNGs drop spaces** (`Planningworkshop`). The `.pptx` still has normal spaces. Open it in PowerPoint. LibreOffice often collapses spaces when it substitutes Archivo.
+
+**`javaldx` / Java warning from `soffice`.** Harmless. The PDF and PNGs still write.
+
+**`git clone` has no `GETTING_STARTED.md`.** The default branch may still be an older commit. Check out the branch your team is using for this skill.
 
 **You edited the template file in Drive.** Make a new copy from the imported PPTX and set `WORKDAY_SLIDES_TEMPLATE_ID` to the unused template, not a finished deck.

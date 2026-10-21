@@ -12,3 +12,4 @@ token.json
 token_cache*.json
 workday-slide-assets.json
 out/
+docs/proof/*.pdf

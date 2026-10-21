@@ -1352,7 +1352,7 @@ def main(argv: list[str] | None = None) -> int:
             "note": (
                 "Send these createSlide requests. If slideLayoutReference still has layoutName, "
                 "replace it with layouts[].objectId from presentations.get (match displayName, strip space). "
-                "Keep the planned objectId values (wd_s1, …). Cover createImage requests are in --phase fills."
+                "Keep the planned objectId values (wd_s1, wd_s2, ...). Cover createImage requests are in --phase fills."
             ),
             "requests": create_phase_requests(plan, layouts, args.allow_predefined),
         }

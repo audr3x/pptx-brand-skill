@@ -1,0 +1,137 @@
+{
+  "phase": "creates",
+  "title": "Planning workshop",
+  "chrome": {
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png when a Drive ID/URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper."
+  },
+  "note": "Send these createSlide requests. If slideLayoutReference still has layoutName, replace it with layouts[].objectId from presentations.get (match displayName, strip space). Keep the planned objectId values (wd_s1, wd_s2, ...). Cover createImage requests are in --phase fills.",
+  "requests": [
+    {
+      "createSlide": {
+        "objectId": "wd_s1",
+        "insertionIndex": 0,
+        "placeholderIdMappings": [
+          {
+            "layoutPlaceholder": {
+              "type": "CENTERED_TITLE",
+              "index": 0
+            },
+            "objectId": "wd_s1_title"
+          },
+          {
+            "layoutPlaceholder": {
+              "type": "SUBTITLE",
+              "index": 0
+            },
+            "objectId": "wd_s1_sub"
+          }
+        ],
+        "slideLayoutReference": {
+          "layoutName": "Title Slide"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "wd_s2",
+        "insertionIndex": 1,
+        "slideLayoutReference": {
+          "layoutName": "Section Title"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "wd_s3",
+        "insertionIndex": 2,
+        "placeholderIdMappings": [
+          {
+            "layoutPlaceholder": {
+              "type": "TITLE",
+              "index": 0
+            },
+            "objectId": "wd_s3_title"
+          },
+          {
+            "layoutPlaceholder": {
+              "type": "BODY",
+              "index": 0
+            },
+            "objectId": "wd_s3_body"
+          }
+        ],
+        "slideLayoutReference": {
+          "layoutName": "Title and Content"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "wd_s4",
+        "insertionIndex": 3,
+        "placeholderIdMappings": [
+          {
+            "layoutPlaceholder": {
+              "type": "TITLE",
+              "index": 0
+            },
+            "objectId": "wd_s4_title"
+          }
+        ],
+        "slideLayoutReference": {
+          "layoutName": "1/2_Headline"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "wd_s5",
+        "insertionIndex": 4,
+        "placeholderIdMappings": [
+          {
+            "layoutPlaceholder": {
+              "type": "TITLE",
+              "index": 0
+            },
+            "objectId": "wd_s5_title"
+          }
+        ],
+        "slideLayoutReference": {
+          "layoutName": "Title Only"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "wd_s6",
+        "insertionIndex": 5,
+        "placeholderIdMappings": [
+          {
+            "layoutPlaceholder": {
+              "type": "TITLE",
+              "index": 0
+            },
+            "objectId": "wd_s6_title"
+          }
+        ],
+        "slideLayoutReference": {
+          "layoutName": "Title Only"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "wd_s7",
+        "insertionIndex": 6,
+        "slideLayoutReference": {
+          "layoutName": "Bumper Slide"
+        }
+      }
+    }
+  ]
+}
