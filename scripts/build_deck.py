@@ -8,126 +8,39 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from pptx import Presentation
 from pptx.chart.data import CategoryChartData
 from pptx.dml.color import RGBColor
 from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION
-from pptx.enum.shapes import PP_PLACEHOLDER
+from pptx.enum.shapes import MSO_SHAPE, PP_PLACEHOLDER
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.oxml.ns import qn
 from pptx.table import Table
 from pptx.util import Inches, Pt
 
+from brand import BRAND, Composition, NormalizedSlide, load_outline
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TEMPLATE = ROOT / "assets" / "template.pptx"
-TOKENS_PATH = ROOT / "assets" / "brand-tokens.json"
 
-# Official Workday Corporate Template tokens. Never invent a hex.
-CORE = {
-    "after_hours": "022043",
-    "ink": "0F2E66",
-    "ballpoint": "0057AE",
-    "water_cooler": "1C98E8",
-    "blue_sky": "9ECFFF",
-    "paper": "FFFFFF",
-    "keyboard": "FCF8E8",
-    "highlighter": "FFF3A8",
-    "pencil": "FDE65E",
-    "lunch_break": "FEC10B",
-}
-SECONDARY = {
-    "tack": "6FC9D3",
-    "eraser": "FFC2FD",
-    "smoothie": "AB65D0",
-    "happy_hour": "FD7E00",
-    "thumbtack": "FC5B05",
-    "laptop": "525D6A",
-    "staple": "7D8B99",
-    "desk": "B6C1CC",
-    "business_card": "F1F3F6",
-}
-ALL_COLORS = {**CORE, **SECONDARY}
-CHART_SERIES = [
-    CORE["water_cooler"],
-    CORE["lunch_break"],
-    CORE["ballpoint"],
-    CORE["blue_sky"],
-    CORE["ink"],
-]
-
-LAYOUT_ALIASES = {
-    "title": "Title Slide",
-    "cover": "Title Slide",
-    "title-slide": "Title Slide",
-    "section": "Section Title",
-    "section-title": "Section Title",
-    "divider": "Section Title",
-    "content": "Title and Content",
-    "title-and-content": "Title and Content",
-    "bullets": "Title and Content",
-    "two-column": "1/2_Headline",
-    "two-col": "1/2_Headline",
-    "headline": "1/2_Headline",
-    "table": "Title Only",
-    "chart": "Title Only",
-    "closing": "Bumper Slide",
-    "bumper": "Bumper Slide",
-    "close": "Bumper Slide",
-    "intro": "Intro_One",
-    "intro-one": "Intro_One",
-    "intro-three": "Intro_Three",
-    "intro-four": "Intro_Four",
-    "blank": "Blank White Background",
-    "title-only": "Title Only",
-    "title-only-alt": "Title Only_Alt",
-    "photo-right": "Photo-Right",
-    "photos": "3-Photos",
-    "layout-1": "Layout 1",
-}
-
-MAX_BULLETS = 6
-FONT_TITLE = "Archivo"
-FONT_BODY = "Archivo Light"
-FONT_FALLBACK = "Arial"
+MAX_BULLETS = BRAND.limits["bullets"]
+CORE = BRAND.core
+SECONDARY = BRAND.secondary
+CHART_SERIES = BRAND.chart_series
+FONT_TITLE = BRAND.fonts["title"]
+FONT_BODY = BRAND.fonts["body"]
 
 
 def rgb(name_or_hex: str) -> RGBColor:
-    token = name_or_hex.strip().lstrip("#").lower().replace(" ", "_")
-    if token in ALL_COLORS:
-        h = ALL_COLORS[token]
-    else:
-        h = token.upper()
-        allowed = {v.upper() for v in ALL_COLORS.values()}
-        if h not in allowed:
-            raise ValueError(
-                f"Off-brand color {name_or_hex!r}. Use a named token from BRAND.md "
-                f"or one of: {', '.join(sorted(ALL_COLORS))}."
-            )
-    return RGBColor.from_string(h)
-
-
-def load_outline(path: Path) -> dict[str, Any]:
-    text = path.read_text()
-    if path.suffix.lower() in {".yaml", ".yml"}:
-        try:
-            import yaml
-        except ImportError as exc:
-            raise SystemExit("PyYAML is required for .yaml outlines. pip3 install pyyaml") from exc
-        data = yaml.safe_load(text)
-    else:
-        data = json.loads(text)
-    if not isinstance(data, dict) or "slides" not in data:
-        raise SystemExit("Outline must be an object with a top-level 'slides' list.")
-    return data
+    return RGBColor.from_string(BRAND.color_hex(name_or_hex))
 
 
 def find_layout(prs: Presentation, name: str):
-    wanted = LAYOUT_ALIASES.get(name.strip().lower(), name).strip().lower()
+    wanted = name.strip().lower()
     for layout in prs.slide_layouts:
         if layout.name.strip().lower() == wanted:
             return layout
@@ -209,15 +122,11 @@ def add_textbox(
     return box
 
 
-NO_FOOTER_LAYOUTS = {"Title Slide", "Bumper Slide"}
-
-
-def fill_footer(slide, text: str | None, layout_name: str):
+def fill_footer(slide, text: str | None, layout):
     """python-pptx does not clone footer placeholders. Draw the brand footer ourselves."""
-    if text is None or layout_name in NO_FOOTER_LAYOUTS:
+    if text is None or not layout.footer:
         return
-    # Staple on Paper. Ink on the gold rails so the line still reads.
-    color = "ink" if layout_name in {"Section Title", "Layout 1"} else "staple"
+    color = "ink" if layout.name in {"Section Title", "Layout 1"} else "staple"
     footer = placeholder_of_types(slide, {PP_PLACEHOLDER.FOOTER})
     if footer is not None:
         replace_text(footer, text)
@@ -226,13 +135,13 @@ def fill_footer(slide, text: str | None, layout_name: str):
                 for run in para.runs:
                     set_run_font(run, name=FONT_TITLE, size=8, bold=False, color=color)
         return
-    left = 0.36 if layout_name == "Layout 1" else 0.03
+    left, top, width, height = layout.footer_region
     add_textbox(
         slide,
         left,
-        5.27,
-        3.375,
-        0.30,
+        top,
+        width,
+        height,
         text,
         font=FONT_TITLE,
         size=8,
@@ -264,6 +173,13 @@ def body_placeholder(slide):
             # Skip footer / title-like bodies already handled.
             if kind == PP_PLACEHOLDER.FOOTER:
                 continue
+            return shape
+    return None
+
+
+def placeholder_by_idx(slide, idx: int):
+    for shape in iter_placeholders(slide):
+        if shape.placeholder_format.idx == idx:
             return shape
     return None
 
@@ -322,20 +238,25 @@ def set_bullets(shape, items: list[Any]):
             )
 
 
-def add_picture_if_given(slide, spec: dict[str, Any]):
-    image = spec.get("image")
+def image_path(image: Any) -> Path:
+    if isinstance(image, dict):
+        image = image.get("path") or image.get("file")
     if not image:
-        return
+        raise ValueError("A local image path is required for PowerPoint output")
     path = Path(image)
     if not path.is_file():
         path = (ROOT / image).resolve()
-    pic = placeholder_of_types(slide, {PP_PLACEHOLDER.PICTURE})
-    if pic is None:
-        return
     if not path.is_file():
-        print(f"warning: image not found: {image}", file=sys.stderr)
-        return
-    pic.insert_picture(str(path))
+        raise ValueError(f"Image not found: {image}")
+    return path
+
+
+def fill_picture_slots(slide, indexes: list[int] | tuple[int, ...], images: list[Any]):
+    for idx, image in zip(indexes, images):
+        placeholder = placeholder_by_idx(slide, idx)
+        if placeholder is None:
+            raise ValueError(f"Picture placeholder {idx} is missing")
+        placeholder.insert_picture(str(image_path(image)))
 
 
 def _set_cell_border(cell, *, color_hex: str, width_emu: int, edges=None):
@@ -524,24 +445,26 @@ def add_section_copy(slide, spec: dict[str, Any]):
     eyebrow = spec.get("eyebrow") or spec.get("kicker")
     title = spec.get("title") or spec.get("statement") or ""
     if eyebrow:
+        left, top, width, height = BRAND.region("section_eyebrow")
         add_textbox(
             slide,
-            3.32,
-            1.08,
-            4.34,
-            0.41,
+            left,
+            top,
+            width,
+            height,
             str(eyebrow).upper(),
             font=FONT_TITLE,
             size=14,
             bold=False,
             color="water_cooler",
         )
+    left, top, width, height = BRAND.region("section_title")
     add_textbox(
         slide,
-        3.32,
-        1.46,
-        5.61,
-        2.20,
+        left,
+        top,
+        width,
+        height,
         title,
         font=FONT_TITLE,
         size=28,
@@ -551,54 +474,57 @@ def add_section_copy(slide, spec: dict[str, Any]):
     )
 
 
-def add_two_column_items(slide, spec: dict[str, Any]):
-    items = spec.get("items") or spec.get("right") or []
-    if isinstance(items, dict):
-        items = items.get("items") or []
-    items = items[:3]
-    top = 0.76
-    gap = 1.28
+def item_copy(item: Any) -> tuple[str, str]:
+    if isinstance(item, str):
+        return item, ""
+    return (
+        item.get("title") or item.get("heading") or "",
+        item.get("body") or item.get("text") or "",
+    )
+
+
+def add_two_column_items(slide, items: list[Any], *, compact: bool):
+    stack = "two_column_compact" if compact else "two_column_numbered"
     for i, item in enumerate(items):
-        if isinstance(item, str):
-            heading, body = item, ""
-        else:
-            heading = item.get("title") or item.get("heading") or ""
-            body = item.get("body") or item.get("text") or ""
-        y = top + i * gap
+        heading, body = item_copy(item)
+        if not compact:
+            left, top, width, height = BRAND.stack_region(stack, "number", i)
+            add_textbox(
+                slide,
+                left,
+                top,
+                width,
+                height,
+                f"{i + 1:02d}",
+                font=FONT_TITLE,
+                size=20,
+                bold=True,
+                color="water_cooler",
+            )
+        left, top, width, height = BRAND.stack_region(stack, "heading", i)
         add_textbox(
             slide,
-            5.00,
-            y,
-            0.53,
-            0.44,
-            f"{i + 1:02d}",
-            font=FONT_TITLE,
-            size=20,
-            bold=True,
-            color="water_cooler",
-        )
-        add_textbox(
-            slide,
-            5.57,
-            y,
-            3.61,
-            0.35,
+            left,
+            top,
+            width,
+            height,
             heading,
             font=FONT_TITLE,
-            size=15,
+            size=13 if compact else 15,
             bold=True,
             color="ink",
         )
         if body:
+            left, top, width, height = BRAND.stack_region(stack, "body", i)
             add_textbox(
                 slide,
-                5.57,
-                y + 0.32,
-                3.61,
-                0.76,
+                left,
+                top,
+                width,
+                height,
                 body,
                 font=FONT_BODY,
-                size=13,
+                size=11 if compact else 13,
                 bold=False,
                 color="ink",
             )
@@ -607,12 +533,13 @@ def add_two_column_items(slide, spec: dict[str, Any]):
 def add_cover_date(slide, date_text: str | None):
     if not date_text:
         return
+    left, top, width, height = BRAND.region("cover_date")
     add_textbox(
         slide,
-        0.51,
-        4.96,
-        4.00,
-        0.30,
+        left,
+        top,
+        width,
+        height,
         date_text,
         font=FONT_TITLE,
         size=12,
@@ -624,13 +551,13 @@ def add_cover_date(slide, date_text: str | None):
 def add_closing_caption(slide, text: str | None):
     if not text:
         return
-    # Layout lockup occupies 1.79–3.31 in. Keep the caption clear of the wordmark.
+    left, top, width, height = BRAND.region("closing_caption")
     add_textbox(
         slide,
-        1.50,
-        3.58,
-        7.00,
-        0.40,
+        left,
+        top,
+        width,
+        height,
         text,
         font=FONT_TITLE,
         size=16,
@@ -640,28 +567,253 @@ def add_closing_caption(slide, text: str | None):
     )
 
 
-def fill_intro(slide, spec: dict[str, Any]):
-    # Intro layouts expose body placeholders in name / title / company order.
-    bodies = [
-        shape
-        for shape in iter_placeholders(slide)
-        if shape.placeholder_format.type == PP_PLACEHOLDER.BODY
-    ]
-    values = [
-        spec.get("name") or spec.get("title") or "",
-        spec.get("role") or spec.get("item_title") or spec.get("subtitle") or "",
-        spec.get("company") or spec.get("org") or "",
-    ]
-    # Intro_One: idx 10 name, 11 title, 12 company
-    by_idx = {shape.placeholder_format.idx: shape for shape in bodies}
-    mapping = [(10, values[0]), (11, values[1]), (12, values[2])]
-    if all(idx in by_idx for idx, _ in mapping):
-        for idx, value in mapping:
-            replace_text(by_idx[idx], value)
-    elif bodies:
-        for shape, value in zip(bodies, values):
-            replace_text(shape, value)
-    add_picture_if_given(slide, spec)
+def fill_intro(slide, normalized: NormalizedSlide):
+    for slot, speaker in zip(
+        normalized.pattern.layout.speaker_slots,
+        normalized.get("speakers") or [],
+    ):
+        for field in ("name", "role", "company"):
+            placeholder = placeholder_by_idx(slide, slot[field])
+            if placeholder is None:
+                raise ValueError(f"Speaker placeholder {slot[field]} is missing")
+            replace_text(placeholder, speaker.get(field) or "")
+        if speaker.get("image"):
+            fill_picture_slots(slide, [slot["picture"]], [speaker["image"]])
+
+
+def add_feature_grid(slide, spec: Mapping[str, Any]):
+    subtitle = spec.get("subtitle")
+    if subtitle:
+        left, top, width, height = BRAND.region("title_alt_subhead")
+        add_textbox(
+            slide,
+            left,
+            top,
+            width,
+            height,
+            str(subtitle),
+            font=FONT_TITLE,
+            size=16,
+            color="ink",
+        )
+    for i, item in enumerate(spec.get("items") or []):
+        heading, body = item_copy(item)
+        left, top, width, height = BRAND.stack_region("feature_grid", "heading", i)
+        add_textbox(
+            slide,
+            left,
+            top,
+            width,
+            height,
+            heading,
+            font=FONT_TITLE,
+            size=15,
+            bold=True,
+            color="ink",
+        )
+        if body:
+            left, top, width, height = BRAND.stack_region("feature_grid", "body", i)
+            add_textbox(
+                slide,
+                left,
+                top,
+                width,
+                height,
+                body,
+                font=FONT_BODY,
+                size=11,
+                color="ink",
+            )
+
+
+def add_photo_right_items(slide, items: list[Any]):
+    for i, item in enumerate(items):
+        heading, body = item_copy(item)
+        left, top, width, height = BRAND.stack_region(
+            "photo_right_items", "heading", i
+        )
+        add_textbox(
+            slide,
+            left,
+            top,
+            width,
+            height,
+            heading,
+            font=FONT_TITLE,
+            size=13,
+            bold=True,
+            color="ink",
+        )
+        if body:
+            left, top, width, height = BRAND.stack_region(
+                "photo_right_items", "body", i
+            )
+            add_textbox(
+                slide,
+                left,
+                top,
+                width,
+                height,
+                body,
+                font=FONT_BODY,
+                size=11,
+                color="ink",
+            )
+
+
+def add_agenda(slide, spec: Mapping[str, Any]):
+    left, top, width, height = BRAND.region("section_eyebrow")
+    add_textbox(
+        slide,
+        left,
+        top,
+        width,
+        height,
+        str(spec.get("title") or "").upper(),
+        font=FONT_TITLE,
+        size=14,
+        color="water_cooler",
+    )
+    for i, item in enumerate(spec.get("items") or []):
+        heading, body = item_copy(item)
+        number = str(item.get("number") if isinstance(item, dict) else i + 1)
+        left, top, width, height = BRAND.stack_region(
+            "agenda_items", "number", i
+        )
+        add_textbox(
+            slide,
+            left,
+            top,
+            width,
+            height,
+            number.zfill(2),
+            font=FONT_TITLE,
+            size=13,
+            bold=True,
+            color="water_cooler",
+        )
+        left, top, width, height = BRAND.stack_region(
+            "agenda_items", "heading", i
+        )
+        text = heading if not body else f"{heading}\n{body}"
+        add_textbox(
+            slide,
+            left,
+            top,
+            width,
+            height + (0.2 if body else 0),
+            text,
+            font=FONT_TITLE if not body else FONT_BODY,
+            size=13 if not body else 11,
+            bold=not body,
+            color="ink",
+        )
+
+
+def add_freeform_copy(slide, normalized: NormalizedSlide):
+    spec = normalized.data
+    layout_name = normalized.pattern.layout.name
+    if layout_name == "Layout 1":
+        title_region, body_region = "rail_title", "rail_body"
+    elif layout_name == "Blank White Background":
+        title_region, body_region = "blank_title", "blank_body"
+    else:
+        title_region, body_region = "standard_title", "standard_body"
+    title = placeholder_of_types(
+        slide, {PP_PLACEHOLDER.TITLE, PP_PLACEHOLDER.CENTER_TITLE}
+    )
+    if title is None and spec.get("title"):
+        left, top, width, height = BRAND.region(title_region)
+        add_textbox(
+            slide,
+            left,
+            top,
+            width,
+            height,
+            str(spec["title"]),
+            font=FONT_TITLE,
+            size=28,
+            bold=True,
+            color="ink",
+        )
+    if layout_name == "Title Only_Alt" and spec.get("subtitle"):
+        left, top, width, height = BRAND.region("title_alt_subhead")
+        add_textbox(
+            slide,
+            left,
+            top,
+            width,
+            height,
+            str(spec["subtitle"]),
+            font=FONT_TITLE,
+            size=16,
+            color="ink",
+        )
+    body = spec.get("body") or spec.get("bullets")
+    if body:
+        if isinstance(body, list):
+            body = "\n".join(
+                item if isinstance(item, str) else str(item.get("text") or item.get("title") or "")
+                for item in body
+            )
+        left, top, width, height = BRAND.region(body_region)
+        add_textbox(
+            slide,
+            left,
+            top,
+            width,
+            height,
+            str(body),
+            font=FONT_BODY,
+            size=18,
+            color="ink",
+        )
+
+
+def add_timeline(slide, items: list[Any]):
+    line = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE,
+        Inches(0.75),
+        Inches(2.73),
+        Inches(8.5),
+        Inches(0.03),
+    )
+    line.fill.solid()
+    line.fill.fore_color.rgb = rgb("desk")
+    line.line.fill.background()
+    step = 8.2 / max(len(items) - 1, 1)
+    for i, item in enumerate(items):
+        heading, body = item_copy(item)
+        x = 0.55 + i * step
+        above = i % 2 == 1
+        date_y = 2.15 if above else 2.9
+        body_y = 1.45 if above else 3.2
+        add_textbox(
+            slide,
+            x,
+            date_y,
+            1.15,
+            0.28,
+            heading,
+            font=FONT_TITLE,
+            size=10,
+            bold=True,
+            color="water_cooler",
+            align=PP_ALIGN.CENTER,
+        )
+        if body:
+            add_textbox(
+                slide,
+                x,
+                body_y,
+                1.15,
+                0.65,
+                body,
+                font=FONT_BODY,
+                size=9,
+                color="ink",
+                align=PP_ALIGN.CENTER,
+            )
 
 
 def add_notes(slide, notes: str | None):
@@ -670,58 +822,70 @@ def add_notes(slide, notes: str | None):
     slide.notes_slide.notes_text_frame.text = notes
 
 
-def build_slide(prs: Presentation, spec: dict[str, Any], footer: str):
-    intent = spec.get("layout") or spec.get("intent") or "content"
-    layout = find_layout(prs, intent)
+def build_slide(prs: Presentation, normalized: NormalizedSlide, footer: str):
+    spec = normalized.data
+    pattern = normalized.pattern
+    layout = find_layout(prs, pattern.layout.name)
     slide = prs.slides.add_slide(layout)
-    layout_name = layout.name.strip()
 
-    fill_footer(slide, spec.get("footer", footer), layout_name)
+    fill_footer(slide, spec.get("footer", footer), pattern.layout)
 
-    if layout_name == "Title Slide":
+    if pattern.composition == Composition.TITLE:
         fill_title(slide, spec.get("title"))
-        fill_subtitle(slide, spec.get("subtitle") or spec.get("subhead"))
+        fill_subtitle(slide, spec.get("subtitle"))
         add_cover_date(slide, spec.get("date"))
-    elif layout_name == "Section Title":
-        add_section_copy(slide, spec)
-    elif layout_name == "Bumper Slide":
-        add_closing_caption(slide, spec.get("title") or spec.get("caption"))
-    elif layout_name.startswith("Intro_"):
-        fill_intro(slide, spec)
-    elif intent.strip().lower() in {"table"}:
+    elif pattern.composition == Composition.INTRO:
+        fill_intro(slide, normalized)
+    elif pattern.composition == Composition.CONTENT:
         fill_title(slide, spec.get("title"))
-        add_table_slide(slide, spec)
-    elif intent.strip().lower() in {"chart"}:
+        body = body_placeholder(slide)
+        if body is None:
+            raise ValueError("Content layout is missing its body placeholder")
+        set_bullets(body, spec.get("bullets") or [])
+    elif pattern.composition == Composition.FREEFORM:
         fill_title(slide, spec.get("title"))
-        add_chart_slide(slide, spec)
-    elif layout_name in {"1/2_Headline", "1/2 Headline_Alt"}:
+        add_freeform_copy(slide, normalized)
+    elif pattern.composition == Composition.FEATURE_GRID:
+        fill_title(slide, spec.get("title"))
+        add_feature_grid(slide, spec)
+    elif pattern.composition == Composition.TWO_COLUMN:
         fill_title(slide, spec.get("title"))
         title = placeholder_of_types(
             slide, {PP_PLACEHOLDER.TITLE, PP_PLACEHOLDER.CENTER_TITLE}
         )
         if title is not None and title.has_text_frame:
-            # Middle-align the short title with the first numbered item.
             try:
                 title.text_frame._txBody.bodyPr.set("anchor", "ctr")
             except Exception:
                 pass
-        add_two_column_items(slide, spec)
-    else:
+        items = list(spec.get("items") or [])
+        add_two_column_items(slide, items, compact=len(items) > 3)
+    elif pattern.composition == Composition.SECTION:
+        add_section_copy(slide, spec)
+    elif pattern.composition == Composition.AGENDA:
+        add_agenda(slide, spec)
+    elif pattern.composition == Composition.PHOTOS:
         fill_title(slide, spec.get("title"))
-        fill_subtitle(slide, spec.get("subtitle") or spec.get("subhead"))
-        bullets = spec.get("bullets") or spec.get("body")
-        body = body_placeholder(slide)
-        if bullets and body is not None:
-            if isinstance(bullets, str):
-                bullets = [bullets]
-            set_bullets(body, bullets)
-        elif spec.get("body") and body is not None and isinstance(spec.get("body"), str):
-            set_bullets(body, [spec["body"]])
-        add_picture_if_given(slide, spec)
-        if spec.get("headers"):
-            add_table_slide(slide, spec)
-        if spec.get("chart"):
-            add_chart_slide(slide, spec)
+        fill_picture_slots(
+            slide,
+            pattern.layout.picture_slots,
+            list(spec.get("images") or []),
+        )
+    elif pattern.composition == Composition.PHOTO_RIGHT:
+        fill_title(slide, spec.get("title"))
+        fill_picture_slots(slide, pattern.layout.picture_slots, [spec.get("image")])
+        add_photo_right_items(slide, list(spec.get("items") or []))
+    elif pattern.composition == Composition.CLOSING:
+        add_closing_caption(slide, spec.get("title") or spec.get("caption"))
+    elif pattern.composition == Composition.TABLE:
+        fill_title(slide, spec.get("title"))
+        add_table_slide(slide, spec)
+    elif pattern.composition == Composition.CHART:
+        fill_title(slide, spec.get("title"))
+        add_chart_slide(slide, spec)
+    elif pattern.composition == Composition.TIMELINE:
+        fill_title(slide, spec.get("title"))
+        add_timeline(slide, list(spec.get("items") or []))
 
     add_notes(slide, spec.get("notes"))
     return slide
@@ -741,8 +905,12 @@ def build(outline: dict[str, Any], template: Path, dest: Path):
     if len(prs.slides) != 0:
         print("warning: template already contains slides; new slides will be appended.", file=sys.stderr)
     footer = outline.get("footer", "Workday Confidential")
-    for spec in outline.get("slides") or []:
-        build_slide(prs, spec, footer)
+    try:
+        slides = BRAND.normalize_outline(outline)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    for normalized in slides:
+        build_slide(prs, normalized, footer)
     apply_core_props(prs, outline)
     dest.parent.mkdir(parents=True, exist_ok=True)
     prs.save(str(dest))
@@ -757,7 +925,10 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not args.template.is_file():
         raise SystemExit(f"Template not found: {args.template}")
-    outline = load_outline(args.outline)
+    try:
+        outline = load_outline(args.outline)
+    except (ValueError, RuntimeError) as exc:
+        raise SystemExit(str(exc)) from exc
     dest = args.output
     if dest is None:
         dest = args.outline.with_suffix(".pptx")

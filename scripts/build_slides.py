@@ -15,73 +15,12 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
+
+from brand import BRAND, Composition, NormalizedSlide, load_outline
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PPTX = ROOT / "assets" / "template.pptx"
-TOKENS_PATH = ROOT / "assets" / "brand-tokens.json"
-
-CORE = {
-    "after_hours": "022043",
-    "ink": "0F2E66",
-    "ballpoint": "0057AE",
-    "water_cooler": "1C98E8",
-    "blue_sky": "9ECFFF",
-    "paper": "FFFFFF",
-    "keyboard": "FCF8E8",
-    "highlighter": "FFF3A8",
-    "pencil": "FDE65E",
-    "lunch_break": "FEC10B",
-}
-SECONDARY = {
-    "tack": "6FC9D3",
-    "eraser": "FFC2FD",
-    "smoothie": "AB65D0",
-    "happy_hour": "FD7E00",
-    "thumbtack": "FC5B05",
-    "laptop": "525D6A",
-    "staple": "7D8B99",
-    "desk": "B6C1CC",
-    "business_card": "F1F3F6",
-}
-ALL_COLORS = {**CORE, **SECONDARY}
-CHART_SERIES = [
-    CORE["water_cooler"],
-    CORE["lunch_break"],
-    CORE["ballpoint"],
-    CORE["blue_sky"],
-    CORE["ink"],
-]
-
-LAYOUT_ALIASES = {
-    "title": "Title Slide",
-    "cover": "Title Slide",
-    "title-slide": "Title Slide",
-    "section": "Section Title",
-    "section-title": "Section Title",
-    "divider": "Section Title",
-    "content": "Title and Content",
-    "title-and-content": "Title and Content",
-    "bullets": "Title and Content",
-    "two-column": "1/2_Headline",
-    "two-col": "1/2_Headline",
-    "headline": "1/2_Headline",
-    "table": "Title Only",
-    "chart": "Title Only",
-    "closing": "Bumper Slide",
-    "bumper": "Bumper Slide",
-    "close": "Bumper Slide",
-    "intro": "Intro_One",
-    "intro-one": "Intro_One",
-    "intro-three": "Intro_Three",
-    "intro-four": "Intro_Four",
-    "blank": "Blank White Background",
-    "title-only": "Title Only",
-    "title-only-alt": "Title Only_Alt",
-    "photo-right": "Photo-Right",
-    "photos": "3-Photos",
-    "layout-1": "Layout 1",
-}
 
 PREDEFINED_FALLBACK = {
     "Title Slide": "TITLE",
@@ -94,29 +33,22 @@ PREDEFINED_FALLBACK = {
     "Bumper Slide": "BLANK",
     "Blank White Background": "BLANK",
     "Intro_One": "TITLE_AND_BODY",
+    "Intro_Three": "TITLE_AND_BODY",
+    "Intro_Four": "TITLE_AND_BODY",
     "Photo-Right": "TITLE_ONLY",
     "Layout 1": "BLANK",
     "3-Photos": "TITLE_ONLY",
 }
 
-NO_FOOTER = {"Title Slide", "Bumper Slide"}
-MAX_BULLETS = 6
-FONT_TITLE = "Archivo"
-FONT_BODY = "Archivo Light"
+MAX_BULLETS = BRAND.limits["bullets"]
+CHART_SERIES = BRAND.chart_series
+FONT_TITLE = BRAND.fonts["title"]
+FONT_BODY = BRAND.fonts["body"]
 EMU_PER_INCH = 914400
 
 
 def hex_of(name_or_hex: str) -> str:
-    token = name_or_hex.strip().lstrip("#").lower().replace(" ", "_")
-    if token in ALL_COLORS:
-        return ALL_COLORS[token]
-    h = token.upper()
-    if h not in {v.upper() for v in ALL_COLORS.values()}:
-        raise ValueError(
-            f"Off-brand color {name_or_hex!r}. Use a named token from BRAND.md "
-            f"or one of: {', '.join(sorted(ALL_COLORS))}."
-        )
-    return h
+    return BRAND.color_hex(name_or_hex)
 
 
 def rgb_frac(name_or_hex: str) -> dict[str, float]:
@@ -158,25 +90,6 @@ def element_props(page: str, x: float, y: float, w: float, h: float) -> dict[str
         "size": {"width": emu(w), "height": emu(h)},
         "transform": transform(x, y),
     }
-
-
-def layout_name(intent: str) -> str:
-    return LAYOUT_ALIASES.get(intent.strip().lower(), intent).strip()
-
-
-def load_outline(path: Path) -> dict[str, Any]:
-    text = path.read_text()
-    if path.suffix.lower() in {".yaml", ".yml"}:
-        try:
-            import yaml
-        except ImportError as exc:
-            raise SystemExit("PyYAML is required for .yaml outlines. pip3 install pyyaml") from exc
-        data = yaml.safe_load(text)
-    else:
-        data = json.loads(text)
-    if not isinstance(data, dict) or "slides" not in data:
-        raise SystemExit("Outline must be an object with a top-level 'slides' list.")
-    return data
 
 
 def flatten_bullets(items: list[Any]) -> list[tuple[str, int]]:
@@ -354,18 +267,73 @@ def create_rect(object_id: str, page: str, x: float, y: float, w: float, h: floa
     ]
 
 
-def footer_ops(slide_id: str, idx: int, text: str, layout: str) -> list[dict[str, Any]]:
-    if layout in NO_FOOTER:
+def placeholder_object_id(slide_id: str, idx: int) -> str:
+    return f"{slide_id}_ph_{idx}"
+
+
+def placeholder_mappings(slide_id: str, normalized: NormalizedSlide) -> list[dict[str, Any]]:
+    layout = normalized.pattern.layout
+    entries: dict[int, str] = {}
+    for role, idx in layout.placeholders.items():
+        if role == "title":
+            kind = "CENTER_TITLE" if layout.name == "Title Slide" else "TITLE"
+        else:
+            kind = {
+                "subtitle": "SUBTITLE",
+                "body": "BODY",
+                "footer": "FOOTER",
+            }[role]
+        entries[idx] = kind
+    for slot in layout.speaker_slots:
+        for role in ("name", "role", "company"):
+            entries[slot[role]] = "BODY"
+        entries[slot["picture"]] = "PICTURE"
+    for idx in layout.picture_slots:
+        entries[idx] = "PICTURE"
+    return [
+        {
+            "layoutPlaceholder": {"type": kind, "index": idx},
+            "objectId": placeholder_object_id(slide_id, idx),
+        }
+        for idx, kind in sorted(entries.items())
+    ]
+
+
+def image_url(image: Any) -> str:
+    if isinstance(image, dict):
+        image = image.get("url")
+    if not isinstance(image, str) or not image.startswith(("https://", "http://")):
+        raise ValueError("Google Slides images need a public http or https URL")
+    return image
+
+
+def create_image(
+    object_id: str,
+    page: str,
+    image: Any,
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+) -> dict[str, Any]:
+    return {
+        "createImage": {
+            "objectId": object_id,
+            "url": image_url(image),
+            "elementProperties": element_props(page, x, y, w, h),
+        }
+    }
+
+
+def footer_ops(
+    slide_id: str, text: str, normalized: NormalizedSlide
+) -> list[dict[str, Any]]:
+    layout = normalized.pattern.layout
+    if not layout.footer:
         return []
-    color = "ink" if layout in {"Section Title", "Layout 1"} else "staple"
-    left = 0.36 if layout == "Layout 1" else 0.03
-    return create_box(
-        f"{slide_id}_footer",
-        slide_id,
-        left,
-        5.27,
-        3.375,
-        0.30,
+    color = "ink" if layout.name in {"Section Title", "Layout 1"} else "staple"
+    return text_ops(
+        placeholder_object_id(slide_id, layout.placeholders["footer"]),
         text,
         font=FONT_TITLE,
         size=8,
@@ -517,43 +485,106 @@ def chart_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
     return ops
 
 
-def two_column_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
-    items = spec.get("items") or spec.get("right") or []
-    if isinstance(items, dict):
-        items = items.get("items") or []
-    items = items[:3]
+def item_copy(item: Any) -> tuple[str, str]:
+    if isinstance(item, str):
+        return item, ""
+    return (
+        item.get("title") or item.get("heading") or "",
+        item.get("body") or item.get("text") or "",
+    )
+
+
+def two_column_ops(
+    slide_id: str, items: list[Any], *, compact: bool
+) -> list[dict[str, Any]]:
     ops: list[dict[str, Any]] = []
-    top, gap = 0.76, 1.28
+    stack = "two_column_compact" if compact else "two_column_numbered"
     for i, item in enumerate(items):
-        if isinstance(item, str):
-            heading, body = item, ""
-        else:
-            heading = item.get("title") or item.get("heading") or ""
-            body = item.get("body") or item.get("text") or ""
-        y = top + i * gap
-        ops.extend(
-            create_box(
-                f"{slide_id}_n{i}",
-                slide_id,
-                5.00,
-                y,
-                0.53,
-                0.44,
-                f"{i + 1:02d}",
-                font=FONT_TITLE,
-                size=20,
-                bold=True,
-                color="water_cooler",
+        heading, body = item_copy(item)
+        if not compact:
+            x, y, w, h = BRAND.stack_region(stack, "number", i)
+            ops.extend(
+                create_box(
+                    f"{slide_id}_n{i}",
+                    slide_id,
+                    x,
+                    y,
+                    w,
+                    h,
+                    f"{i + 1:02d}",
+                    font=FONT_TITLE,
+                    size=20,
+                    bold=True,
+                    color="water_cooler",
+                )
             )
-        )
+        x, y, w, h = BRAND.stack_region(stack, "heading", i)
         ops.extend(
             create_box(
                 f"{slide_id}_h{i}",
                 slide_id,
-                5.57,
+                x,
                 y,
-                3.61,
-                0.35,
+                w,
+                h,
+                heading,
+                font=FONT_TITLE,
+                size=13 if compact else 15,
+                bold=True,
+                color="ink",
+            )
+        )
+        if body:
+            x, y, w, h = BRAND.stack_region(stack, "body", i)
+            ops.extend(
+                create_box(
+                    f"{slide_id}_b{i}",
+                    slide_id,
+                    x,
+                    y,
+                    w,
+                    h,
+                    body,
+                    font=FONT_BODY,
+                    size=11 if compact else 13,
+                    bold=False,
+                    color="ink",
+                )
+            )
+    return ops
+
+
+def feature_grid_ops(slide_id: str, spec: Mapping[str, Any]) -> list[dict[str, Any]]:
+    ops: list[dict[str, Any]] = []
+    subtitle = spec.get("subtitle")
+    if subtitle:
+        x, y, w, h = BRAND.region("title_alt_subhead")
+        ops.extend(
+            create_box(
+                f"{slide_id}_subhead",
+                slide_id,
+                x,
+                y,
+                w,
+                h,
+                str(subtitle),
+                font=FONT_TITLE,
+                size=16,
+                bold=False,
+                color="ink",
+            )
+        )
+    for i, item in enumerate(spec.get("items") or []):
+        heading, body = item_copy(item)
+        x, y, w, h = BRAND.stack_region("feature_grid", "heading", i)
+        ops.extend(
+            create_box(
+                f"{slide_id}_feature_h{i}",
+                slide_id,
+                x,
+                y,
+                w,
+                h,
                 heading,
                 font=FONT_TITLE,
                 size=15,
@@ -562,17 +593,18 @@ def two_column_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
             )
         )
         if body:
+            x, y, w, h = BRAND.stack_region("feature_grid", "body", i)
             ops.extend(
                 create_box(
-                    f"{slide_id}_b{i}",
+                    f"{slide_id}_feature_b{i}",
                     slide_id,
-                    5.57,
-                    y + 0.32,
-                    3.61,
-                    0.76,
+                    x,
+                    y,
+                    w,
+                    h,
                     body,
                     font=FONT_BODY,
-                    size=13,
+                    size=11,
                     bold=False,
                     color="ink",
                 )
@@ -580,61 +612,319 @@ def two_column_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
     return ops
 
 
-def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
-    intent = spec.get("layout") or spec.get("intent") or "content"
-    layout = layout_name(intent)
-    slide_id = f"wd_s{index + 1}"
-    requests: list[dict[str, Any]] = []
-    mappings = [
-        {"layoutPlaceholder": {"type": "TITLE", "index": 0}, "objectId": f"{slide_id}_title"},
-        {"layoutPlaceholder": {"type": "CENTER_TITLE", "index": 0}, "objectId": f"{slide_id}_ctitle"},
-        {"layoutPlaceholder": {"type": "SUBTITLE", "index": 0}, "objectId": f"{slide_id}_sub"},
-        {"layoutPlaceholder": {"type": "BODY", "index": 0}, "objectId": f"{slide_id}_body"},
-        {"layoutPlaceholder": {"type": "FOOTER", "index": 0}, "objectId": f"{slide_id}_ph_footer"},
-    ]
-    create: dict[str, Any] = {
-        "objectId": slide_id,
-        "insertionIndex": index,
-        "placeholderIdMappings": mappings,
-        "slideLayoutReference": {"layoutName": layout},
-    }
-    if layout in PREDEFINED_FALLBACK:
-        create["predefinedLayoutFallback"] = PREDEFINED_FALLBACK[layout]
-    requests.append({"createSlide": create})
-
-    title = spec.get("title")
-    subtitle = spec.get("subtitle") or spec.get("subhead")
-    if title and layout not in {"Section Title", "Bumper Slide"}:
-        requests.extend(
-            text_ops(
-                f"{slide_id}_title",
-                str(title),
+def photo_right_ops(slide_id: str, spec: Mapping[str, Any]) -> list[dict[str, Any]]:
+    ops: list[dict[str, Any]] = []
+    x, y, w, h = BRAND.patterns["photo-right"].layout.picture_regions[0]
+    ops.append(create_image(f"{slide_id}_image", slide_id, spec["image"], x, y, w, h))
+    for i, item in enumerate(spec.get("items") or []):
+        heading, body = item_copy(item)
+        x, y, w, h = BRAND.stack_region("photo_right_items", "heading", i)
+        ops.extend(
+            create_box(
+                f"{slide_id}_photo_h{i}",
+                slide_id,
+                x,
+                y,
+                w,
+                h,
+                heading,
                 font=FONT_TITLE,
-                size=36 if layout == "Title Slide" else 28,
-                bold=layout != "Title Slide",
+                size=13,
+                bold=True,
                 color="ink",
             )
         )
-    if subtitle is not None and layout == "Title Slide":
-        requests.extend(
-            text_ops(
-                f"{slide_id}_sub",
-                str(subtitle),
+        if body:
+            x, y, w, h = BRAND.stack_region("photo_right_items", "body", i)
+            ops.extend(
+                create_box(
+                    f"{slide_id}_photo_b{i}",
+                    slide_id,
+                    x,
+                    y,
+                    w,
+                    h,
+                    body,
+                    font=FONT_BODY,
+                    size=11,
+                    bold=False,
+                    color="ink",
+                )
+            )
+    return ops
+
+
+def intro_ops(slide_id: str, normalized: NormalizedSlide) -> list[dict[str, Any]]:
+    ops: list[dict[str, Any]] = []
+    layout = normalized.pattern.layout
+    for i, (slot, speaker) in enumerate(
+        zip(layout.speaker_slots, normalized.get("speakers") or [])
+    ):
+        for field, size, bold, font in (
+            ("name", 15, True, FONT_TITLE),
+            ("role", 12, False, FONT_BODY),
+            ("company", 10.5, False, FONT_BODY),
+        ):
+            ops.extend(
+                text_ops(
+                    placeholder_object_id(slide_id, slot[field]),
+                    str(speaker.get(field) or ""),
+                    font=font,
+                    size=size,
+                    bold=bold,
+                    color="ink",
+                )
+            )
+        if speaker.get("image"):
+            x, y, w, h = layout.picture_regions[i]
+            ops.append(
+                create_image(
+                    f"{slide_id}_speaker_image_{i}",
+                    slide_id,
+                    speaker["image"],
+                    x,
+                    y,
+                    w,
+                    h,
+                )
+            )
+    return ops
+
+
+def photos_ops(slide_id: str, normalized: NormalizedSlide) -> list[dict[str, Any]]:
+    return [
+        create_image(
+            f"{slide_id}_image_{i}",
+            slide_id,
+            image,
+            *normalized.pattern.layout.picture_regions[i],
+        )
+        for i, image in enumerate(normalized.get("images") or [])
+    ]
+
+
+def freeform_ops(slide_id: str, normalized: NormalizedSlide) -> list[dict[str, Any]]:
+    spec = normalized.data
+    layout_name = normalized.pattern.layout.name
+    if layout_name == "Layout 1":
+        title_region, body_region = "rail_title", "rail_body"
+    elif layout_name == "Blank White Background":
+        title_region, body_region = "blank_title", "blank_body"
+    else:
+        title_region, body_region = "standard_title", "standard_body"
+    ops: list[dict[str, Any]] = []
+    if "title" not in normalized.pattern.layout.placeholders and spec.get("title"):
+        x, y, w, h = BRAND.region(title_region)
+        ops.extend(
+            create_box(
+                f"{slide_id}_drawn_title",
+                slide_id,
+                x,
+                y,
+                w,
+                h,
+                str(spec["title"]),
+                font=FONT_TITLE,
+                size=28,
+                bold=True,
+                color="ink",
+            )
+        )
+    if layout_name == "Title Only_Alt" and spec.get("subtitle"):
+        x, y, w, h = BRAND.region("title_alt_subhead")
+        ops.extend(
+            create_box(
+                f"{slide_id}_subhead",
+                slide_id,
+                x,
+                y,
+                w,
+                h,
+                str(spec["subtitle"]),
                 font=FONT_TITLE,
                 size=16,
                 bold=False,
                 color="ink",
             )
         )
-    if layout == "Title Slide" and spec.get("date"):
+    body = spec.get("body") or spec.get("bullets")
+    if body:
+        if isinstance(body, list):
+            body = "\n".join(
+                item
+                if isinstance(item, str)
+                else str(item.get("text") or item.get("title") or "")
+                for item in body
+            )
+        x, y, w, h = BRAND.region(body_region)
+        ops.extend(
+            create_box(
+                f"{slide_id}_body_copy",
+                slide_id,
+                x,
+                y,
+                w,
+                h,
+                str(body),
+                font=FONT_BODY,
+                size=18,
+                bold=False,
+                color="ink",
+            )
+        )
+    return ops
+
+
+def agenda_ops(slide_id: str, spec: Mapping[str, Any]) -> list[dict[str, Any]]:
+    x, y, w, h = BRAND.region("section_eyebrow")
+    ops = create_box(
+        f"{slide_id}_agenda_title",
+        slide_id,
+        x,
+        y,
+        w,
+        h,
+        str(spec.get("title") or "").upper(),
+        font=FONT_TITLE,
+        size=14,
+        bold=False,
+        color="water_cooler",
+    )
+    for i, item in enumerate(spec.get("items") or []):
+        heading, body = item_copy(item)
+        number = str(item.get("number") if isinstance(item, dict) else i + 1)
+        x, y, w, h = BRAND.stack_region("agenda_items", "number", i)
+        ops.extend(
+            create_box(
+                f"{slide_id}_agenda_n{i}",
+                slide_id,
+                x,
+                y,
+                w,
+                h,
+                number.zfill(2),
+                font=FONT_TITLE,
+                size=13,
+                bold=True,
+                color="water_cooler",
+            )
+        )
+        x, y, w, h = BRAND.stack_region("agenda_items", "heading", i)
+        text = heading if not body else f"{heading}\n{body}"
+        ops.extend(
+            create_box(
+                f"{slide_id}_agenda_h{i}",
+                slide_id,
+                x,
+                y,
+                w,
+                h + (0.2 if body else 0),
+                text,
+                font=FONT_TITLE if not body else FONT_BODY,
+                size=13 if not body else 11,
+                bold=not body,
+                color="ink",
+            )
+        )
+    return ops
+
+
+def timeline_ops(slide_id: str, items: list[Any]) -> list[dict[str, Any]]:
+    ops = create_rect(f"{slide_id}_timeline", slide_id, 0.75, 2.73, 8.5, 0.03, "desk")
+    step = 8.2 / max(len(items) - 1, 1)
+    for i, item in enumerate(items):
+        heading, body = item_copy(item)
+        x = 0.55 + i * step
+        above = i % 2 == 1
+        ops.extend(
+            create_box(
+                f"{slide_id}_timeline_h{i}",
+                slide_id,
+                x,
+                2.15 if above else 2.9,
+                1.15,
+                0.28,
+                heading,
+                font=FONT_TITLE,
+                size=10,
+                bold=True,
+                color="water_cooler",
+                align="CENTER",
+            )
+        )
+        if body:
+            ops.extend(
+                create_box(
+                    f"{slide_id}_timeline_b{i}",
+                    slide_id,
+                    x,
+                    1.45 if above else 3.2,
+                    1.15,
+                    0.65,
+                    body,
+                    font=FONT_BODY,
+                    size=9,
+                    bold=False,
+                    color="ink",
+                    align="CENTER",
+                )
+            )
+    return ops
+
+
+def slide_plan(
+    index: int, normalized: NormalizedSlide, footer: str
+) -> dict[str, Any]:
+    spec = normalized.data
+    pattern = normalized.pattern
+    layout = pattern.layout.name
+    slide_id = f"wd_s{index + 1}"
+    requests: list[dict[str, Any]] = []
+    create: dict[str, Any] = {
+        "objectId": slide_id,
+        "insertionIndex": index,
+        "placeholderIdMappings": placeholder_mappings(slide_id, normalized),
+        "slideLayoutReference": {"layoutName": layout},
+    }
+    if layout.strip() in PREDEFINED_FALLBACK:
+        create["predefinedLayoutFallback"] = PREDEFINED_FALLBACK[layout.strip()]
+    requests.append({"createSlide": create})
+
+    title = spec.get("title")
+    title_idx = pattern.layout.placeholders.get("title")
+    if title and title_idx is not None:
+        requests.extend(
+            text_ops(
+                placeholder_object_id(slide_id, title_idx),
+                str(title),
+                font=FONT_TITLE,
+                size=36 if pattern.composition == Composition.TITLE else 28,
+                bold=pattern.composition != Composition.TITLE,
+                color="ink",
+            )
+        )
+    if pattern.composition == Composition.TITLE and spec.get("subtitle") is not None:
+        subtitle_idx = pattern.layout.placeholders["subtitle"]
+        requests.extend(
+            text_ops(
+                placeholder_object_id(slide_id, subtitle_idx),
+                str(spec["subtitle"]),
+                font=FONT_TITLE,
+                size=16,
+                bold=False,
+                color="ink",
+            )
+        )
+    if pattern.composition == Composition.TITLE and spec.get("date"):
+        x, y, w, h = BRAND.region("cover_date")
         requests.extend(
             create_box(
                 f"{slide_id}_date",
                 slide_id,
-                0.51,
-                4.96,
-                4.00,
-                0.30,
+                x,
+                y,
+                w,
+                h,
                 str(spec["date"]),
                 font=FONT_TITLE,
                 size=12,
@@ -642,17 +932,18 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
                 color="ink",
             )
         )
-    if layout == "Section Title":
+    if pattern.composition == Composition.SECTION:
         eyebrow = spec.get("eyebrow") or spec.get("kicker")
         if eyebrow:
+            x, y, w, h = BRAND.region("section_eyebrow")
             requests.extend(
                 create_box(
                     f"{slide_id}_eyebrow",
                     slide_id,
-                    3.32,
-                    1.08,
-                    4.34,
-                    0.41,
+                    x,
+                    y,
+                    w,
+                    h,
                     str(eyebrow).upper(),
                     font=FONT_TITLE,
                     size=14,
@@ -660,30 +951,34 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
                     color="water_cooler",
                 )
             )
+        x, y, w, h = BRAND.region("section_title")
         requests.extend(
             create_box(
                 f"{slide_id}_statement",
                 slide_id,
-                3.32,
-                1.46,
-                5.61,
-                2.20,
-                str(title or spec.get("statement") or ""),
+                x,
+                y,
+                w,
+                h,
+                str(title or ""),
                 font=FONT_TITLE,
                 size=28,
                 bold=True,
                 color="ink",
             )
         )
-    if layout == "Bumper Slide" and (title or spec.get("caption")):
+    if pattern.composition == Composition.CLOSING and (
+        title or spec.get("caption")
+    ):
+        x, y, w, h = BRAND.region("closing_caption")
         requests.extend(
             create_box(
                 f"{slide_id}_caption",
                 slide_id,
-                1.50,
-                3.58,
-                7.00,
-                0.40,
+                x,
+                y,
+                w,
+                h,
                 str(title or spec.get("caption")),
                 font=FONT_TITLE,
                 size=16,
@@ -692,16 +987,17 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
                 align="CENTER",
             )
         )
-    if layout == "Title and Content":
-        bullets = spec.get("bullets") or spec.get("body") or []
-        if isinstance(bullets, str):
-            bullets = [bullets]
-        rows = flatten_bullets(bullets)
-        body = "\n".join(text for text, _ in rows)
+    if pattern.composition == Composition.INTRO:
+        requests.extend(intro_ops(slide_id, normalized))
+    elif pattern.composition == Composition.CONTENT:
+        rows = flatten_bullets(spec.get("bullets") or [])
+        body = "\n".join(("\t" * level) + text for text, level in rows)
         if body:
             requests.extend(
                 text_ops(
-                    f"{slide_id}_body",
+                    placeholder_object_id(
+                        slide_id, pattern.layout.placeholders["body"]
+                    ),
                     body,
                     font=FONT_BODY,
                     size=20,
@@ -710,18 +1006,31 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
                     bullets=True,
                 )
             )
-    if layout in {"1/2_Headline", "1/2 Headline_Alt"}:
-        requests.extend(two_column_ops(slide_id, spec))
-    if intent.strip().lower() == "table" or spec.get("headers"):
+    elif pattern.composition == Composition.FREEFORM:
+        requests.extend(freeform_ops(slide_id, normalized))
+    elif pattern.composition == Composition.FEATURE_GRID:
+        requests.extend(feature_grid_ops(slide_id, spec))
+    elif pattern.composition == Composition.TWO_COLUMN:
+        items = list(spec.get("items") or [])
+        requests.extend(two_column_ops(slide_id, items, compact=len(items) > 3))
+    elif pattern.composition == Composition.AGENDA:
+        requests.extend(agenda_ops(slide_id, spec))
+    elif pattern.composition == Composition.PHOTOS:
+        requests.extend(photos_ops(slide_id, normalized))
+    elif pattern.composition == Composition.PHOTO_RIGHT:
+        requests.extend(photo_right_ops(slide_id, spec))
+    elif pattern.composition == Composition.TABLE:
         requests.extend(table_ops(slide_id, spec))
-    if intent.strip().lower() == "chart" or spec.get("chart"):
+    elif pattern.composition == Composition.CHART:
         requests.extend(chart_ops(slide_id, spec))
-    requests.extend(footer_ops(slide_id, index, spec.get("footer") or footer, layout))
+    elif pattern.composition == Composition.TIMELINE:
+        requests.extend(timeline_ops(slide_id, list(spec.get("items") or [])))
+    requests.extend(footer_ops(slide_id, spec.get("footer") or footer, normalized))
     notes = spec.get("notes")
     return {
         "slideId": slide_id,
         "layout": layout,
-        "intent": intent,
+        "intent": pattern.name,
         "spec": spec,
         "notes": notes,
         "requests": requests,
@@ -730,7 +1039,8 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str) -> dict[str, Any]:
 
 def build_plan(outline: dict[str, Any]) -> dict[str, Any]:
     footer = outline.get("footer", "Workday Confidential")
-    slides = [slide_plan(i, spec, footer) for i, spec in enumerate(outline.get("slides") or [])]
+    normalized = BRAND.normalize_outline(outline)
+    slides = [slide_plan(i, spec, footer) for i, spec in enumerate(normalized)]
     requests: list[dict[str, Any]] = []
     for slide in slides:
         requests.extend(slide["requests"])
@@ -742,7 +1052,11 @@ def build_plan(outline: dict[str, Any]) -> dict[str, Any]:
             "height": emu(5.625),
             "note": "16:9 Workday canvas (10.00 x 5.625 in)",
         },
-        "fonts": {"title": FONT_TITLE, "body": FONT_BODY, "fallback": "Arial"},
+        "fonts": {
+            "title": FONT_TITLE,
+            "body": FONT_BODY,
+            "fallback": BRAND.fonts["fallback"],
+        },
         "slides": [
             {"slideId": s["slideId"], "layout": s["layout"], "intent": s["intent"]}
             for s in slides
@@ -888,13 +1202,31 @@ def bind_requests(requests: list[dict[str, Any]], layouts: dict[str, str], allow
     return bound
 
 
-def placeholder_id(slide: dict[str, Any], *types: str) -> str | None:
-    wanted = {t.upper() for t in types}
+def placeholder_ids(slide: dict[str, Any]) -> dict[int, str]:
+    found: dict[int, str] = {}
     for el in slide.get("pageElements") or []:
         ph = ((el.get("shape") or {}).get("placeholder") or {})
-        if str(ph.get("type") or "").upper() in wanted:
-            return el.get("objectId")
-    return None
+        if ph.get("index") is not None and el.get("objectId"):
+            found[int(ph["index"])] = el["objectId"]
+    return found
+
+
+def rewrite_slide_requests(
+    planned: dict[str, Any], live: dict[str, Any]
+) -> list[dict[str, Any]]:
+    slide_id = planned["slideId"]
+    live_placeholders = placeholder_ids(live)
+    rewritten: list[dict[str, Any]] = []
+    for request in planned["requests"]:
+        if "createSlide" in request:
+            continue
+        blob = json.dumps(request)
+        for idx, object_id in live_placeholders.items():
+            blob = blob.replace(placeholder_object_id(slide_id, idx), object_id)
+        if f"{slide_id}_ph_" in blob:
+            raise ValueError(f"Slide {slide_id} is missing a required placeholder")
+        rewritten.append(json.loads(blob))
+    return rewritten
 
 
 def apply(outline: dict[str, Any], plan: dict[str, Any], args: argparse.Namespace) -> str:
@@ -933,40 +1265,10 @@ def apply(outline: dict[str, Any], plan: dict[str, Any], args: argparse.Namespac
         if live is None:
             print(f"warning: created slide {slide_id} not in GET response", file=sys.stderr)
             continue
-        title_id = placeholder_id(live, "TITLE", "CENTER_TITLE")
-        sub_id = placeholder_id(live, "SUBTITLE")
-        body_id = placeholder_id(live, "BODY")
-        footer_id = placeholder_id(live, "FOOTER")
-        rewritten: list[dict[str, Any]] = []
-        for req in planned["requests"]:
-            if "createSlide" in req:
-                continue
-            blob = json.dumps(req)
-            if title_id:
-                blob = blob.replace(f"{slide_id}_title", title_id).replace(f"{slide_id}_ctitle", title_id)
-            if sub_id:
-                blob = blob.replace(f"{slide_id}_sub", sub_id)
-            if body_id:
-                blob = blob.replace(f"{slide_id}_body", body_id)
-            if footer_id:
-                blob = blob.replace(f"{slide_id}_ph_footer", footer_id)
-                blob = blob.replace(f'"{slide_id}_footer"', f'"{footer_id}"')
-            rewritten.append(json.loads(blob))
-        if footer_id:
-            rewritten = [r for r in rewritten if f"{slide_id}_footer" not in json.dumps(r)]
-            footer_text = (planned["spec"].get("footer") or outline.get("footer") or "Workday Confidential")
-            color = "ink" if planned["layout"] in {"Section Title", "Layout 1"} else "staple"
-            rewritten.extend(
-                text_ops(
-                    footer_id,
-                    footer_text,
-                    font=FONT_TITLE,
-                    size=8,
-                    bold=False,
-                    color=color,
-                )
-            )
-        fills.extend(rewritten)
+        try:
+            fills.extend(rewrite_slide_requests(planned, live))
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
     batch_update(backend, deck_id, fills)
     url = f"https://docs.google.com/presentation/d/{deck_id}/edit"
     print(url)
@@ -987,8 +1289,14 @@ def main(argv: list[str] | None = None) -> int:
         help="If a Workday layout is missing, fall back to a Google predefined layout (off-brand chrome).",
     )
     args = parser.parse_args(argv)
-    outline = load_outline(args.outline)
-    plan = build_plan(outline)
+    try:
+        outline = load_outline(args.outline)
+    except (ValueError, RuntimeError) as exc:
+        raise SystemExit(str(exc)) from exc
+    try:
+        plan = build_plan(outline)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
     dest = args.output
     if dest is None and args.dry_run:
         dest = args.outline.with_name("example-slides-requests.json")
