@@ -13,3 +13,5 @@ token_cache*.json
 workday-slide-assets.json
 out/
 docs/proof/*.pdf
+~$*.pptx
+examples/outline.pptx

@@ -164,9 +164,20 @@ Same map as the PPTX skill. Google remaps placeholder object IDs on import; reso
 | Chart | `chart` | Title Only | `title` + on-brand columns (or a Sheets chart) |
 | Closing | `closing` | Bumper Slide | optional caption under the smile |
 | Intro | `intro` | Intro_One | `name`, `role`, `company` |
+| Three speakers | `intro-three` | Intro_Three | exactly 3 `speakers` |
+| Four speakers | `intro-four` | Intro_Four | exactly 4 `speakers` |
+| Warm feature grid | `feature-grid` | Title Only_Alt | `title`, optional `subtitle`, 3 `items` |
+| Compact half-headline | `two-column-alt` | 1/2 Headline_Alt | `title`, up to 6 `items` |
+| Agenda | `agenda` | Section Title | `title`, up to 6 `items` |
+| Rail content | `rail` | Layout 1 | `title`, `body` |
+| Three photos | `three-photos` | 3-Photos | `title`, exactly 3 `images` |
+| Photo right | `photo-right` | Photo-Right | `title`, `image`, optional `items` |
+| Timeline | `timeline` | Title Only | `title`, up to 7 `items` |
 | Blank | `blank` | Blank White Background | last resort |
 
 Content layout XML name is `Title and Content ` (trailing space). Match after strip.
+
+`assets/brand-tokens.json` owns colors, exact layout names, placeholder indexes, limits, and geometry. `scripts/brand.py` validates and loads it. Both builders consume the same normalized outline.
 
 If a Workday `layoutId` is missing (import dropped it), stop and re-import. Do not silently switch to `TITLE_AND_BODY` except as a last-resort fallback the user approved.
 
@@ -250,7 +261,7 @@ Body / Archivo Light equivalent:
 
 `importSlides` from the Workday template is fine when adding slides to an existing copy (`preserveTheme`: `USE_DESTINATION_THEME`). Do not import from a customer deck.
 
-Images: `createImage` needs a URL Slides can fetch. Share the Drive PNGs in the Drive UI as Anyone with the link: Viewer. The Drive connector cannot create that share. When image IDs are set, use the Drive download URL only. Drop GitHub raw URLs (private repos 404). `--cover-image-url` is not a workaround for that.
+Images: `createImage` needs a URL Slides can fetch. Content `image` fields also require a public `http` or `https` URL. Share the Drive PNGs in the Drive UI as Anyone with the link: Viewer. The Drive connector cannot create that share. When image IDs are set, use the Drive download URL only. Drop GitHub raw URLs (private repos 404). `--cover-image-url` is not a workaround for that.
 
 ```json
 {

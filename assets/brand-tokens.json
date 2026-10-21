@@ -1,6 +1,11 @@
 {
   "theme": "Workday Corporate Template",
   "palette": "Workday Color Palette",
+  "provenance": {
+    "source_file": "Workday Corporate PowerPoint Template 2.pptx",
+    "source_sha256": "38fb9099a2d58227053de3f8ce5e35696d802c447ee0b60c2011fbff6120bd7d",
+    "blue_sky_note": "The theme and printed HEX use 9ECFFF. One sample swatch fill and its RGB label use 9FCFFF."
+  },
   "slide": {
     "width_in": 10.0,
     "height_in": 5.625,
@@ -61,6 +66,9 @@
     "caption": 12,
     "footer": 8
   },
+  "limits": {
+    "bullets": 6
+  },
   "footer": {
     "text": "Workday Confidential",
     "color": "7D8B99",
@@ -70,6 +78,321 @@
     "top_in": 5.27,
     "width_in": 3.375,
     "height_in": 0.3
+  },
+  "regions": {
+    "standard_title": [0.5, 0.41, 9.0, 0.525],
+    "standard_body": [0.5, 1.34, 9.0, 3.74],
+    "cover_date": [0.51, 4.96, 2.48, 0.3],
+    "section_eyebrow": [3.32, 1.08, 4.34, 0.41],
+    "section_title": [3.32, 1.46, 5.61, 2.2],
+    "half_title": [0.5, 0.41, 3.7, 0.95],
+    "closing_caption": [1.5, 3.58, 7.0, 0.4],
+    "rail_title": [0.72, 0.41, 8.78, 0.525],
+    "rail_body": [0.72, 1.34, 8.78, 3.74],
+    "blank_title": [0.5, 0.41, 9.0, 0.525],
+    "blank_body": [0.5, 1.34, 9.0, 3.74],
+    "title_alt_subhead": [0.51, 0.84, 8.99, 0.4]
+  },
+  "stacks": {
+    "two_column_numbered": {
+      "number": [5.0, 0.76, 0.53, 0.44],
+      "heading": [5.57, 0.76, 3.61, 0.35],
+      "body": [5.57, 1.08, 3.61, 0.76],
+      "step_y": 1.28
+    },
+    "two_column_compact": {
+      "heading": [5.33, 0.62, 3.95, 0.3],
+      "body": [5.33, 0.83, 3.95, 0.28],
+      "step_y": 0.78
+    },
+    "photo_right_items": {
+      "heading": [0.52, 2.02, 4.6, 0.29],
+      "body": [0.52, 2.24, 4.6, 0.66],
+      "step_y": 1.01
+    },
+    "feature_grid": {
+      "heading": [0.51, 3.76, 2.42, 0.57],
+      "body": [0.51, 4.3, 2.72, 0.5],
+      "step_x": 3.01,
+      "step_y": 0.0
+    },
+    "agenda_items": {
+      "number": [3.32, 0.86, 0.5, 0.3],
+      "heading": [3.92, 0.86, 4.9, 0.3],
+      "step_x": 0.0,
+      "step_y": 0.62
+    }
+  },
+  "template_layouts": {
+    "Title Slide": {
+      "footer": false,
+      "placeholders": {"title": 0, "subtitle": 1}
+    },
+    "Intro_One": {
+      "footer": true,
+      "placeholders": {"footer": 3},
+      "speaker_slots": [
+        {"name": 10, "role": 11, "company": 12, "picture": 13}
+      ],
+      "speaker_regions": [
+        {
+          "name": [5.02, 2.3, 4.15, 0.46],
+          "role": [5.02, 2.68, 4.15, 0.4],
+          "company": [5.02, 3.1, 4.15, 0.3]
+        }
+      ],
+      "picture_regions": [[2.26, 1.56, 2.5, 2.5]]
+    },
+    "Intro_Three": {
+      "footer": true,
+      "placeholders": {"footer": 3},
+      "speaker_slots": [
+        {"name": 10, "role": 11, "company": 12, "picture": 19},
+        {"name": 13, "role": 14, "company": 15, "picture": 20},
+        {"name": 16, "role": 17, "company": 18, "picture": 21}
+      ],
+      "speaker_regions": [
+        {
+          "name": [0.51, 3.52, 3.0, 0.37],
+          "role": [0.51, 3.84, 3.0, 0.3],
+          "company": [0.51, 4.17, 3.0, 0.29]
+        },
+        {
+          "name": [3.49, 3.52, 3.0, 0.37],
+          "role": [3.49, 3.84, 3.0, 0.3],
+          "company": [3.49, 4.17, 3.0, 0.29]
+        },
+        {
+          "name": [6.57, 3.52, 3.0, 0.37],
+          "role": [6.57, 3.84, 3.0, 0.3],
+          "company": [6.57, 4.17, 3.0, 0.29]
+        }
+      ],
+      "picture_regions": [
+        [1.01, 1.38, 2.0, 2.0],
+        [3.99, 1.38, 2.0, 2.0],
+        [7.07, 1.38, 2.0, 2.0]
+      ]
+    },
+    "Intro_Four": {
+      "footer": true,
+      "placeholders": {"footer": 3},
+      "speaker_slots": [
+        {"name": 10, "role": 11, "company": 12, "picture": 19},
+        {"name": 16, "role": 17, "company": 18, "picture": 20},
+        {"name": 13, "role": 14, "company": 15, "picture": 21},
+        {"name": 23, "role": 24, "company": 25, "picture": 22}
+      ],
+      "speaker_regions": [
+        {
+          "name": [2.46, 1.21, 2.24, 0.37],
+          "role": [2.46, 1.5, 2.24, 0.3],
+          "company": [2.46, 1.82, 2.24, 0.25]
+        },
+        {
+          "name": [6.78, 1.21, 2.24, 0.37],
+          "role": [6.78, 1.5, 2.24, 0.3],
+          "company": [6.78, 1.82, 2.24, 0.25]
+        },
+        {
+          "name": [2.46, 3.5, 2.24, 0.37],
+          "role": [2.46, 3.78, 2.24, 0.3],
+          "company": [2.46, 4.11, 2.24, 0.25]
+        },
+        {
+          "name": [6.78, 3.5, 2.24, 0.37],
+          "role": [6.78, 3.78, 2.24, 0.3],
+          "company": [6.78, 4.11, 2.24, 0.25]
+        }
+      ],
+      "picture_regions": [
+        [0.72, 0.86, 1.65, 1.65],
+        [5.04, 0.86, 1.65, 1.65],
+        [0.72, 3.15, 1.65, 1.65],
+        [5.04, 3.15, 1.65, 1.65]
+      ]
+    },
+    "Title and Content ": {
+      "footer": true,
+      "placeholders": {"title": 0, "body": 14, "footer": 3}
+    },
+    "Title Only": {
+      "footer": true,
+      "placeholders": {"title": 0, "footer": 3}
+    },
+    "Title Only_Alt": {
+      "footer": true,
+      "placeholders": {"title": 0, "footer": 3}
+    },
+    "1/2_Headline": {
+      "footer": true,
+      "placeholders": {"title": 0, "footer": 3}
+    },
+    "1/2 Headline_Alt": {
+      "footer": true,
+      "placeholders": {"title": 0, "footer": 3}
+    },
+    "Section Title": {
+      "footer": true,
+      "placeholders": {"footer": 3}
+    },
+    "Layout 1": {
+      "footer": true,
+      "placeholders": {"footer": 3}
+    },
+    "3-Photos": {
+      "footer": true,
+      "placeholders": {"title": 0, "footer": 3},
+      "picture_slots": [23, 22, 24],
+      "picture_regions": [
+        [0.6, 1.92, 2.77, 1.95],
+        [3.62, 1.92, 2.77, 1.95],
+        [6.63, 1.92, 2.77, 1.95]
+      ]
+    },
+    "Photo-Right": {
+      "footer": true,
+      "placeholders": {"title": 0, "footer": 3},
+      "picture_slots": [14],
+      "picture_regions": [[5.81, 0.0, 4.19, 5.625]]
+    },
+    "Bumper Slide": {
+      "footer": false,
+      "placeholders": {}
+    },
+    "Blank White Background": {
+      "footer": true,
+      "placeholders": {"footer": 3}
+    }
+  },
+  "patterns": {
+    "title": {
+      "layout": "Title Slide",
+      "composition": "title",
+      "aliases": ["cover", "title-slide"],
+      "required": ["title"]
+    },
+    "intro-one": {
+      "layout": "Intro_One",
+      "composition": "intro",
+      "aliases": ["intro"],
+      "speaker_count": 1
+    },
+    "intro-three": {
+      "layout": "Intro_Three",
+      "composition": "intro",
+      "aliases": [],
+      "speaker_count": 3
+    },
+    "intro-four": {
+      "layout": "Intro_Four",
+      "composition": "intro",
+      "aliases": [],
+      "speaker_count": 4
+    },
+    "content": {
+      "layout": "Title and Content ",
+      "composition": "content",
+      "aliases": ["title-and-content", "bullets"],
+      "required": ["title", "bullets"]
+    },
+    "title-only": {
+      "layout": "Title Only",
+      "composition": "freeform",
+      "aliases": [],
+      "required": ["title"]
+    },
+    "title-only-alt": {
+      "layout": "Title Only_Alt",
+      "composition": "freeform",
+      "aliases": [],
+      "required": ["title"]
+    },
+    "feature-grid": {
+      "layout": "Title Only_Alt",
+      "composition": "feature-grid",
+      "aliases": [],
+      "required": ["title", "items"],
+      "item_limit": 3
+    },
+    "two-column": {
+      "layout": "1/2_Headline",
+      "composition": "two-column",
+      "aliases": ["two-col", "headline"],
+      "required": ["title", "items"],
+      "item_limit": 3
+    },
+    "two-column-alt": {
+      "layout": "1/2 Headline_Alt",
+      "composition": "two-column",
+      "aliases": ["headline-alt"],
+      "required": ["title", "items"],
+      "item_limit": 6
+    },
+    "section": {
+      "layout": "Section Title",
+      "composition": "section",
+      "aliases": ["section-title", "divider"],
+      "required": ["title"]
+    },
+    "agenda": {
+      "layout": "Section Title",
+      "composition": "agenda",
+      "aliases": [],
+      "required": ["title", "items"],
+      "item_limit": 6
+    },
+    "rail": {
+      "layout": "Layout 1",
+      "composition": "freeform",
+      "aliases": ["layout-1"],
+      "required": ["title"]
+    },
+    "three-photos": {
+      "layout": "3-Photos",
+      "composition": "photos",
+      "aliases": ["photos", "3-photos"],
+      "required": ["title", "images"],
+      "image_count": 3
+    },
+    "photo-right": {
+      "layout": "Photo-Right",
+      "composition": "photo-right",
+      "aliases": [],
+      "required": ["title", "image"],
+      "item_limit": 3
+    },
+    "closing": {
+      "layout": "Bumper Slide",
+      "composition": "closing",
+      "aliases": ["bumper", "close"],
+      "required": []
+    },
+    "blank": {
+      "layout": "Blank White Background",
+      "composition": "freeform",
+      "aliases": [],
+      "required": []
+    },
+    "table": {
+      "layout": "Title Only",
+      "composition": "table",
+      "aliases": [],
+      "required": ["title", "headers", "rows"]
+    },
+    "chart": {
+      "layout": "Title Only",
+      "composition": "chart",
+      "aliases": [],
+      "required": ["title", "chart"]
+    },
+    "timeline": {
+      "layout": "Title Only",
+      "composition": "timeline",
+      "aliases": [],
+      "required": ["title", "items"],
+      "item_limit": 7
+    }
   },
   "logo": {
     "smile": "assets/logos/workday-smile.png",

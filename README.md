@@ -13,6 +13,8 @@ This repository is the brand system plus two small builders. It is not a dump of
 | [assets/template.pptx](assets/template.pptx) | Masters and layouts only, no sample slides |
 | [assets/logos/](assets/logos) | Smile mark, `cover-gradient.png`, and decorative SVGs |
 | [assets/brand-tokens.json](assets/brand-tokens.json) | Machine-readable tokens |
+| [scripts/brand.py](scripts/brand.py) | Validated brand registry and outline normalizer |
+| [scripts/validate_brand.py](scripts/validate_brand.py) | Template, registry, and skill validator |
 | [.cursor/skills/workday-pptx/SKILL.md](.cursor/skills/workday-pptx/SKILL.md) | PowerPoint skill |
 | [.cursor/skills/workday-google-slides/SKILL.md](.cursor/skills/workday-google-slides/SKILL.md) | Google Slides skill |
 | [scripts/build_deck.py](scripts/build_deck.py) | Outline to `.pptx` |
@@ -40,8 +42,24 @@ Full auth, `--upload-assets`, and Cursor chat examples are in [GETTING_STARTED.m
 ## Rules
 
 - Start from `assets/template.pptx` or a copy of the imported Slides template. Do not build from a blank theme.
-- Use only colors in `BRAND.md`.
+- Treat `assets/brand-tokens.json` as the programmatic source for colors, layouts, limits, and geometry.
 - Archivo for titles, Archivo Light for body (in Slides: Archivo at weight 300). Arial is the fallback.
 - Leave `Workday Confidential` in the footer.
 - Do not put confidential customer copy into this repo.
 - Do not commit Google credentials, `gws` tokens, or `.env` files.
+
+The shared registry covers all 15 template layouts through 20 outline patterns. It includes multi-speaker intros, feature grids, compact half-headlines, agendas, rail content, photo stories, timelines, tables, and charts.
+
+## Verify changes
+
+```bash
+python3 scripts/validate_brand.py
+python3 -m unittest discover -s tests -v
+```
+
+To compare the registry with the extraction source, pass the original deck explicitly:
+
+```bash
+python3 scripts/validate_brand.py \
+  --source "/path/to/Workday Corporate PowerPoint Template 2.pptx"
+```
