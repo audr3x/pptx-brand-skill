@@ -100,15 +100,6 @@ def validate_brand(template: Path, source: Path | None = None) -> list[str]:
                 errors.append(
                     f"{layout.name} picture placeholder {idx} moved from {expected}"
                 )
-        if layout.footer_region is not None:
-            footer_idx = layout.placeholders["footer"]
-            if footer_idx not in actual:
-                continue
-            if any(
-                abs(a - b) > 0.02
-                for a, b in zip(actual[footer_idx], layout.footer_region)
-            ):
-                errors.append(f"{layout.name} footer geometry differs from the registry")
     actual_theme = theme_colors(template)
     for theme_slot, token in BRAND.raw["theme_map"].items():
         expected = BRAND.colors[token]

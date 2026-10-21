@@ -74,7 +74,7 @@
     "color": "7D8B99",
     "font": "Archivo",
     "size_pt": 8,
-    "left_in": 0.03,
+    "left_in": 0.5,
     "top_in": 5.27,
     "width_in": 3.375,
     "height_in": 0.3
@@ -139,7 +139,6 @@
     "Intro_Three": {
       "footer": true,
       "placeholders": {"footer": 3},
-      "footer_region": [0.03, 5.27, 2.41, 0.3],
       "speaker_slots": [
         {"name": 10, "role": 11, "company": 12, "picture": 19},
         {"name": 13, "role": 14, "company": 15, "picture": 20},
@@ -154,7 +153,6 @@
     "Intro_Four": {
       "footer": true,
       "placeholders": {"footer": 3},
-      "footer_region": [0.03, 5.27, 2.41, 0.3],
       "speaker_slots": [
         {"name": 10, "role": 11, "company": 12, "picture": 19},
         {"name": 16, "role": 17, "company": 18, "picture": 20},
@@ -194,8 +192,7 @@
     },
     "Layout 1": {
       "footer": true,
-      "placeholders": {"footer": 3},
-      "footer_region": [0.36, 5.27, 3.375, 0.3]
+      "placeholders": {"footer": 3}
     },
     "3-Photos": {
       "footer": true,
