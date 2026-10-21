@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from brand import BRAND
 from build_deck import build
-from build_slides import build_plan, rewrite_slide_requests
+from build_slides import bind_fills, build_plan
 from validate_brand import validate_brand
 
 
@@ -199,44 +199,45 @@ class BrandSystemTests(unittest.TestCase):
         )
         requests = json.dumps(plan["requests"])
         self.assertIn('"createImage"', requests)
-        self.assertIn('"wd_s3_ph_18"', requests)
-        self.assertIn('"wd_s4_ph_25"', requests)
+        self.assertIn('"wd_s3_speaker_2_company"', requests)
+        self.assertIn('"wd_s4_speaker_3_company"', requests)
 
-    def test_live_request_rewrite_uses_placeholder_indexes(self):
+    def test_live_request_binding_preserves_connector_ids(self):
         outline = {
             "slides": [
                 {"layout": "content", "title": "Title", "bullets": ["Body"]}
             ]
         }
         planned = build_plan(outline)["slidePlans"][0]
-        live = {
-            "pageElements": [
+        presentation = {
+            "slides": [
                 {
-                    "objectId": "live-title",
-                    "shape": {"placeholder": {"type": "TITLE", "index": 0}},
-                },
-                {
-                    "objectId": "live-body",
-                    "shape": {"placeholder": {"type": "BODY", "index": 14}},
-                },
-                {
-                    "objectId": "live-footer",
-                    "shape": {"placeholder": {"type": "FOOTER", "index": 3}},
-                },
+                    "objectId": "live-slide",
+                    "pageElements": [
+                        {
+                            "objectId": "live-title",
+                            "shape": {
+                                "placeholder": {"type": "TITLE", "index": 0}
+                            },
+                        },
+                        {
+                            "objectId": "live-body",
+                            "shape": {
+                                "placeholder": {"type": "BODY", "index": 0}
+                            },
+                        },
+                    ],
+                }
             ]
         }
-        rewritten = rewrite_slide_requests(planned, live)
+        rewritten = bind_fills(
+            {"slidePlans": [planned]},
+            presentation,
+        )
         payload = json.dumps(rewritten)
-        self.assertNotIn("wd_s1_ph_", payload)
         self.assertIn("live-title", payload)
         self.assertIn("live-body", payload)
-        self.assertIn("live-footer", payload)
-        self.assertFalse(
-            any(
-                request.get("createShape", {}).get("objectId") == "live-footer"
-                for request in rewritten
-            )
-        )
+        self.assertIn("live-slide", payload)
 
 
 if __name__ == "__main__":

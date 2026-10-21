@@ -193,7 +193,7 @@ Match intent to layout. Do not rebuild chrome on a blank slide when a layout alr
 | Photo-right title | 0.50 | 0.41 | 4.58 | 0.95 |
 | Photo-right image | 5.81 | 0.00 | 4.19 | 5.63 |
 | Bumper smile | 3.39 | 1.79 | 3.22 | 1.52 |
-| Footer | 0.03 | 5.27 | 3.38 | 0.30 |
+| Footer | 0.50 | 5.27 | 3.38 | 0.30 |
 | Thin left rail | 0.00 | 0.00 | 0.36 | 5.63 |
 | Wide section rail | 0.00 | 0.00 | 2.74 | 5.63 |
 
@@ -262,6 +262,7 @@ Extracted to `assets/logos/`. The template already embeds the same files on the 
 | File | What it is | Where the template uses it |
 | --- | --- | --- |
 | `workday-smile.png` | Full lockup: white "workday" wordmark plus orange smile `#FC5B05`. The wordmark is white, so it only reads on dark grounds (title and bumper). | Title Slide (top left), Bumper Slide (center) |
+| `cover-gradient.png` | 16:9 raster of `Day_Crop_5` (blue → cream → gold). Use this with Slides `createImage`. | Title Slide full bleed |
 | `gradient-day-crop.svg` | Yellow-to-navy vertical wash (`Day_Crop_5`) | Title Slide full bleed |
 | `gradient-day-crop-warm.svg` | Yellow-to-teal wash (`Day_Crop_1`) | Section Title wide rail, Layout 1 thin rail |
 | `glow-keyboard.svg` | Cream / gold intro glow (`Night_Glow_on_Keyboard`) | Intro layouts |
@@ -275,7 +276,7 @@ A photo-instruction PNG lived on sample slides only. It is not a logo and is not
 
 - Footer copy: **Workday Confidential**
 - 8 pt Archivo, Staple `#7D8B99`, left aligned
-- Box: 0.03 in, 5.27 in, 3.375 x 0.30 in
+- Box: 0.50 in, 5.27 in, 3.375 x 0.30 in (same 0.50 in content inset as titles). The PPTX master placeholder sits at 0.03 in; draw at 0.50 in so the line lines up with the title column.
 - Master header/footer flags: slide number off, date off, header off (`sldNum="0" hdr="0" dt="0"`)
 - Title Slide and Bumper Slide have no footer
 - Do not add slide numbers, confidential-classification bars, or extra legal lines unless the brief asks for them

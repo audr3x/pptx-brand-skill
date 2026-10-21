@@ -38,6 +38,7 @@ class LayoutSpec:
     footer_region: tuple[float, float, float, float] | None
     placeholders: Mapping[str, int]
     speaker_slots: tuple[Mapping[str, int], ...]
+    speaker_regions: tuple[Mapping[str, tuple[float, float, float, float]], ...]
     picture_slots: tuple[int, ...]
     picture_regions: tuple[tuple[float, float, float, float], ...]
 
@@ -113,6 +114,12 @@ class BrandSystem:
                     MappingProxyType(dict(slot))
                     for slot in entry.get("speaker_slots") or []
                 ),
+                speaker_regions=tuple(
+                    MappingProxyType(
+                        {field: tuple(region) for field, region in slot.items()}
+                    )
+                    for slot in entry.get("speaker_regions") or []
+                ),
                 picture_slots=tuple(entry.get("picture_slots") or []),
                 picture_regions=tuple(
                     tuple(region) for region in entry.get("picture_regions") or []
@@ -166,6 +173,10 @@ class BrandSystem:
                 raise ValueError(
                     f"Layout {layout.name!r} has {expected} picture slots and "
                     f"{len(layout.picture_regions)} picture regions"
+                )
+            if len(layout.speaker_slots) != len(layout.speaker_regions):
+                raise ValueError(
+                    f"Layout {layout.name!r} has mismatched speaker slots and regions"
                 )
 
     def resolve_pattern(self, name: str) -> PatternSpec:

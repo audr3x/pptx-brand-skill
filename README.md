@@ -1,119 +1,54 @@
 # Workday brand skills (PowerPoint and Google Slides)
 
-Reusable Cursor skills that build on-brand decks from the Workday Corporate Template. PowerPoint is the native surface. Google Slides is the same brand system after you import `assets/template.pptx` once (or pass a template deck ID).
+On-brand Workday decks from the Corporate Template. PowerPoint is the native file. Google Slides uses the same tokens after you import `assets/template.pptx` once.
+
+**Start here: [GETTING_STARTED.md](GETTING_STARTED.md)** (clone, install, Cursor prompts, Slides auth, two-phase flow, troubleshooting).
 
 This repository is the brand system plus two small builders. It is not a dump of a real presentation. Sample copy in `examples/` is generic placeholder text.
 
 | Path | What it is |
 | --- | --- |
+| [GETTING_STARTED.md](GETTING_STARTED.md) | How to use both skills on your machine |
 | [BRAND.md](BRAND.md) | Colors, type, layouts, footer, table and chart rules |
 | [assets/template.pptx](assets/template.pptx) | Masters and layouts only, no sample slides |
-| [assets/logos/](assets/logos) | Smile mark and decorative gradients |
+| [assets/logos/](assets/logos) | Smile mark, `cover-gradient.png`, and decorative SVGs |
 | [assets/brand-tokens.json](assets/brand-tokens.json) | Machine-readable tokens |
 | [scripts/brand.py](scripts/brand.py) | Validated brand registry and outline normalizer |
 | [scripts/validate_brand.py](scripts/validate_brand.py) | Template, registry, and skill validator |
-| [.cursor/skills/workday-pptx/SKILL.md](.cursor/skills/workday-pptx/SKILL.md) | How Cursor builds a `.pptx` |
-| [.cursor/skills/workday-google-slides/SKILL.md](.cursor/skills/workday-google-slides/SKILL.md) | How Cursor builds a Google Slides deck |
+| [.cursor/skills/workday-pptx/SKILL.md](.cursor/skills/workday-pptx/SKILL.md) | PowerPoint skill |
+| [.cursor/skills/workday-google-slides/SKILL.md](.cursor/skills/workday-google-slides/SKILL.md) | Google Slides skill |
 | [scripts/build_deck.py](scripts/build_deck.py) | Outline to `.pptx` |
-| [scripts/build_slides.py](scripts/build_slides.py) | Outline to Slides API / `gws` (or a dry-run request plan) |
+| [scripts/build_slides.py](scripts/build_slides.py) | Outline to Slides API / `gws` (or a request plan) |
 | [examples/outline.yaml](examples/outline.yaml) | Shared example outline |
-| [examples/example-deck.pptx](examples/example-deck.pptx) | Example PowerPoint from that outline |
-| [examples/example-slides-requests.json](examples/example-slides-requests.json) | Example Slides `batchUpdate` plan from the same outline |
+| [docs/proof/](docs/proof/) | Worked example `.pptx`, PNG thumbnails, and Slides JSON batches |
 
-## Install the skills in Cursor
-
-The skills are the folders under `.cursor/skills/`. Cursor loads project skills from `.cursor/skills/` and personal skills from `~/.cursor/skills/`.
-
-### Project skill (recommended for Workday repos)
-
-Copy this repository's `.cursor/skills` directory into the repo that should produce decks, and keep `BRAND.md`, `assets/`, and `scripts/` beside it so the relative paths in the skill resolve.
+## Quick commands
 
 ```bash
-cp -R .cursor/skills/workday-pptx <your-repo>/.cursor/skills/workday-pptx
-cp -R .cursor/skills/workday-google-slides <your-repo>/.cursor/skills/workday-google-slides
-cp -R BRAND.md assets scripts examples <your-repo>/
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+# managed Python / PEP 668: use the venv. Fallback: pip3 install --break-system-packages -r requirements.txt
+
+python3 scripts/build_deck.py examples/outline.yaml -o out/planning-workshop.pptx
+
+python3 scripts/build_slides.py examples/outline.yaml --phase creates \
+  --presentation get.json -o docs/proof/slides/creates.json
+python3 scripts/build_slides.py examples/outline.yaml --phase fills \
+  --presentation get.json --chunk 40 -o docs/proof/slides/fills.json
 ```
 
-Or add this repository as a subtree / submodule and point the skill paths at it.
+Full auth, `--upload-assets`, and Cursor chat examples are in [GETTING_STARTED.md](GETTING_STARTED.md).
 
-### Personal skill
+## Rules
 
-```bash
-mkdir -p ~/.cursor/skills
-cp -R .cursor/skills/workday-pptx ~/.cursor/skills/workday-pptx
-cp -R .cursor/skills/workday-google-slides ~/.cursor/skills/workday-google-slides
-```
-
-A personal copy still needs the template and `BRAND.md`. Keep the rest of this repo on disk and either leave the relative links as-is (if you cloned the whole repo into `~/.cursor/skills/workday-pptx-repo`) or edit the skills to use absolute paths to `BRAND.md` and `assets/template.pptx`.
-
-After a copy, restart Cursor or reopen the folder so the skills are indexed. Ask Cursor to "make a Workday deck", "use the workday-pptx skill", or "make this as Google Slides".
-
-## Use the builder directly
-
-```bash
-pip3 install -r requirements.txt
-python3 scripts/build_deck.py examples/outline.yaml -o examples/example-deck.pptx
-```
-
-The outline can be YAML or JSON. Each slide names a `layout` from the intent map in the skill (`title`, `section`, `content`, `two-column`, `table`, `chart`, `closing`, and a few extras).
-
-```yaml
-title: Planning workshop
-footer: Workday Confidential
-slides:
-  - layout: title
-    title: Planning workshop
-    subtitle: Sample deck
-    date: October 2026
-  - layout: content
-    title: Working agreements
-    bullets:
-      - One idea per slide
-      - Six bullets at most
-```
-
-The builder opens `assets/template.pptx`, adds slides from the real Workday layouts, and paints tables and charts with the named tokens. It refuses unknown hex colors and invalid layout payloads.
-
-The shared registry supports all 15 template layouts. It also defines reusable patterns for multi-speaker intros, feature grids, compact half-headlines, agendas, rail content, photo stories, timelines, tables, and charts.
-
-## Use the Google Slides builder
-
-Same outline. Copy a Workday Slides template (never a blank theme), then fill layouts through `gws` or the Slides API.
-
-```bash
-# No Google account required. Writes the batchUpdate plan:
-python3 scripts/build_slides.py examples/outline.yaml --dry-run \
-  -o examples/example-slides-requests.json
-
-# First time: import the PPTX so Workday masters exist in Drive
-python3 scripts/build_slides.py examples/outline.yaml \
-  --import-pptx assets/template.pptx --backend gws
-
-# Later decks: copy that template ID
-export WORKDAY_SLIDES_TEMPLATE_ID=...   # not committed
-python3 scripts/build_slides.py examples/outline.yaml \
-  --template-id "$WORKDAY_SLIDES_TEMPLATE_ID" --backend gws
-```
-
-Auth options (never commit the files):
-
-1. Cursor **Google Drive** + **Google Slides** plugins, signed in as the Workday user. The skill then uses `copy_file` and `update_presentation`.
-2. [Google Workspace CLI](https://github.com/googleworkspace/cli): `gws auth setup` then `gws auth login -s drive,slides`.
-3. `--backend api` with Application Default Credentials or `GOOGLE_APPLICATION_CREDENTIALS` pointing outside the repo.
-
-Details, layout map, and `batchUpdate` recipes are in the [Google Slides skill](.cursor/skills/workday-google-slides/SKILL.md).
-
-## Fonts
-
-Designed type is **Archivo** and **Archivo Light**. The Office theme fallback is Arial. Archivo is not embedded in the template. Install it from [Google Fonts](https://fonts.google.com/specimen/Archivo) on any machine that will author or render decks. If Archivo Light is missing, use Archivo. Do not substitute Proxima Nova (licensed, not bundled) or Calibri.
-
-## Rules of the road
-
-- Start from `assets/template.pptx` (PowerPoint) or a copy of the imported Slides template. Do not build a Workday deck from a blank theme.
-- Treat `assets/brand-tokens.json` as the programmatic source. Do not copy its values into a builder.
-- Leave `Workday Confidential` in the footer placeholder.
+- Start from `assets/template.pptx` or a copy of the imported Slides template. Do not build from a blank theme.
+- Treat `assets/brand-tokens.json` as the programmatic source for colors, layouts, limits, and geometry.
+- Archivo for titles, Archivo Light for body (in Slides: Archivo at weight 300). Arial is the fallback.
+- Leave `Workday Confidential` in the footer.
 - Do not put confidential customer copy into this repo.
 - Do not commit Google credentials, `gws` tokens, or `.env` files.
+
+The shared registry covers all 15 template layouts through 20 outline patterns. It includes multi-speaker intros, feature grids, compact half-headlines, agendas, rail content, photo stories, timelines, tables, and charts.
 
 ## Verify changes
 

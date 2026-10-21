@@ -10,6 +10,8 @@ credentials.json
 client_secret*.json
 token.json
 token_cache*.json
+workday-slide-assets.json
 out/
+docs/proof/*.pdf
 ~$*.pptx
 examples/outline.pptx

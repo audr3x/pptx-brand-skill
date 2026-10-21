@@ -50,7 +50,7 @@ A generic JSON drawing language could describe every shape. It would move render
 
 ## Open risks
 
-Live Google Slides import can change placeholder object IDs. `rewrite_slide_requests()` resolves IDs by placeholder index after slide creation. The unit test covers that rewrite, but a signed-in integration run remains the final API check.
+Google Slides imports can change placeholder object IDs. `bind_fills()` resolves the native title and body placeholders from the live presentation, then remaps page and placeholder IDs before phase two. Complex intro and photo patterns draw their own boxes and images from registry geometry. The existing seven-pattern flow has connector proof in `docs/proof/slides`; the new multi-speaker and photo patterns still need one signed-in integration run.
 
 ## Next implementation step
 
