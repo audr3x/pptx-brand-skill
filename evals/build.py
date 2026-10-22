@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -34,8 +35,8 @@ def target_for(task: str) -> str:
     return yaml.safe_load(spec.read_text()).get("target", "pptx")
 
 
-def run(cmd: list[str]) -> tuple[int, str]:
-    p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=300)
+def run(cmd: list[str], env: dict | None = None) -> tuple[int, str]:
+    p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=300, env=env)
     return p.returncode, p.stdout + p.stderr
 
 
@@ -43,7 +44,9 @@ def render(pptx: Path, out: Path) -> int:
     shutil.rmtree(out, ignore_errors=True)
     out.mkdir(parents=True)
     with tempfile.TemporaryDirectory() as tmp:
-        rc, _ = run(["soffice", "--headless", "--convert-to", "pdf", "--outdir", tmp, str(pptx)])
+        # Maps the template's "Archivo Light" family to Archivo at light weight so text wraps as in PowerPoint.
+        env = {**os.environ, "FONTCONFIG_FILE": str(EVALS / "fonts.conf")}
+        rc, _ = run(["soffice", "--headless", "--convert-to", "pdf", "--outdir", tmp, str(pptx)], env)
         pdf = Path(tmp) / (pptx.stem + ".pdf")
         if rc or not pdf.is_file():
             return 0
@@ -58,6 +61,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True, help="folder name under evals/runs/, for example claude-opus-5.5")
     ap.add_argument("--task", required=True, help="task id, for example T01-kickoff-pptx")
+    ap.add_argument("--rebuild", action="store_true",
+                    help="refresh artifacts from the existing outline after a builder change; not logged as an attempt")
     args = ap.parse_args()
     target = target_for(args.task)
     run_dir = EVALS / "runs" / args.model / args.task
@@ -98,6 +103,9 @@ def main() -> int:
         record["rendered_pages"] = render(preview, run_dir / "render")
         print(f"Rendered {record['rendered_pages']} PNGs to {(run_dir / 'render').relative_to(ROOT)}/")
     record["rc"] = rc_all
+    if args.rebuild:
+        print("rebuild only, attempt not logged")
+        return rc_all
     with log.open("a") as f:
         f.write(json.dumps(record) + "\n")
     print(f"attempt {attempt}: {'ok' if rc_all == 0 else 'failed'}")

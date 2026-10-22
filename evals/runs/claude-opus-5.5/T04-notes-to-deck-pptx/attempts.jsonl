@@ -1,0 +1,2 @@
+{"attempt": 1, "time": "2026-10-22T18:30:08", "target": "pptx", "steps": [{"step": "check", "rc": 0, "errors": 0, "warnings": 3, "traceback": false}, {"step": "build_pptx", "rc": 0, "errors": 0, "warnings": 3, "traceback": false}], "rendered_pages": 8, "rc": 0}
+{"attempt": 2, "time": "2026-10-22T18:30:35", "target": "pptx", "steps": [{"step": "check", "rc": 0, "errors": 0, "warnings": 3, "traceback": false}, {"step": "build_pptx", "rc": 0, "errors": 0, "warnings": 3, "traceback": false}], "rendered_pages": 8, "rc": 0}

@@ -133,7 +133,7 @@ def score_task(model: str, task: str) -> dict[str, Any]:
     brand_hits: list[str] = []
     if target == "pptx" and (run_dir / "deck.pptx").is_file():
         built = True
-        slide_texts = pptx_text_by_slide(run_dir / "deck.pptx")
+        slide_texts = pptx_text_by_slide(run_dir / "deck.pptx", notes=False)
         problems = pptx_problems(run_dir / "deck.pptx")
         brand_hits = [f"{k}: {v[0]}" for k, v in problems.items() if v]
         brand_total = len(problems)
@@ -150,11 +150,13 @@ def score_task(model: str, task: str) -> dict[str, Any]:
             slide_texts.append(" ".join(f"{v:g}" for _, vals in chart_series(outline) for v in vals))
     deck_text = norm(" ".join(slide_texts))
     if not deck_text and isinstance(outline, dict):
-        deck_text = norm(" ".join(str(v) for v in _leaves(outline)))
+        deck_text = norm(" ".join(str(v) for s in outline.get("slides", []) if isinstance(s, dict) for v in _leaves(_drawn(s))))
 
     # structure
-    if outline is not None or build_required:
-        scores["structure"] = mean([float(outline is not None and not errors), float(built)]) if build_required else float(not errors)
+    if build_required:
+        scores["structure"] = mean([float(outline is not None and not errors), float(built)])
+    elif built:
+        scores["structure"] = float(not errors)
     if errors:
         row["notes"].append(f"check errors: {errors[0][:80]}")
 
@@ -185,7 +187,9 @@ def score_task(model: str, task: str) -> dict[str, Any]:
         parts = []
         facts = spec.get("facts") or []
         if facts:
-            missing = [f for f in facts if norm(f) not in deck_text]
+            # A fact may be a list of accepted spellings.
+            missing = [f if isinstance(f, str) else f[0] for f in facts
+                       if not any(norm(alt) in deck_text for alt in ([f] if isinstance(f, str) else f))]
             parts.append(1 - len(missing) / len(facts))
             if missing:
                 row["notes"].append(f"missing facts: {', '.join(missing[:3])}")
@@ -239,6 +243,13 @@ def score_task(model: str, task: str) -> dict[str, Any]:
     auto = [v for v in scores.values() if v is not None]
     row["auto"] = mean(auto)
     return row
+
+
+def _drawn(spec: dict) -> dict:
+    from outline_rules import COMMON_FIELDS, LAYOUT_FIELDS
+
+    fields = LAYOUT_FIELDS.get(canonical_layout(spec), set()) | (COMMON_FIELDS - {"notes"})
+    return {k: v for k, v in spec.items() if k in fields}
 
 
 def _leaves(value: Any):

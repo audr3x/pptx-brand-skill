@@ -63,7 +63,8 @@ def slides_plan_problems(requests: list[dict[str, Any]]) -> dict[str, list[str]]
             bulleted[body["objectId"]] = n
         if kind == "updateParagraphStyle" and body.get("objectId") in bulleted:
             style = body.get("style", {})
-            if style.get("spacingMode") == "NEVER_COLLAPSE" and "spaceBelow" in style:
+            fields = set(body.get("fields", "").split(","))
+            if style.get("spacingMode") == "NEVER_COLLAPSE" and {"spaceAbove", "spaceBelow", "spacingMode"} <= fields:
                 bulleted.pop(body["objectId"])
     for oid, n in bulleted.items():
         out["bullets"].append(f"#{n} {oid}: bullets without spaceAbove/spaceBelow and spacingMode NEVER_COLLAPSE after them")
@@ -176,7 +177,7 @@ def pptx_problems(path: Path, template: Path = ROOT / "assets" / "template.pptx"
     return {k: sorted(set(v))[:10] for k, v in out.items()}
 
 
-def pptx_text_by_slide(path: Path) -> list[str]:
+def pptx_text_by_slide(path: Path, notes: bool = True) -> list[str]:
     from pptx import Presentation
 
     texts = []
@@ -193,7 +194,7 @@ def pptx_text_by_slide(path: Path) -> list[str]:
                 for s in plot.series:
                     parts.append(str(s.name))
                     parts.extend(f"{v:g}" for v in s.values if v is not None)
-        if slide.has_notes_slide:
+        if notes and slide.has_notes_slide:
             parts.append(slide.notes_slide.notes_text_frame.text)
         texts.append(re.sub(r"\s+", " ", " ".join(parts)).strip())
     return texts

@@ -2,7 +2,7 @@ target: pptx
 difficulty: medium
 slides: [6, 8]
 layouts_include: [title]
-facts: ["9 days", "Priya", "Marco", "Lena", "380", "Brazil", "November 14"]
+facts: ["9 days", "Priya", "Marco", "Lena", "380", "Brazil", ["Nov 14", "November 14"]]
 allowed_numbers: [27, 2027, 1, 2, 3, 4, 5, 9]
 checks:
   - max_bullets: 6

@@ -75,6 +75,16 @@ See `evals/RUBRIC.md`. In short: seven automated categories (structure, brand, l
 
 Delete `evals/runs/<MODEL>/<TASK>/` and run that task again with the same prompt, telling the agent which task to do. The attempt log starts over with the folder.
 
+## After a builder change
+
+Runs keep their outlines. To score every model on the current builders, refresh the artifacts without counting attempts:
+
+```bash
+for d in evals/runs/<MODEL>/T*/; do t=$(basename "$d"); [ -f "$d/outline.yaml" ] && python3 evals/build.py --model <MODEL> --task "$t" --rebuild; done
+```
+
+Skip tasks the runner chose not to build (T08 when it only asked questions).
+
 ## Changing the tasks
 
 The tasks and specs are fixed so runs stay comparable. If a task or spec has to change, rerun every model on it, and note the change in `evals/decision-log.tsv`.
