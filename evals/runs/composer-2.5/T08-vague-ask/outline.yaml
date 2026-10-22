@@ -1,0 +1,19 @@
+title: "TODO: deck title"
+subtitle: Contoso Q3 business review
+date: "TODO: cover date"
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: "TODO: deck title"
+    subtitle: Contoso Q3 business review
+    date: "TODO: cover date"
+
+  - layout: content
+    title: "TODO: section title"
+    bullets:
+      - "TODO: key metric or outcome for Q3"
+      - "TODO: second priority for the review"
+      - "TODO: third talking point"
+
+  - layout: closing
+    title: Thank you
