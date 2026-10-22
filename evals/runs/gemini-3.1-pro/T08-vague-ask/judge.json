@@ -1,0 +1,1 @@
+{"visual":3,"content":5,"communication":5,"notes":"Slides 1 and 2 contain visible TODO placeholders, including a TODO title and bullet on slide 2, so the rendered deck is not review-ready. The model correctly avoided inventing stats and asked the user for the missing facts."}
