@@ -4,6 +4,8 @@ On-brand Workday decks from the Corporate Template. PowerPoint is the native fil
 
 **Start here: [GETTING_STARTED.md](GETTING_STARTED.md)** (clone, install, Cursor prompts, Slides auth, two-phase flow, troubleshooting).
 
+**Writing the prompt: [docs/PROMPTING.md](docs/PROMPTING.md)** (what to include, layouts per slide, images, charts, copy-paste prompts, checklist).
+
 This repository is the brand system plus two small builders. It is not a dump of a real presentation. Sample copy in `examples/` is generic placeholder text.
 
 | Path | What it is |
@@ -15,9 +17,14 @@ This repository is the brand system plus two small builders. It is not a dump of
 | [assets/brand-tokens.json](assets/brand-tokens.json) | Machine-readable tokens |
 | [.cursor/skills/workday-pptx/SKILL.md](.cursor/skills/workday-pptx/SKILL.md) | PowerPoint skill |
 | [.cursor/skills/workday-google-slides/SKILL.md](.cursor/skills/workday-google-slides/SKILL.md) | Google Slides skill |
+| [.cursor/skills/workday-deck-prompting/SKILL.md](.cursor/skills/workday-deck-prompting/SKILL.md) | Brief to outline skill (what the builders support) |
+| [docs/PROMPTING.md](docs/PROMPTING.md) | Prompting guide with copy-paste prompts |
 | [scripts/build_deck.py](scripts/build_deck.py) | Outline to `.pptx` |
 | [scripts/build_slides.py](scripts/build_slides.py) | Outline to Slides API / `gws` (or a request plan) |
+| [scripts/check_outline.py](scripts/check_outline.py) | Checks an outline against what both builders read |
 | [examples/outline.yaml](examples/outline.yaml) | Shared example outline |
+| [examples/images/](examples/images) | Sample photo for `intro` and `photo-right` |
+| [tests/](tests) | `python3 -m unittest discover -s tests` |
 | [docs/proof/](docs/proof/) | Worked example `.pptx`, PNG thumbnails, and Slides JSON batches |
 
 ## Quick commands

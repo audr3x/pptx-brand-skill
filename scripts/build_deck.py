@@ -471,6 +471,7 @@ def add_chart_slide(slide, spec: dict[str, Any]):
         Inches(3.70),
         data,
     ).chart
+    chart.has_title = False
     chart.has_legend = len(series_list) > 1
     if chart.has_legend:
         chart.legend.include_in_layout = True
@@ -624,7 +625,7 @@ def add_cover_date(slide, date_text: str | None):
 def add_closing_caption(slide, text: str | None):
     if not text:
         return
-    # Layout lockup occupies 1.79–3.31 in. Keep the caption clear of the wordmark.
+    # Layout lockup occupies 1.79 to 3.31 in. Keep the caption clear of the wordmark.
     add_textbox(
         slide,
         1.50,

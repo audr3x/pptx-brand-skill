@@ -72,6 +72,10 @@ def check(outline: Any, target: str, label: str) -> tuple[list[str], list[str]]:
             if key not in SLIDE_FIELDS:
                 errors.append(f"{where}: field '{key}' is not read by either builder")
         bullets = spec.get("bullets") if spec.get("bullets") is not None else spec.get("body")
+        if slides_target and isinstance(bullets, list) and any(
+            isinstance(b, dict) and (b.get("children") or b.get("bullets")) for b in bullets
+        ):
+            warnings.append(f"{where}: Google Slides shows nested bullets at the top level")
         if bullets is not None and count_bullets(bullets) > MAX_BULLETS:
             warnings.append(f"{where}: {count_bullets(bullets)} bullets, builders keep the first {MAX_BULLETS}")
         items = spec.get("items") or spec.get("right")
@@ -105,6 +109,10 @@ def check(outline: Any, target: str, label: str) -> tuple[list[str], list[str]]:
                     errors.append(f"{where}: series {s.get('name')!r} has {len(values)} values for {len(cats)} categories")
                 if not all(isinstance(v, (int, float)) for v in values):
                     errors.append(f"{where}: series {s.get('name')!r} values must be numbers")
+        if layout.lower() == "photo-right" and (spec.get("bullets") or spec.get("body")):
+            warnings.append(f"{where}: photo-right has no body area; bullets are dropped")
+        if layout.lower() == "3-photos":
+            warnings.append(f"{where}: 3-photos fills only the first photo slot from 'image'")
         image = spec.get("image")
         if image:
             if layout.lower() not in PICTURE_LAYOUTS:
