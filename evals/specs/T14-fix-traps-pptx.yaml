@@ -1,0 +1,14 @@
+target: pptx
+difficulty: hard
+slides: [6, 6]
+layouts: [title, two-column, section, content, chart, closing]
+facts: ["Owner: Dana Reyes, review on May 6", "Employees receive a guided checklist"]
+checks:
+  - field_equals: {slide: 4, path: bullets.-1, value: "Owner: Dana Reyes, review on May 6"}
+  - field_equals: {slide: 4, path: bullets.1, value: "Owner: Sam Patel for carrier files"}
+  - field_equals: {slide: 2, path: items.0.body, value: "Employees receive a guided checklist in Workday"}
+  - field_equals: {slide: 1, path: date, value: "June 2026"}
+  - chart_values: {series: Completed, values: [35, 50, 44, 59]}
+  - chart_values: {series: Requests, values: [40, 52, 47, 61]}
+  - unchanged_from: {path: evals/tasks/fixtures/T14-outline.yaml, except: {2: [items], 4: [bullets], 5: [chart]}}
+  - fixture_untouched: evals/tasks/fixtures/T14-outline.yaml

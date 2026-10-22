@@ -1,0 +1,10 @@
+target: slides
+difficulty: hard
+slides: [3, 3]
+layouts: [title, content, closing]
+facts: ["Open enrollment kickoff", "dental", "750", "Workday app"]
+checks:
+  # The prompt asks for a date but never gives one.
+  - date_todo_or_empty: {slide: 1}
+  - todo_or_question: true
+  - response_mentions: [["date"]]
