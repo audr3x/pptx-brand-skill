@@ -1,6 +1,6 @@
 # Running the eval under another model
 
-The eval runs the same 10 deck requests through a model and scores what it builds. The baseline (`evals/runs/claude-opus-5.5/`) was produced by a fresh agent that saw only the runner prompt below, the same way a cheaper model should be run.
+The eval runs the same 16 deck requests through a model and scores what it builds. The baseline (`evals/runs/claude-opus-5.5/`) was produced by a fresh agent that saw only the runner prompt below, the same way a cheaper model should be run. Runs from the first harness (10 tasks) are in `evals/archive/v1/`; relaunch every model on this one rather than reusing them.
 
 ## 1. Start an agent on the model you want to measure
 
@@ -25,7 +25,7 @@ Setup, once:
 - LibreOffice and pdftoppm must be installed: run `soffice --version` and `pdftoppm -v`.
   If either is missing: sudo apt-get update && sudo apt-get install -y libreoffice-impress poppler-utils
 
-Then do the 10 tasks in evals/tasks/, in order (T01 to T10). For each task <TASK> (the file
+Then do the 16 tasks in evals/tasks/, in order (T01 to T16). For each task <TASK> (the file
 name without .md):
 1. Read evals/tasks/<TASK>.md. Treat it as a request from a Workday user in Cursor. Use the
    repository skills in .cursor/skills/ (workday-pptx, workday-google-slides,
@@ -33,27 +33,31 @@ name without .md):
 2. Write the outline to evals/runs/<MODEL>/<TASK>/outline.yaml.
 3. Check and build ONLY with:
      python3 evals/build.py --model <MODEL> --task <TASK>
-   It runs the outline check and the right builder, renders PNGs to render/, and logs each
-   attempt. Do not run check_outline.py, build_deck.py, or build_slides.py directly. If it
-   fails, fix the outline and run it again. When it succeeds, open the PNGs and fix anything
-   that looks wrong, then build again.
+   It runs the outline check (with the task file as the user's prompt), the right builder, and
+   scripts/readback.py, which prints the text visible on each built slide and lists anything
+   from the outline that is missing. It renders PNGs to render/ and logs each attempt. Do not
+   run check_outline.py, build_deck.py, or build_slides.py directly (readback.py is fine). If
+   it fails, fix the outline and run it again. When it succeeds, read the warnings and the
+   readback, open the PNGs, fix anything that looks wrong, and build again.
 4. Google Slides is not connected in this session. For Slides tasks the build writes the
    request batches. Do not call any Google, Drive, or Slides tool.
 5. Write evals/runs/<MODEL>/<TASK>/response.md: the message you would send the user at the
    end. Say what you built, every warning or limit that changes what they will see, and any
-   question you need answered. The user is not available to reply in this session: if facts
-   are missing, ask in response.md and write TODO in the outline. Never invent facts or
-   numbers.
+   question you need answered. The user is not available to reply in this session: when the
+   skills say to ask first, ask in response.md, and write TODO in the outline for anything
+   you would need from them.
 
 Rules:
 - Do not open evals/specs/, evals/score.py, evals/checks.py, evals/RUBRIC.md, evals/JUDGE.md,
-  evals/adversarial/, evals/scorecard.md, or other folders under evals/runs/.
+  evals/FINDINGS.md, evals/decision-log.tsv, evals/adversarial/, evals/archive/,
+  evals/scorecard.md, or other folders under evals/runs/.
 - Do not edit anything outside evals/runs/<MODEL>/. Do not change scripts, skills, docs,
   templates, or fixtures.
 - Work on each task until you are satisfied, as you would for a real user. Each failed build
-  attempt is counted, so check your outline before building.
+  attempt is counted (an attempt whose readback finds missing text counts as failed), so
+  check your outline before building.
 
-When all 10 are done, commit evals/runs/<MODEL>/ with the message "Eval run: <MODEL>" and push
+When all 16 are done, commit evals/runs/<MODEL>/ with the message "Eval run: <MODEL>" and push
 your branch. In your final message, list the tasks and one line on anything you could not do.
 ```
 
@@ -69,7 +73,7 @@ To score one model without the judge, skip steps 1 and 2: `python3 evals/score.p
 
 ## What the scores mean
 
-See `evals/RUBRIC.md`. In short: seven automated categories (structure, brand, layouts, faithfulness, instruction following, render, process) and a separate judge score for visual quality, content, and communication. Compare models category by category, not only by the total.
+See `evals/RUBRIC.md`. In short: nine automated categories (structure, brand, layouts, faithful, readback, truthful, instructions, render, process) and a separate judge score for visual quality, content, and communication. Compare models category by category, not only by the total.
 
 ## Rerunning a single task
 
@@ -83,7 +87,7 @@ Runs keep their outlines. To score every model on the current builders, refresh 
 for d in evals/runs/<MODEL>/T*/; do t=$(basename "$d"); [ -f "$d/outline.yaml" ] && python3 evals/build.py --model <MODEL> --task "$t" --rebuild; done
 ```
 
-Skip tasks the runner chose not to build (T08 when it only asked questions).
+Skip tasks the runner chose not to build (T08 or T15 when it only asked questions).
 
 ## Changing the tasks
 
