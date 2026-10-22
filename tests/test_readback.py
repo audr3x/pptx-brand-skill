@@ -58,6 +58,17 @@ class ReadbackTest(unittest.TestCase):
         self.assertEqual(rc, 1)
 
 
+class ChunkTest(unittest.TestCase):
+    def test_rebuild_with_fewer_chunks_removes_stale_ones(self):
+        import build_slides as bs
+
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "fills.json"
+            bs.write_request_chunks(dest, [{"n": i} for i in range(90)], size=40, meta={})
+            bs.write_request_chunks(dest, [{"n": i} for i in range(30)], size=40, meta={})
+            self.assertEqual(sorted(p.name for p in Path(tmp).iterdir()), ["fills-01.json", "fills.json"])
+
+
 class ProvenanceTest(unittest.TestCase):
     def test_invented_month_year_is_flagged(self):
         self.assertEqual(unsourced_dates("Kickoff October 2026", "Kickoff next quarter"), ["October 2026"])

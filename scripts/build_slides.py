@@ -456,6 +456,9 @@ def write_request_chunks(
     chunks = [requests[i : i + size] for i in range(0, len(requests), size)] or [[]]
     count = len(chunks)
     names = [f"{dest.stem}-{i:02d}.json" for i in range(1, count + 1)]
+    for stale in dest.parent.glob(f"{dest.stem}-[0-9][0-9].json"):
+        if stale.name not in names:
+            stale.unlink()
     for i, chunk in enumerate(chunks, 1):
         chunk_path = dest.with_name(names[i - 1])
         write_json(
