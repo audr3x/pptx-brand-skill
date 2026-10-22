@@ -9,12 +9,17 @@ Reads evals/runs/<model>/<task>/outline.yaml and writes, next to it:
   both: render/slide-N.png (Google Slides tasks render a PowerPoint built from the same
         outline, because the Slides batches cannot be rendered offline)
   attempts.jsonl: one line per call (step, exit code, error and warning counts)
+
+The check runs with --prompt pointed at the task prompt and its fixtures, so dates and
+figures the prompt never gave are warned about. After the build, scripts/readback.py
+prints the visible text per slide and fails the attempt if outline text is missing.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -33,6 +38,13 @@ def target_for(task: str) -> str:
     if not spec.is_file():
         raise SystemExit(f"unknown task {task!r}; see evals/tasks/")
     return yaml.safe_load(spec.read_text()).get("target", "pptx")
+
+
+def sources_for(task: str) -> list[str]:
+    """The task prompt plus any fixture it points at: everything the user gave the runner."""
+    prompt = EVALS / "tasks" / f"{task}.md"
+    found = re.findall(r"evals/tasks/fixtures/[\w./-]*\w", prompt.read_text())
+    return [str(prompt.relative_to(ROOT))] + sorted({f for f in found if (ROOT / f).is_file()})
 
 
 def run(cmd: list[str], env: dict | None = None) -> tuple[int, str]:
@@ -73,16 +85,20 @@ def main() -> int:
     log = run_dir / "attempts.jsonl"
     attempt = sum(1 for _ in log.open()) + 1 if log.is_file() else 1
 
-    steps: list[tuple[str, list[str]]] = [("check", [sys.executable, "scripts/check_outline.py", "--target", target, rel])]
+    prompts = [a for s in sources_for(args.task) for a in ("--prompt", s)]
+    steps: list[tuple[str, list[str]]] = [("check", [sys.executable, "scripts/check_outline.py", "--target", target, *prompts, rel])]
     if target == "pptx":
         steps.append(("build_pptx", [sys.executable, "scripts/build_deck.py", rel, "-o", str(run_dir / "deck.pptx")]))
         preview = run_dir / "deck.pptx"
+        built = preview
     else:
         slides = run_dir / "slides"
         steps.append(("build_creates", [sys.executable, "scripts/build_slides.py", rel, "--phase", "creates", "-o", str(slides / "creates.json")]))
         steps.append(("build_fills", [sys.executable, "scripts/build_slides.py", rel, "--phase", "fills", "--chunk", "40", "-o", str(slides / "fills.json")]))
         preview = run_dir / "preview.pptx"
         steps.append(("build_preview", [sys.executable, "scripts/build_deck.py", rel, "-o", str(preview)]))
+        built = slides / "fills.json"
+    steps.append(("readback", [sys.executable, "scripts/readback.py", rel, str(built.relative_to(ROOT)), "--show"]))
 
     record = {"attempt": attempt, "time": time.strftime("%Y-%m-%dT%H:%M:%S"), "target": target, "steps": []}
     rc_all = 0
@@ -96,10 +112,14 @@ def main() -> int:
             "warnings": sum(l.startswith("warning:") for l in out.splitlines()),
             "traceback": "Traceback" in out,
         })
+        if name == "readback":
+            record["steps"][-1]["missing"] = sum(l.startswith("missing:") for l in out.splitlines())
+        if name == "check":
+            record["steps"][-1]["unsourced"] = sum("is not in the prompt" in l for l in out.splitlines())
         if rc:
             rc_all = rc
             break
-    if rc_all == 0:
+    if all(s["rc"] == 0 for s in record["steps"] if s["step"] != "readback") and preview.is_file():
         record["rendered_pages"] = render(preview, run_dir / "render")
         print(f"Rendered {record['rendered_pages']} PNGs to {(run_dir / 'render').relative_to(ROOT)}/")
     record["rc"] = rc_all

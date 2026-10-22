@@ -139,7 +139,17 @@ def _text(value: Any, where: str, field: str, errors: list[str]) -> Any:
     return str(value)
 
 
-def _bullets(value: Any, where: str, errors: list[str]) -> list[Any]:
+def _colon_pair(value: Any, known: set[str]) -> tuple[str, Any] | None:
+    """An unquoted '- Risk: text' line, which YAML reads as the mapping {Risk: text}."""
+    if isinstance(value, dict) and len(value) == 1 and not set(value) & known:
+        return next(iter(value.items()))
+    return None
+
+
+BULLET_KEYS = {"text", "title", "children", "bullets"}
+
+
+def _bullets(value: Any, where: str, errors: list[str], warnings: list[str]) -> list[Any]:
     if isinstance(value, (str, int, float, bool, _dt.date)):
         value = [value]
     if not isinstance(value, list):
@@ -147,11 +157,19 @@ def _bullets(value: Any, where: str, errors: list[str]) -> list[Any]:
         return []
     out = []
     for b in value:
-        if isinstance(b, dict):
+        pair = _colon_pair(b, BULLET_KEYS)
+        if pair:
+            b = f"{pair[0]}: {_text(pair[1], where, 'bullet', errors)}"
+            warnings.append(f"{where}: bullet '{b}' has an unquoted colon, so YAML read it as a mapping. "
+                            "It is kept as text; put bullets that contain ': ' in quotes")
+            out.append(b)
+        elif isinstance(b, dict):
+            if not set(b) & BULLET_KEYS:
+                errors.append(f"{where}: bullet {b!r} has no text. Put bullets that contain ': ' in quotes")
             kids = b.get("children") or b.get("bullets") or []
             node = {"text": _text(b.get("text") or b.get("title") or "", where, "bullet", errors)}
             if kids:
-                node["children"] = _bullets(kids, where, errors)
+                node["children"] = _bullets(kids, where, errors, warnings)
             out.append(node)
         else:
             out.append(_text(b, where, "bullet", errors))
@@ -280,6 +298,49 @@ def _leaf_text(value: Any) -> list[str]:
     return [value] if isinstance(value, str) else []
 
 
+TEXT_KEYS = ("eyebrow", "kicker", "title", "statement", "subtitle", "subhead", "date",
+             "name", "role", "company", "org", "caption")
+
+
+def drawn_strings(spec: dict[str, Any], target: str = "pptx") -> list[tuple[str, str]]:
+    """(field, text) for every string the target's builder puts on this slide, after prepare().
+
+    Slides draws chart values as bar heights and fills only the title on intro layouts,
+    so those are left out for target 'slides'.
+    """
+    layout = canonical_layout(spec)
+    fields = LAYOUT_FIELDS.get(layout, set())
+    if target == "slides" and layout.startswith("Intro_"):
+        fields = {"title"}
+    out = [(k, str(spec[k])) for k in TEXT_KEYS if k in fields and spec.get(k) not in (None, "")]
+    bullets = spec.get("bullets") if spec.get("bullets") is not None else spec.get("body")
+    if "bullets" in fields and bullets:
+        texts = [bullets] if isinstance(bullets, str) else _bullet_texts(bullets)
+        out += [(f"bullet {n}", t) for n, t in enumerate(texts, 1) if t]
+    if "items" in fields and isinstance(spec.get("items"), list):
+        for n, it in enumerate(spec["items"], 1):
+            if isinstance(it, dict):
+                out += [(f"item {n} {k}", str(it[k])) for k in ("title", "body") if it.get(k)]
+    if "headers" in fields and isinstance(spec.get("headers"), list):
+        out += [("header", str(h)) for h in spec["headers"] if h]
+        for r, row in enumerate(spec.get("rows") or [], 1):
+            if isinstance(row, list):
+                out += [(f"row {r}", str(c)) for c in row if c not in (None, "")]
+    chart = spec.get("chart")
+    if "chart" in fields and isinstance(chart, dict):
+        out += [("category", str(c)) for c in chart.get("categories") or []]
+        series = chart.get("series") or []
+        if target != "slides" and chart.get("type") == "pie":
+            series = series[:1]
+        for s in series:
+            if isinstance(s, dict):
+                out.append(("series", str(s.get("name") or "")))
+                if target != "slides":
+                    out += [(f"value in {s.get('name')}", f"{float(v):g}") for v in s.get("values") or []
+                            if isinstance(v, (int, float))]
+    return [(k, v) for k, v in out if v.strip()]
+
+
 def prepare(outline: Any, target: str = "both", label: str = "outline") -> tuple[Any, list[str], list[str]]:
     """Normalize in place where safe. Return (outline, errors, warnings)."""
     errors: list[str] = []
@@ -329,7 +390,7 @@ def prepare(outline: Any, target: str = "both", label: str = "outline") -> tuple
             if key == "body" and isinstance(bullets, str):
                 spec[key] = _text(bullets, where, key, errors)
             else:
-                spec[key] = bullets = _bullets(bullets, where, errors)
+                spec[key] = bullets = _bullets(bullets, where, errors, warnings)
                 if slides_target and any(isinstance(b, dict) and b.get("children") for b in bullets):
                     warnings.append(f"{where}: Google Slides shows nested bullets at the top level")
                 if count_bullets(bullets) > MAX_BULLETS:
@@ -344,6 +405,11 @@ def prepare(outline: Any, target: str = "both", label: str = "outline") -> tuple
             else:
                 norm = []
                 for it in items:
+                    pair = _colon_pair(it, {"title", "heading", "body", "text"})
+                    if pair:
+                        warnings.append(f"{where}: item '{pair[0]}: ...' has an unquoted colon; it is read as "
+                                        f"title {pair[0]!r} with that text as the body. Use title: and body: keys")
+                        it = {"title": pair[0], "body": pair[1]}
                     if isinstance(it, dict) and set(it) - {"title", "heading", "body", "text"}:
                         warnings.append(
                             f"{where}: item keys {sorted(set(it) - {'title', 'heading', 'body', 'text'})} are dropped. "
