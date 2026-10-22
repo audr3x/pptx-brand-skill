@@ -53,7 +53,7 @@ Open the `pptx-brand-skill` folder as the Cursor project. The skills live in `.c
 ## Use it for PowerPoint
 
 1. **Open the repo.** In Cursor, choose **File > Open Folder** and pick the `pptx-brand-skill` folder you cloned. Run the install steps above once.
-2. **Pick a model.** Open a chat (Cmd+L on Mac, Ctrl+L on Windows) and pick a model in the model menu under the message box. Claude Opus 5.5 and Gemini 3.8 Flash scored best in our tests (`evals/FINDINGS.md`).
+2. **Pick a model.** Open a chat (Cmd+L on Mac, Ctrl+L on Windows) and pick a model in the model menu under the message box. Use **Claude Opus 5.5** or **Gemini 3.8 Flash**, which scored best in our evals (`evals/FINDINGS.md`). Avoid Composer 2.5, which invented cover dates, and Gemini 3.1 Pro, which dropped content.
 3. **Ask for the deck.** Name the skill, give every fact you want on the slides, and say where to save it. Example:
 
    > Use the workday-pptx skill. Build a 5 slide deck for the Contoso payroll kickoff on May 12, 2027: cover, goals (cut payroll errors by half, one pay calendar for all 6 countries), a timeline table (Design in June, Build in July to September, Go-live in October), risks (two countries still on paper timesheets), and a closing slide. Save my request to decks/contoso-kickoff-notes.md, the outline to decks/contoso-kickoff.yaml, and the deck to out/contoso-kickoff.pptx. Use only my facts and write TODO for anything missing.

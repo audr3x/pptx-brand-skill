@@ -6,6 +6,17 @@ On-brand Workday decks from the Corporate Template. PowerPoint is the native fil
 
 **Writing the prompt: [docs/PROMPTING.md](docs/PROMPTING.md)** (what to include, layouts per slide, images, charts, copy-paste prompts, checklist).
 
+## Which model to use
+
+Use **Claude Opus 5.5** or **Gemini 3.8 Flash** in Cursor. Both scored top marks in our 16-task eval (`evals/FINDINGS.md`): every fact kept, nothing invented, and replies that match the deck.
+
+Avoid the other models we tested for decks you send to customers:
+
+- **Composer 2.5** invented cover dates (for example "October 2026" when no date was given) and did not say so.
+- **Gemini 3.1 Pro** dropped content (a next-step owner, a deck it was asked to build) and once misreported which chart value it changed.
+
+Whatever the model, read its reply for any `TODO` and check the readback result before you send a deck.
+
 This repository is the brand system plus two small builders. It is not a dump of a real presentation. Sample copy in `examples/` is generic placeholder text.
 
 | Path | What it is |
