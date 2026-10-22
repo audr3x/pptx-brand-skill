@@ -9,10 +9,26 @@ Setup comes first: [GETTING_STARTED.md](../GETTING_STARTED.md). Brand rules: [BR
 1. You describe the deck in chat.
 2. Cursor writes an **outline** (a short YAML file, like [examples/outline.yaml](../examples/outline.yaml)).
 3. A builder turns the outline into slides: `scripts/build_deck.py` for PowerPoint, `scripts/build_slides.py` for Google Slides.
+4. Cursor reads back the text that is actually on the slides (`scripts/readback.py`), fixes anything that did not make it, and then tells you what the deck holds.
 
 The builders only read the fields listed below. Colors, fonts, the cover, the logo, and the footer come from the Workday template, so you never need to ask for them. Anything the outline cannot express (a custom color, a moved box, an animation) will not appear in the deck, however you phrase the prompt.
 
 The most reliable way to work: ask for the outline first, read it, then ask Cursor to build.
+
+## What Cursor must not do, and how it checks
+
+These rules are in all three skills. Where a script can enforce them, it does.
+
+| Rule | How it is checked |
+| --- | --- |
+| Ask first when the request has no real content (numbers, names, dates, rows). A draft gets `TODO` for every gap | Skills; the gate warns on every `TODO` left in the outline |
+| Never infer or invent a date, number, name, or quote. "Next month" or "our Q3 review" is not a cover date | `check_outline.py --prompt <your request saved to a file>` warns on every date and figure that is not in it |
+| Leave out figures you mark as old, a typo, or confidential | Skills; say it plainly in the prompt ("last quarter's 48% stays out") |
+| When two instructions conflict (exactly 4 slides, then a fifth topic; two dates), ask or pick one and say which | Skills |
+| Quote text that contains `: ` (`- "Risk: audit freeze"`) | The gate warns, and keeps the text instead of dropping it |
+| Read back the visible slide text after every build and fix drops before reporting | `scripts/readback.py <outline> <deck.pptx or fills.json>` lists every title, bullet, item, cell, and chart label missing from the slides and exits 1 |
+| Look hardest at titles that wrap and the first bullet under each title | The gate warns on long titles; the render shows collisions |
+| The final message claims only what readback confirms: slide count, what each slide holds, every `TODO` left, warnings that change what you see, anything cut or changed | Skills; the eval harness scores this (`evals/RUBRIC.md`, truthful) |
 
 ## What to put in a prompt
 
@@ -123,7 +139,7 @@ Save to decks/<name>.yaml and run python3 scripts/check_outline.py on it. Show m
 Then:
 
 ```text
-Looks good. Build decks/<name>.yaml with the workday-pptx skill to decks/<name>.pptx and render PNGs so I can check every slide.
+Looks good. Build decks/<name>.yaml with the workday-pptx skill to decks/<name>.pptx, run scripts/readback.py on it, and render PNGs so I can check every slide.
 ```
 
 ### 2. PowerPoint from an outline you already have
@@ -164,7 +180,7 @@ On presentation <id>, slide wd_s4 only: replace the text of wd_s4_title with "<n
 ### 6. Turn notes into a deck
 
 ```text
-Use the workday-pptx skill. Here are my notes: <paste>. Propose a 6 to 8 slide outline using only these layouts: title, section, content, two-column, table, chart, closing. Use only facts from my notes; mark anything missing as TODO instead of inventing it. Save to decks/<name>.yaml and run check_outline.py.
+Use the workday-pptx skill. Here are my notes: <paste>. Propose a 6 to 8 slide outline using only these layouts: title, section, content, two-column, table, chart, closing. Use only facts from my notes; mark anything missing as TODO instead of inventing it. Save my notes to decks/<name>-notes.md and the outline to decks/<name>.yaml, and run check_outline.py with --prompt decks/<name>-notes.md.
 ```
 
 ## Example outline
@@ -276,4 +292,5 @@ Every warning the check gives, and every limit of the builders, is listed in [LI
 - [ ] Chart: type, categories, and one number per category per series
 - [ ] Photos only on `intro`, `photo-right`, or `photos`, with a path in the repository
 - [ ] Google Slides: cover option (A, B, or C) stated, and no request for photos, notes, or non-column charts
-- [ ] Asked Cursor to run `scripts/check_outline.py` and to show you the slides when done
+- [ ] Cover date given, or you expect a `TODO` in its place
+- [ ] Asked Cursor to run `scripts/check_outline.py`, read back the built slides with `scripts/readback.py`, and show you the slides when done

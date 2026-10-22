@@ -2,7 +2,7 @@
 
 `scripts/check_outline.py` and both builders share one set of outline rules (`scripts/outline_rules.py`). An outline either builds the same way in both, or both stop with the same plain message. This page lists what those rules catch and what is still up to you.
 
-The list comes from an adversarial test set in `evals/adversarial/` (24 hostile outlines: overlong text, wrong types, broken YAML, huge tables, odd charts, missing images, and so on). Run it with `python3 evals/adversarial/run.py`. The current report is `evals/adversarial/report.md`.
+The list comes from an adversarial test set in `evals/adversarial/` (25 hostile outlines: overlong text, wrong types, broken YAML, huge tables, odd charts, missing images, and so on). Run it with `python3 evals/adversarial/run.py`. The current report is `evals/adversarial/report.md`.
 
 ## The check stops the build (error)
 
@@ -39,6 +39,8 @@ The builder still runs, but the slide will not look the way the outline reads. T
 | Text with commas inside `{...}` that was not quoted | YAML splits it into extra keys that are dropped | Quote the text |
 | Table rows written as mappings with keys that are not headers | Those cells are dropped | Match the keys to `headers` |
 | `TODO` left in the outline | `TODO` prints on the slide | Fill in the real fact, or remove the line |
+| A bullet or item like `- Risk: audit freeze` without quotes | YAML reads it as a mapping. The gate keeps it as the text `Risk: audit freeze` (an item becomes title `Risk` with that body) | Quote text that contains `: ` |
+| With `--prompt`: a date or figure that is not in the prompt file | Builds as written | Replace it with the user's value, or `TODO` and ask |
 | Cover slide not first, or more than one cover | Builds as written | Check the order |
 | A slide with no content | An empty layout | Remove the slide or add content |
 

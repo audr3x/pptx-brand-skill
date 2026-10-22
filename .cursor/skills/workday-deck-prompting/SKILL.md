@@ -9,17 +9,26 @@ The full guide for people is [docs/PROMPTING.md](../../../docs/PROMPTING.md). Th
 
 ## Workflow
 
-1. Ask for whatever is missing, in one message: target (PowerPoint or Google Slides), audience, goal, slide count, and the real content (bullets, numbers, table rows, names). For Google Slides also ask which cover image option the org allows (A Drive link share, B public URL, C no image).
-2. Write the outline as YAML (shape of [examples/outline.yaml](../../../examples/outline.yaml)). Use only facts the user gave. Write `TODO` for anything missing. Never invent numbers, names, or quotes.
-3. Run the gate and fix every error:
+1. Ask for whatever is missing, in one message: target (PowerPoint or Google Slides), audience, goal, slide count, and the real content (bullets, numbers, table rows, names, the cover date). For Google Slides also ask which cover image option the org allows (A Drive link share, B public URL, C no image). When the request is vague, ask before you write an outline.
+2. Write the outline as YAML (shape of [examples/outline.yaml](../../../examples/outline.yaml)). Use only facts the user gave. Write `TODO` for anything missing. Never infer or invent a date, number, name, or quote: "next month" or "Q3 review" does not give you a cover date. Leave out figures the user marks as old, a typo, or confidential. Quote any text that contains `: `.
+3. Save the user's request and notes to a file. Run the gate with it and fix every error:
 
    ```bash
-   python3 scripts/check_outline.py --target pptx|slides <outline>
+   python3 scripts/check_outline.py --target pptx|slides --prompt <request file> <outline>
    ```
 
-   Tell the user about each warning that changes what they will see. Every warning and limit is explained in [docs/LIMITS.md](../../../docs/LIMITS.md).
-4. Show the outline. Build only after the user agrees, unless they asked to build straight away.
-5. After the build, render or read back every slide and compare with the outline.
+   Each "is not in the prompt" warning is a date or figure you added; replace it with the user's value or `TODO`. Tell the user about each other warning that changes what they will see. Every warning and limit is explained in [docs/LIMITS.md](../../../docs/LIMITS.md).
+4. When instructions conflict (exactly 4 slides, then a fifth topic; two different dates), ask, or pick one and say which in your reply.
+5. Show the outline. Build only after the user agrees, unless they asked to build straight away.
+6. After the build, read back the visible text and fix every drop before reporting:
+
+   ```bash
+   python3 scripts/readback.py <outline> out/deck.pptx --show          # PowerPoint
+   python3 scripts/readback.py <outline> out/slides/fills.json --show  # Google Slides
+   ```
+
+   Look hardest at titles that wrap and at the first bullet under each title.
+7. In your reply, claim only what readback confirms: slide count, what each slide holds, every `TODO` left, warnings that change what the user sees, and anything you cut, split, or changed. Say "nothing was invented" or "everything is included" only when readback passed and the prompt check was clean.
 
 ## What the outline can hold
 

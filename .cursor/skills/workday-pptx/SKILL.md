@@ -11,18 +11,31 @@ For Google Slides, use [workday-google-slides](../workday-google-slides/SKILL.md
 
 ## Quick path
 
-1. Turn the brief into a short slide list. One idea per slide.
-2. Pick a layout by intent (table below). Do not invent a new master.
-3. Write a JSON or YAML outline (see [examples/outline.yaml](../../../examples/outline.yaml)).
-4. Build:
+1. If the request has no real content (numbers, names, dates, rows), ask for it first. See the guardrails below.
+2. Turn the brief into a short slide list. One idea per slide.
+3. Pick a layout by intent (table below). Do not invent a new master.
+4. Write a JSON or YAML outline (see [examples/outline.yaml](../../../examples/outline.yaml)). Save the user's request and notes to a file, then check, build, and read back:
 
 ```bash
-python3 scripts/build_deck.py examples/outline.yaml -o out/deck.pptx
+python3 scripts/check_outline.py --target pptx --prompt out/request.md out/outline.yaml
+python3 scripts/build_deck.py out/outline.yaml -o out/deck.pptx
+python3 scripts/readback.py out/outline.yaml out/deck.pptx --show
 ```
 
-5. Open the file. Confirm titles, footer, and colors. If you can render with LibreOffice, do that and look at the PNGs.
+5. Fix every `missing:` line from readback and rebuild. Render with LibreOffice if you can and look at the PNGs: titles, the first bullet under each title, footer, and colors.
+6. Report only what readback confirms (guardrails below).
 
 If the outline is the wrong tool (heavy custom drawing on `Title Only`), still start from the template, add the matching layout, and paint only with tokens from `BRAND.md`.
+
+## Content guardrails
+
+- **Ask first on vague requests.** "A deck about X" with no facts gets one message asking for audience, slide count, and the real content. If the user wants a draft anyway, write `TODO` for every gap.
+- **Use only what the user gave.** Never infer or invent a date, number, name, or quote. "Next month" is not a date: write `date: "TODO: date"` and ask. Leave out figures the user marks as old, a typo, or confidential. When two instructions conflict (slide count, dates), pick one or ask, and name the conflict in your reply.
+- **Run the gate with the prompt.** `check_outline.py --prompt <file>` warns on every date or figure that is not in the user's text. Replace each one with the user's value or `TODO`.
+- **Quote text that contains `: `.** `- "Risk: audit freeze in January"`. Unquoted, YAML reads it as a mapping.
+- **Read back before you report.** `scripts/readback.py` lists every outline title, bullet, item, cell, and chart label that is not on the built slides and exits 1. Fix and rebuild until it prints `ok`.
+- **Look hardest at wrapped titles and first bullets.** A title past the layout's limit wraps into the first bullet; the gate warns, and the render shows it. Shorten the title rather than accept the warning.
+- **Claim only what readback confirms.** Your reply states the slide count, what each slide holds, every `TODO` left, each warning that changes what the user sees, and anything you cut, split, or changed. Write "nothing was invented" or "everything is included" only when readback passed and the prompt check showed no warnings.
 
 ## Layouts by intent
 
@@ -111,4 +124,4 @@ soffice --headless --convert-to pdf --outdir /tmp out/deck.pptx
 pdftoppm -png -r 140 /tmp/deck.pdf /tmp/deck-slide
 ```
 
-Look at every PNG. Check contrast (Ink on Paper, Paper on Ink / Ballpoint), footer clearance, smile placement, and that no off-brand blue or gray appeared. Fix the outline or the builder, then render again.
+Look at every PNG. Check that no title runs into the first bullet, then contrast (Ink on Paper, Paper on Ink / Ballpoint), footer clearance, smile placement, and that no off-brand blue or gray appeared. Fix the outline or the builder, then render again.

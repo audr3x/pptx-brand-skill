@@ -16,10 +16,22 @@ Workday Slides compliance:
 - [ ] Layout picked by intent (no blank slide when a Workday layout exists)
 - [ ] Tokens only (core palette first). Archivo, Arial fallback
 - [ ] Footer is Workday Confidential. About 6 bullets max
+- [ ] Gate run with --prompt; every date and figure came from the user or is TODO
+- [ ] scripts/readback.py prints ok on fills.json before anything is sent
 - [ ] Re-read the deck and check styles before calling it done
 ```
 
-Writing the deck content or prompt? See [docs/PROMPTING.md](../../../docs/PROMPTING.md) and the [workday-deck-prompting](../workday-deck-prompting/SKILL.md) skill. Check outlines with `python3 scripts/check_outline.py <outline>`.
+Writing the deck content or prompt? See [docs/PROMPTING.md](../../../docs/PROMPTING.md) and the [workday-deck-prompting](../workday-deck-prompting/SKILL.md) skill. Check outlines with `python3 scripts/check_outline.py --target slides --prompt <request file> <outline>`.
+
+## Content guardrails
+
+- **Ask first on vague requests.** "A deck about X" with no facts gets one message asking for audience, slide count, the real content, and the cover image option (A, B, or C). If the user wants a draft anyway, write `TODO` for every gap.
+- **Use only what the user gave.** Never infer or invent a date, number, name, or quote. "Next month" is not a date: write `date: "TODO: date"` and ask. Leave out figures the user marks as old, a typo, or confidential. When two instructions conflict (slide count, dates), pick one or ask, and name the conflict in your reply.
+- **Run the gate with the prompt.** Save the user's request and notes to a file. `check_outline.py --prompt <file>` warns on every date or figure that is not in it. Replace each one with the user's value or `TODO`.
+- **Quote text that contains `: `.** `- "Risk: audit freeze in January"`. Unquoted, YAML reads it as a mapping.
+- **Read back before you send or report.** `python3 scripts/readback.py <outline> out/slides/fills.json --show` lists every outline title, bullet, item, cell, and chart label missing from the fills batch and exits 1. Chart values are bar heights in Slides, so readback checks only the labels. Fix and rebuild until it prints `ok`. After a live apply, `read_presentation` and confirm the same text is there.
+- **Look hardest at wrapped titles and first bullets.** A title past the layout's limit wraps into the first bullet; the gate warns. Shorten the title rather than accept the warning.
+- **Claim only what readback confirms.** Your reply states the slide count, what each slide holds, every `TODO` left, each warning that changes what the user sees (for example a chart drawn as columns), and anything you cut, split, or changed. Write "nothing was invented" or "everything is included" only when readback passed and the prompt check showed no warnings.
 
 ## Auth (pick one). Never commit credentials
 
@@ -145,7 +157,7 @@ Drive plugin: `copy_file` with that `fileId` and the deliverable title.
 
 6. Draw missing chrome. Title Slide: Ballpoint `pageBackgroundFill`, then `createImage` of the cover full-bleed and send to back when a real cover ID or public URL is set. The smile comes from the layout. Bumper: Ink fill; the smile comes from the layout. Section rail (2.743 in Tack / Keyboard / Lunch Break stack), half-headline items, footer box at **x = 0.50 in** (x = 3.32 in on Section Title, right of the rail), cover date, bumper caption. Cover title is bold (700). Cover type is **Ink** on the gradient, **Paper** only on the flat Ballpoint fallback.
 
-7. Read the deck again. Check fonts, fills, footer, contrast.
+7. Read the deck again (`read_presentation`). Check that every outline item is on its slide, then fonts, fills, footer, contrast.
 
 `scripts/build_slides.py` does this. Extend it instead of starting from a blank `presentations.create`. Do not reuse a footer placeholder objectId for a new text box. Google does not copy PPTX footer placeholders onto new slides.
 
