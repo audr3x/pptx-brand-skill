@@ -2,16 +2,16 @@
   "phase": "fills",
   "title": "Planning workshop",
   "chrome": {
-    "coverImageId": "YOUR_COVER_IMAGE_ID",
-    "smileImageId": "YOUR_SMILE_IMAGE_ID",
-    "coverImageUrl": "https://drive.google.com/uc?export=download&id=YOUR_COVER_IMAGE_ID",
-    "smileImageUrl": "https://drive.google.com/uc?export=download&id=YOUR_SMILE_IMAGE_ID",
-    "coverText": "ink",
-    "note": "Title Slide uses createImage of cover-gradient.png when a Drive ID/URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper."
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png only when a real Drive ID or public URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper. The smile comes from the imported layouts unless --place-smile is set."
   },
-  "note": "Chunk 1 of 5. Send only the requests array to update_presentation. Send chunks in order: fills-01.json, fills-02.json, fills-03.json, fills-04.json, fills-05.json.",
+  "note": "Chunk 1 of 6. Send only the requests array to update_presentation. Send chunks in order: fills-01.json, fills-02.json, fills-03.json, fills-04.json, fills-05.json, fills-06.json.",
   "chunk": 1,
-  "chunkCount": 5,
+  "chunkCount": 6,
   "requests": [
     {
       "updatePageProperties": {
@@ -33,70 +33,6 @@
       }
     },
     {
-      "createImage": {
-        "objectId": "wd_s1_cover",
-        "url": "https://drive.google.com/uc?export=download&id=YOUR_COVER_IMAGE_ID",
-        "elementProperties": {
-          "pageObjectId": "wd_s1",
-          "size": {
-            "width": {
-              "magnitude": 9144000.0,
-              "unit": "EMU"
-            },
-            "height": {
-              "magnitude": 5143500.0,
-              "unit": "EMU"
-            }
-          },
-          "transform": {
-            "scaleX": 1,
-            "scaleY": 1,
-            "shearX": 0,
-            "shearY": 0,
-            "translateX": 0.0,
-            "translateY": 0.0,
-            "unit": "EMU"
-          }
-        }
-      }
-    },
-    {
-      "updatePageElementsZOrder": {
-        "pageElementObjectIds": [
-          "wd_s1_cover"
-        ],
-        "operation": "SEND_TO_BACK"
-      }
-    },
-    {
-      "createImage": {
-        "objectId": "wd_s1_smile",
-        "url": "https://drive.google.com/uc?export=download&id=YOUR_SMILE_IMAGE_ID",
-        "elementProperties": {
-          "pageObjectId": "wd_s1",
-          "size": {
-            "width": {
-              "magnitude": 1228039.2,
-              "unit": "EMU"
-            },
-            "height": {
-              "magnitude": 580644.0,
-              "unit": "EMU"
-            }
-          },
-          "transform": {
-            "scaleX": 1,
-            "scaleY": 1,
-            "shearX": 0,
-            "shearY": 0,
-            "translateX": 611733.6,
-            "translateY": 470916.0,
-            "unit": "EMU"
-          }
-        }
-      }
-    },
-    {
       "insertText": {
         "objectId": "wd_s1_title",
         "text": "Planning workshop",
@@ -110,19 +46,19 @@
           "fontFamily": "Archivo",
           "weightedFontFamily": {
             "fontFamily": "Archivo",
-            "weight": 400
+            "weight": 700
           },
           "fontSize": {
             "magnitude": 36,
             "unit": "PT"
           },
-          "bold": false,
+          "bold": true,
           "foregroundColor": {
             "opaqueColor": {
               "rgbColor": {
-                "red": 0.058823529411764705,
-                "green": 0.1803921568627451,
-                "blue": 0.4
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
               }
             }
           }
@@ -157,9 +93,9 @@
           "foregroundColor": {
             "opaqueColor": {
               "rgbColor": {
-                "red": 0.058823529411764705,
-                "green": 0.1803921568627451,
-                "blue": 0.4
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
               }
             }
           }
@@ -233,9 +169,9 @@
           "foregroundColor": {
             "opaqueColor": {
               "rgbColor": {
-                "red": 0.058823529411764705,
-                "green": 0.1803921568627451,
-                "blue": 0.4
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
               }
             }
           }
@@ -579,7 +515,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 457200.0,
+            "translateX": 3035808.0,
             "translateY": 4818888.0,
             "unit": "EMU"
           }
@@ -688,7 +624,7 @@
             "weight": 300
           },
           "fontSize": {
-            "magnitude": 20,
+            "magnitude": 14,
             "unit": "PT"
           },
           "bold": false,
@@ -706,6 +642,110 @@
           "type": "ALL"
         },
         "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 0,
+          "endIndex": 18
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 19,
+          "endIndex": 38
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 39,
+          "endIndex": 82
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 83,
+          "endIndex": 125
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 126,
+          "endIndex": 153
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "spaceAbove": {
+            "magnitude": 6,
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 6,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "spaceAbove,spaceBelow"
       }
     },
     {
@@ -743,54 +783,6 @@
             "unit": "EMU"
           }
         }
-      }
-    },
-    {
-      "updateShapeProperties": {
-        "objectId": "wd_s3_footer",
-        "shapeProperties": {
-          "outline": {
-            "propertyState": "NOT_RENDERED"
-          }
-        },
-        "fields": "outline"
-      }
-    },
-    {
-      "insertText": {
-        "objectId": "wd_s3_footer",
-        "text": "Workday Confidential",
-        "insertionIndex": 0
-      }
-    },
-    {
-      "updateTextStyle": {
-        "objectId": "wd_s3_footer",
-        "style": {
-          "fontFamily": "Archivo",
-          "weightedFontFamily": {
-            "fontFamily": "Archivo",
-            "weight": 400
-          },
-          "fontSize": {
-            "magnitude": 8,
-            "unit": "PT"
-          },
-          "bold": false,
-          "foregroundColor": {
-            "opaqueColor": {
-              "rgbColor": {
-                "red": 0.49019607843137253,
-                "green": 0.5450980392156862,
-                "blue": 0.6
-              }
-            }
-          }
-        },
-        "textRange": {
-          "type": "ALL"
-        },
-        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     }
   ]

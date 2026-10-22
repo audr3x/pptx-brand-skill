@@ -1,0 +1,712 @@
+{
+  "phase": "fills",
+  "title": "Planning workshop",
+  "chrome": {
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png only when a real Drive ID or public URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper. The smile comes from the imported layouts unless --place-smile is set."
+  },
+  "note": "Chunk 6 of 6. Send only the requests array to update_presentation. Send chunks in order: fills-01.json, fills-02.json, fills-03.json, fills-04.json, fills-05.json, fills-06.json.",
+  "chunk": 6,
+  "chunkCount": 6,
+  "requests": [
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_bar_2_0",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.10980392156862745,
+                  "green": 0.596078431372549,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_bar_2_1",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 1474012.8,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 4868037.0,
+            "translateY": 2732227.2,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_bar_2_1",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.996078431372549,
+                  "green": 0.7568627450980392,
+                  "blue": 0.043137254901960784
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_cat_3",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 1588770.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 5634990.0,
+            "translateY": 4242816.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_cat_3",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_cat_3",
+        "text": "April",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_cat_3",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 10,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s6_cat_3",
+        "style": {
+          "alignment": "CENTER"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_bar_3_0",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 2494483.2,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 6145911.0,
+            "translateY": 1711756.8,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_bar_3_0",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.10980392156862745,
+                  "green": 0.596078431372549,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_bar_3_1",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 2154326.4,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 6456807.0,
+            "translateY": 2051913.6,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_bar_3_1",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.996078431372549,
+                  "green": 0.7568627450980392,
+                  "blue": 0.043137254901960784
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_legsw_0",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 164592.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 164592.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 7406640.0,
+            "translateY": 1609344.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_legsw_0",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.10980392156862745,
+                  "green": 0.596078431372549,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_leg_0",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 1280160.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 274320.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 7644384.0,
+            "translateY": 1554480.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_leg_0",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_leg_0",
+        "text": "Requests",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_leg_0",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
+          "fontSize": {
+            "magnitude": 10,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_legsw_1",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 164592.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 164592.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 7406640.0,
+            "translateY": 1938528.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_legsw_1",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.996078431372549,
+                  "green": 0.7568627450980392,
+                  "blue": 0.043137254901960784
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_leg_1",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 1280160.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 274320.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 7644384.0,
+            "translateY": 1883664.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_leg_1",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_leg_1",
+        "text": "Completed",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_leg_1",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
+          "fontSize": {
+            "magnitude": 10,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_footer",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 3086100.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 274320.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 457200.0,
+            "translateY": 4818888.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_footer",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_footer",
+        "text": "Workday Confidential",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_footer",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
+          "fontSize": {
+            "magnitude": 8,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.49019607843137253,
+                "green": 0.5450980392156862,
+                "blue": 0.6
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updatePageProperties": {
+        "objectId": "wd_s7",
+        "pageProperties": {
+          "pageBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.058823529411764705,
+                  "green": 0.1803921568627451,
+                  "blue": 0.4
+                }
+              }
+            }
+          }
+        },
+        "fields": "pageBackgroundFill"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s7_caption",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s7",
+          "size": {
+            "width": {
+              "magnitude": 6400800.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 365760.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 1371600.0,
+            "translateY": 3273552.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s7_caption",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s7_caption",
+        "text": "Thank you",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s7_caption",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
+          "fontSize": {
+            "magnitude": 16,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s7_caption",
+        "style": {
+          "alignment": "CENTER"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    }
+  ]
+}

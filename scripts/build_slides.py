@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import shutil
 import subprocess
@@ -119,6 +120,9 @@ FONT_BODY = "Archivo Light"  # logical role; the API gets Archivo + weight 300
 EMU_PER_INCH = 914400
 FOOTER_LEFT_IN = 0.50
 SECTION_RAIL_WIDTH_IN = 2.743
+SECTION_FOOTER_LEFT_IN = 3.32
+BULLET_SPACE_PT = 6
+BULLET_GLYPH_PT = 14
 TITLE_PLACEHOLDER_TYPES = ("TITLE", "CENTERED_TITLE", "CENTER_TITLE")
 COVER_PNG = ROOT / "assets" / "logos" / "cover-gradient.png"
 SMILE_PNG = ROOT / "assets" / "logos" / "workday-smile.png"
@@ -267,19 +271,15 @@ def text_ops(
     ops: list[dict[str, Any]] = []
     if has_text:
         ops.append({"deleteText": {"objectId": object_id, "textRange": {"type": "ALL"}}})
-    ops.extend(
-        [
-            {"insertText": {"objectId": object_id, "text": text, "insertionIndex": 0}},
-            {
-                "updateTextStyle": {
-                    "objectId": object_id,
-                    "style": style,
-                    "textRange": {"type": "ALL"},
-                    "fields": fields,
-                }
-            },
-        ]
-    )
+    style_op = {
+        "updateTextStyle": {
+            "objectId": object_id,
+            "style": style,
+            "textRange": {"type": "ALL"},
+            "fields": fields,
+        }
+    }
+    ops.extend([{"insertText": {"objectId": object_id, "text": text, "insertionIndex": 0}}, style_op])
     if align:
         ops.append(
             {
@@ -292,6 +292,37 @@ def text_ops(
             }
         )
     if bullets:
+        # The API cannot size a bullet glyph. Slides draws it from the paragraph-end newline,
+        # so the whole box goes to BULLET_GLYPH_PT first and only the words go back to full size.
+        style_op["updateTextStyle"]["style"] = {**style, "fontSize": {"magnitude": BULLET_GLYPH_PT, "unit": "PT"}}
+        start = 0
+        for para in text.split("\n"):
+            end = start + len(para.encode("utf-16-le")) // 2
+            if end > start:
+                ops.append(
+                    {
+                        "updateTextStyle": {
+                            "objectId": object_id,
+                            "style": {"fontSize": {"magnitude": size, "unit": "PT"}},
+                            "textRange": {"type": "FIXED_RANGE", "startIndex": start, "endIndex": end},
+                            "fields": "fontSize",
+                        }
+                    }
+                )
+            start = end + 1
+        ops.append(
+            {
+                "updateParagraphStyle": {
+                    "objectId": object_id,
+                    "style": {
+                        "spaceAbove": {"magnitude": BULLET_SPACE_PT, "unit": "PT"},
+                        "spaceBelow": {"magnitude": BULLET_SPACE_PT, "unit": "PT"},
+                    },
+                    "textRange": {"type": "ALL"},
+                    "fields": "spaceAbove,spaceBelow",
+                }
+            }
+        )
         ops.append(
             {
                 "createParagraphBullets": {
@@ -400,44 +431,62 @@ def is_github_raw_url(url: str | None) -> bool:
     return "raw.githubusercontent.com" in lower or ("github.com/" in lower and "/raw/" in lower)
 
 
-def prefer_drive_image_url(drive_id: str | None, url: str | None) -> str | None:
-    """Drive IDs win. GitHub raw URLs 404 on a private repo and are dropped."""
-    if is_github_raw_url(url):
-        url = None
-    if drive_id:
-        return drive_download_url(drive_id)
+def is_placeholder_value(value: str | None) -> bool:
+    """Doc placeholders such as YOUR_COVER_IMAGE_ID or <cover URL> must never reach createImage."""
+    if not value:
+        return False
+    v = value.strip()
+    if v.upper().startswith("YOUR_") or "<" in v or v in {"...", '"..."'}:
+        print(f"warning: ignoring placeholder image value {v!r}. Pass a real Drive file ID or public URL.", file=sys.stderr)
+        return True
+    return False
+
+
+def probe_url(url: str, timeout: float = 6.0) -> tuple[int | None, str]:
+    """Fetch like Google Slides does: no cookies, no auth. Returns (status, content-type)."""
+    import urllib.error
+    import urllib.request
+
+    for method in ("HEAD", "GET"):
+        req = urllib.request.Request(url, method=method, headers={"User-Agent": "workday-slides-check"})
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                return resp.status, resp.headers.get("Content-Type", "")
+        except urllib.error.HTTPError as exc:
+            if exc.code == 405 and method == "HEAD":
+                continue
+            return exc.code, exc.headers.get("Content-Type", "") if exc.headers else ""
+        except Exception:
+            return None, ""
+    return None, ""
+
+
+def check_image_url(label: str, url: str | None, *, probe: bool) -> str | None:
+    """Keep a public URL. Drop a GitHub raw URL that is not public (a private repo answers 404)."""
+    if not url:
+        return None
+    if not probe:
+        return url
+    status, ctype = probe_url(url)
+    if status is None:
+        print(f"warning: could not reach {label} URL {url}. Make sure it is public before you send fills.", file=sys.stderr)
+        return url
+    if is_github_raw_url(url) and status in {401, 403, 404}:
+        print(
+            f"warning: dropped {label} URL {url} (HTTP {status}). GitHub raw URLs only work from a public repo. "
+            "Host the PNG in a public repo or public static host, or use the no-image path.",
+            file=sys.stderr,
+        )
+        return None
+    if not 200 <= status < 300:
+        print(f"warning: {label} URL {url} returned HTTP {status}. Google Slides will not be able to fetch it.", file=sys.stderr)
+    elif ctype and not ctype.startswith("image/"):
+        print(
+            f"warning: {label} URL {url} returned {ctype}, not an image. "
+            "A sign-in page means the file is not public.",
+            file=sys.stderr,
+        )
     return url
-
-
-def drop_github_image_urls(requests: list[dict[str, Any]], chrome: dict[str, Any]) -> list[dict[str, Any]]:
-    """When Drive IDs are set, never leave a GitHub raw URL in createImage."""
-    cover_id = chrome.get("cover_id")
-    smile_id = chrome.get("smile_id")
-    cleaned: list[dict[str, Any]] = []
-    drop_zorder_for: set[str] = set()
-    for req in requests:
-        img = req.get("createImage")
-        if img and is_github_raw_url(img.get("url")):
-            oid = img.get("objectId") or ""
-            replacement = None
-            if "smile" in oid and smile_id:
-                replacement = drive_download_url(smile_id)
-            elif cover_id:
-                replacement = drive_download_url(cover_id)
-            elif smile_id:
-                replacement = drive_download_url(smile_id)
-            if replacement:
-                img = dict(img)
-                img["url"] = replacement
-                cleaned.append({"createImage": img})
-            else:
-                drop_zorder_for.add(oid)
-            continue
-        z = req.get("updatePageElementsZOrder")
-        if z and drop_zorder_for.intersection(z.get("pageElementObjectIds") or []):
-            continue
-        cleaned.append(req)
-    return cleaned
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -541,7 +590,7 @@ def footer_ops(slide_id: str, idx: int, text: str, layout: str) -> list[dict[str
     return create_box(
         f"{slide_id}_footer",
         slide_id,
-        FOOTER_LEFT_IN,
+        SECTION_FOOTER_LEFT_IN if layout == "Section Title" else FOOTER_LEFT_IN,
         5.27,
         3.375,
         0.30,
@@ -670,6 +719,16 @@ def table_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
     return ops
 
 
+def nice_scale(max_value: float, max_ticks: int = 5) -> tuple[float, int]:
+    """Round axis step (1, 2, 2.5, 5 x 10^k) and tick count so the top tick covers max_value."""
+    if max_value <= 0:
+        return 1.0, 1
+    raw = max_value / max_ticks
+    mag = 10 ** math.floor(math.log10(raw))
+    step = next(m * mag for m in (1, 2, 2.5, 5, 10) if m * mag >= raw)
+    return step, max(1, math.ceil(max_value / step - 1e-9))
+
+
 def chart_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
     chart = spec.get("chart") or {}
     categories = [str(c) for c in chart.get("categories") or []]
@@ -677,9 +736,32 @@ def chart_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
     if not categories or not series_list:
         raise SystemExit("chart slides need chart.categories and chart.series")
     ops: list[dict[str, Any]] = []
-    # Simple clustered columns. Avoids a Sheets dependency.
-    plot_x, plot_y, plot_w, plot_h = 0.50, 1.50, 7.40, 3.10
-    max_val = max(float(v) for series in series_list for v in (series.get("values") or [1])) or 1
+    # Simple clustered columns drawn as shapes. Avoids a Sheets dependency.
+    plot_x, plot_y, plot_w, plot_h = 0.95, 1.50, 6.95, 3.10
+    step, n_ticks = nice_scale(max(float(v) for series in series_list for v in (series.get("values") or [0])))
+    max_val = step * n_ticks
+    hairline = 0.75 / 72
+    for t in range(n_ticks + 1):
+        value = step * t
+        y = plot_y + plot_h - plot_h * t / n_ticks
+        ops.extend(create_rect(f"{slide_id}_grid_{t}", slide_id, plot_x, y - hairline / 2, plot_w, hairline, "desk"))
+        ops.extend(
+            create_box(
+                f"{slide_id}_tick_{t}",
+                slide_id,
+                0.30,
+                y - 0.14,
+                0.58,
+                0.28,
+                f"{value:g}",
+                font=FONT_BODY,
+                size=10,
+                bold=False,
+                color="ink",
+                align="END",
+            )
+        )
+    ops.extend(create_rect(f"{slide_id}_yaxis", slide_id, plot_x - hairline / 2, plot_y, hairline, plot_h, "desk"))
     n_cat = len(categories)
     n_ser = len(series_list)
     group_w = plot_w / n_cat
@@ -841,7 +923,7 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str, chrome: dict[str, 
                 str(title),
                 font=FONT_TITLE,
                 size=36 if layout == "Title Slide" else 28,
-                bold=layout != "Title Slide",
+                bold=True,
                 color=cover_color,
             )
         )
@@ -976,8 +1058,9 @@ def build_plan(outline: dict[str, Any], chrome: dict[str, Any] | None = None) ->
             "smileImageUrl": chrome.get("smile_url"),
             "coverText": "ink" if chrome.get("cover_url") else "paper",
             "note": (
-                "Title Slide uses createImage of cover-gradient.png when a Drive ID/URL is set; "
-                "otherwise pageBackgroundFill is Ballpoint and cover type is Paper."
+                "Title Slide uses createImage of cover-gradient.png only when a real Drive ID or public URL "
+                "is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper. The smile comes "
+                "from the imported layouts unless --place-smile is set."
             ),
         },
         "pageSize": {
@@ -1250,6 +1333,7 @@ def bind_fills(plan: dict[str, Any], presentation: dict[str, Any]) -> list[dict[
 
 
 def resolve_chrome(args: argparse.Namespace) -> dict[str, Any]:
+    """An explicit public URL wins over a Drive ID. A private GitHub raw URL falls back to the ID."""
     cover_id = getattr(args, "cover_image_id", None) or os.environ.get("WORKDAY_COVER_IMAGE_ID")
     smile_id = getattr(args, "smile_image_id", None) or os.environ.get("WORKDAY_SMILE_IMAGE_ID")
     cover_url = getattr(args, "cover_image_url", None) or os.environ.get("WORKDAY_COVER_IMAGE_URL")
@@ -1259,17 +1343,20 @@ def resolve_chrome(args: argparse.Namespace) -> dict[str, Any]:
         data = json.loads(Path(ids_path).read_text())
         cover_id = cover_id or data.get("WORKDAY_COVER_IMAGE_ID") or data.get("coverImageId")
         smile_id = smile_id or data.get("WORKDAY_SMILE_IMAGE_ID") or data.get("smileImageId")
-        cover_url = cover_url or data.get("coverImageUrl")
-        smile_url = smile_url or data.get("smileImageUrl")
-    if is_github_raw_url(cover_url) or is_github_raw_url(smile_url):
-        print(
-            "warning: GitHub raw URLs 404 on a private repo. "
-            "Upload the PNGs to Drive and share Anyone with the link: Viewer. "
-            "--cover-image-url is not a substitute.",
-            file=sys.stderr,
-        )
-    cover_url = prefer_drive_image_url(cover_id, cover_url)
-    smile_url = prefer_drive_image_url(smile_id, smile_url)
+    cover_id, smile_id, cover_url, smile_url = (
+        None if is_placeholder_value(v) else v for v in (cover_id, smile_id, cover_url, smile_url)
+    )
+    if not getattr(args, "place_smile", False):
+        if smile_id or smile_url:
+            print(
+                "note: skipping the smile image. The imported Workday template already has the lockup on the "
+                "Title and Bumper layouts. Add --place-smile only for a template that lacks it.",
+                file=sys.stderr,
+            )
+        smile_id = smile_url = None
+    probe = not getattr(args, "skip_url_check", False)
+    cover_url = check_image_url("cover", cover_url, probe=probe) or (drive_download_url(cover_id) if cover_id else None)
+    smile_url = check_image_url("smile", smile_url, probe=probe) or (drive_download_url(smile_id) if smile_id else None)
     return {
         "cover_id": cover_id,
         "smile_id": smile_id,
@@ -1314,14 +1401,14 @@ def upload_assets(args: argparse.Namespace) -> dict[str, str]:
         try:
             share_anyone(backend, cover_id)
             share_anyone(backend, smile_id)
-        except SystemExit:
-            raise
-        except Exception as exc:
+        except (SystemExit, Exception) as exc:
+            # Org policy can forbid "Anyone with the link". Keep the IDs and explain the ways out.
             print(
-                f"warning: could not share the PNGs as anyone-with-link ({exc}). "
-                "Open each file in the Drive UI and share Anyone with the link: Viewer. "
-                "The Cursor Drive connector cannot create that share. "
-                "Do not use a GitHub raw URL (private repos 404).",
+                f"warning: could not share the PNGs as Anyone with the link ({exc}).\n"
+                "  1. Share each file in the Drive UI as Anyone with the link: Viewer, if your org allows it.\n"
+                "  2. If your org only allows sharing inside the org, host cover-gradient.png at a public URL and pass "
+                "--cover-image-url.\n"
+                "  3. Or run fills with no image options and insert the images by hand (see GETTING_STARTED.md).",
                 file=sys.stderr,
             )
     payload = {
@@ -1437,12 +1524,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--cover-image-url",
         default=None,
-        help="Public URL for the cover PNG. Ignored when --cover-image-id is set. GitHub raw URLs 404 on a private repo.",
+        help="Public URL for cover-gradient.png. Wins over --cover-image-id. A GitHub raw URL must be from a public repo.",
     )
     parser.add_argument(
         "--smile-image-url",
         default=None,
-        help="Public URL for the smile PNG. Ignored when --smile-image-id is set. GitHub raw URLs 404 on a private repo.",
+        help="Public URL for workday-smile.png. Wins over --smile-image-id. A GitHub raw URL must be from a public repo.",
+    )
+    parser.add_argument(
+        "--place-smile",
+        action="store_true",
+        help="Also place the smile PNG. Off by default: the imported template layouts already carry the lockup.",
+    )
+    parser.add_argument(
+        "--skip-url-check",
+        action="store_true",
+        help="Do not fetch the image URLs to confirm they are public (offline builds).",
     )
     parser.add_argument(
         "--assets-ids",
@@ -1501,7 +1598,6 @@ def main(argv: list[str] | None = None) -> int:
                 "Slide IDs are the planned wd_sN values. Re-run with --presentation get.json if IDs differ. "
                 "If you used --chunk, send fills-01, fills-02, ... in order."
             )
-        fill_requests = drop_github_image_urls(fill_requests, chrome)
         payload = {
             "phase": "fills",
             "title": plan["title"],

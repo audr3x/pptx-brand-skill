@@ -2,17 +2,90 @@
   "phase": "fills",
   "title": "Planning workshop",
   "chrome": {
-    "coverImageId": "YOUR_COVER_IMAGE_ID",
-    "smileImageId": "YOUR_SMILE_IMAGE_ID",
-    "coverImageUrl": "https://drive.google.com/uc?export=download&id=YOUR_COVER_IMAGE_ID",
-    "smileImageUrl": "https://drive.google.com/uc?export=download&id=YOUR_SMILE_IMAGE_ID",
-    "coverText": "ink",
-    "note": "Title Slide uses createImage of cover-gradient.png when a Drive ID/URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper."
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png only when a real Drive ID or public URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper. The smile comes from the imported layouts unless --place-smile is set."
   },
-  "note": "Chunk 4 of 5. Send only the requests array to update_presentation. Send chunks in order: fills-01.json, fills-02.json, fills-03.json, fills-04.json, fills-05.json.",
+  "note": "Chunk 4 of 6. Send only the requests array to update_presentation. Send chunks in order: fills-01.json, fills-02.json, fills-03.json, fills-04.json, fills-05.json, fills-06.json.",
   "chunk": 4,
-  "chunkCount": 5,
+  "chunkCount": 6,
   "requests": [
+    {
+      "insertText": {
+        "objectId": "wd_s5_table",
+        "cellLocation": {
+          "rowIndex": 3,
+          "columnIndex": 1
+        },
+        "text": "Operations",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s5_table",
+        "cellLocation": {
+          "rowIndex": 3,
+          "columnIndex": 1
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s5_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 3,
+            "columnIndex": 2
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9882352941176471,
+                  "green": 0.9725490196078431,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
     {
       "insertText": {
         "objectId": "wd_s5_table",
@@ -198,13 +271,63 @@
     },
     {
       "createShape": {
-        "objectId": "wd_s6_cat_0",
+        "objectId": "wd_s6_grid_0",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 6355080.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 9525.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 868680.0,
+            "translateY": 4201477.5,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_grid_0",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.7137254901960784,
+                  "green": 0.7568627450980392,
+                  "blue": 0.8
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_tick_0",
         "shapeType": "TEXT_BOX",
         "elementProperties": {
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 1691640.0,
+              "magnitude": 530352.0,
               "unit": "EMU"
             },
             "height": {
@@ -217,8 +340,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 457200.0,
-            "translateY": 4242816.0,
+            "translateX": 274320.0,
+            "translateY": 4078224.0,
             "unit": "EMU"
           }
         }
@@ -226,7 +349,7 @@
     },
     {
       "updateShapeProperties": {
-        "objectId": "wd_s6_cat_0",
+        "objectId": "wd_s6_tick_0",
         "shapeProperties": {
           "outline": {
             "propertyState": "NOT_RENDERED"
@@ -237,14 +360,14 @@
     },
     {
       "insertText": {
-        "objectId": "wd_s6_cat_0",
-        "text": "January",
+        "objectId": "wd_s6_tick_0",
+        "text": "0",
         "insertionIndex": 0
       }
     },
     {
       "updateTextStyle": {
-        "objectId": "wd_s6_cat_0",
+        "objectId": "wd_s6_tick_0",
         "style": {
           "fontFamily": "Archivo",
           "weightedFontFamily": {
@@ -274,9 +397,9 @@
     },
     {
       "updateParagraphStyle": {
-        "objectId": "wd_s6_cat_0",
+        "objectId": "wd_s6_tick_0",
         "style": {
-          "alignment": "CENTER"
+          "alignment": "END"
         },
         "textRange": {
           "type": "ALL"
@@ -286,17 +409,17 @@
     },
     {
       "createShape": {
-        "objectId": "wd_s6_bar_0_0",
+        "objectId": "wd_s6_grid_1",
         "shapeType": "RECTANGLE",
         "elementProperties": {
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 256032.0,
+              "magnitude": 6355080.0,
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 1546167.27,
+              "magnitude": 9525.0,
               "unit": "EMU"
             }
           },
@@ -305,8 +428,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 1019556.0,
-            "translateY": 2660072.73,
+            "translateX": 868680.0,
+            "translateY": 3634549.5,
             "unit": "EMU"
           }
         }
@@ -314,65 +437,15 @@
     },
     {
       "updateShapeProperties": {
-        "objectId": "wd_s6_bar_0_0",
+        "objectId": "wd_s6_grid_1",
         "shapeProperties": {
           "shapeBackgroundFill": {
             "solidFill": {
               "color": {
                 "rgbColor": {
-                  "red": 0.10980392156862745,
-                  "green": 0.596078431372549,
-                  "blue": 0.9098039215686274
-                }
-              }
-            }
-          },
-          "outline": {
-            "propertyState": "NOT_RENDERED"
-          }
-        },
-        "fields": "shapeBackgroundFill,outline"
-      }
-    },
-    {
-      "createShape": {
-        "objectId": "wd_s6_bar_0_1",
-        "shapeType": "RECTANGLE",
-        "elementProperties": {
-          "pageObjectId": "wd_s6",
-          "size": {
-            "width": {
-              "magnitude": 256032.0,
-              "unit": "EMU"
-            },
-            "height": {
-              "magnitude": 1159625.45,
-              "unit": "EMU"
-            }
-          },
-          "transform": {
-            "scaleX": 1,
-            "scaleY": 1,
-            "shearX": 0,
-            "shearY": 0,
-            "translateX": 1330452.0,
-            "translateY": 3046614.55,
-            "unit": "EMU"
-          }
-        }
-      }
-    },
-    {
-      "updateShapeProperties": {
-        "objectId": "wd_s6_bar_0_1",
-        "shapeProperties": {
-          "shapeBackgroundFill": {
-            "solidFill": {
-              "color": {
-                "rgbColor": {
-                  "red": 0.996078431372549,
+                  "red": 0.7137254901960784,
                   "green": 0.7568627450980392,
-                  "blue": 0.043137254901960784
+                  "blue": 0.8
                 }
               }
             }
@@ -386,13 +459,13 @@
     },
     {
       "createShape": {
-        "objectId": "wd_s6_cat_1",
+        "objectId": "wd_s6_tick_1",
         "shapeType": "TEXT_BOX",
         "elementProperties": {
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 1691640.0,
+              "magnitude": 530352.0,
               "unit": "EMU"
             },
             "height": {
@@ -405,8 +478,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 2148840.0,
-            "translateY": 4242816.0,
+            "translateX": 274320.0,
+            "translateY": 3511296.0,
             "unit": "EMU"
           }
         }
@@ -414,7 +487,7 @@
     },
     {
       "updateShapeProperties": {
-        "objectId": "wd_s6_cat_1",
+        "objectId": "wd_s6_tick_1",
         "shapeProperties": {
           "outline": {
             "propertyState": "NOT_RENDERED"
@@ -425,14 +498,14 @@
     },
     {
       "insertText": {
-        "objectId": "wd_s6_cat_1",
-        "text": "February",
+        "objectId": "wd_s6_tick_1",
+        "text": "5",
         "insertionIndex": 0
       }
     },
     {
       "updateTextStyle": {
-        "objectId": "wd_s6_cat_1",
+        "objectId": "wd_s6_tick_1",
         "style": {
           "fontFamily": "Archivo",
           "weightedFontFamily": {
@@ -462,9 +535,9 @@
     },
     {
       "updateParagraphStyle": {
-        "objectId": "wd_s6_cat_1",
+        "objectId": "wd_s6_tick_1",
         "style": {
-          "alignment": "CENTER"
+          "alignment": "END"
         },
         "textRange": {
           "type": "ALL"
@@ -474,17 +547,17 @@
     },
     {
       "createShape": {
-        "objectId": "wd_s6_bar_1_0",
+        "objectId": "wd_s6_grid_2",
         "shapeType": "RECTANGLE",
         "elementProperties": {
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 256032.0,
+              "magnitude": 6355080.0,
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 2319250.91,
+              "magnitude": 9525.0,
               "unit": "EMU"
             }
           },
@@ -493,8 +566,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 2711196.0,
-            "translateY": 1886989.09,
+            "translateX": 868680.0,
+            "translateY": 3067621.5,
             "unit": "EMU"
           }
         }
@@ -502,65 +575,15 @@
     },
     {
       "updateShapeProperties": {
-        "objectId": "wd_s6_bar_1_0",
+        "objectId": "wd_s6_grid_2",
         "shapeProperties": {
           "shapeBackgroundFill": {
             "solidFill": {
               "color": {
                 "rgbColor": {
-                  "red": 0.10980392156862745,
-                  "green": 0.596078431372549,
-                  "blue": 0.9098039215686274
-                }
-              }
-            }
-          },
-          "outline": {
-            "propertyState": "NOT_RENDERED"
-          }
-        },
-        "fields": "shapeBackgroundFill,outline"
-      }
-    },
-    {
-      "createShape": {
-        "objectId": "wd_s6_bar_1_1",
-        "shapeType": "RECTANGLE",
-        "elementProperties": {
-          "pageObjectId": "wd_s6",
-          "size": {
-            "width": {
-              "magnitude": 256032.0,
-              "unit": "EMU"
-            },
-            "height": {
-              "magnitude": 1803861.82,
-              "unit": "EMU"
-            }
-          },
-          "transform": {
-            "scaleX": 1,
-            "scaleY": 1,
-            "shearX": 0,
-            "shearY": 0,
-            "translateX": 3022092.0,
-            "translateY": 2402378.18,
-            "unit": "EMU"
-          }
-        }
-      }
-    },
-    {
-      "updateShapeProperties": {
-        "objectId": "wd_s6_bar_1_1",
-        "shapeProperties": {
-          "shapeBackgroundFill": {
-            "solidFill": {
-              "color": {
-                "rgbColor": {
-                  "red": 0.996078431372549,
+                  "red": 0.7137254901960784,
                   "green": 0.7568627450980392,
-                  "blue": 0.043137254901960784
+                  "blue": 0.8
                 }
               }
             }
@@ -574,13 +597,13 @@
     },
     {
       "createShape": {
-        "objectId": "wd_s6_cat_2",
+        "objectId": "wd_s6_tick_2",
         "shapeType": "TEXT_BOX",
         "elementProperties": {
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 1691640.0,
+              "magnitude": 530352.0,
               "unit": "EMU"
             },
             "height": {
@@ -593,8 +616,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 3840480.0,
-            "translateY": 4242816.0,
+            "translateX": 274320.0,
+            "translateY": 2944368.0,
             "unit": "EMU"
           }
         }
@@ -602,7 +625,7 @@
     },
     {
       "updateShapeProperties": {
-        "objectId": "wd_s6_cat_2",
+        "objectId": "wd_s6_tick_2",
         "shapeProperties": {
           "outline": {
             "propertyState": "NOT_RENDERED"
@@ -613,14 +636,14 @@
     },
     {
       "insertText": {
-        "objectId": "wd_s6_cat_2",
-        "text": "March",
+        "objectId": "wd_s6_tick_2",
+        "text": "10",
         "insertionIndex": 0
       }
     },
     {
       "updateTextStyle": {
-        "objectId": "wd_s6_cat_2",
+        "objectId": "wd_s6_tick_2",
         "style": {
           "fontFamily": "Archivo",
           "weightedFontFamily": {
@@ -650,9 +673,9 @@
     },
     {
       "updateParagraphStyle": {
-        "objectId": "wd_s6_cat_2",
+        "objectId": "wd_s6_tick_2",
         "style": {
-          "alignment": "CENTER"
+          "alignment": "END"
         },
         "textRange": {
           "type": "ALL"
@@ -662,17 +685,17 @@
     },
     {
       "createShape": {
-        "objectId": "wd_s6_bar_2_0",
+        "objectId": "wd_s6_grid_3",
         "shapeType": "RECTANGLE",
         "elementProperties": {
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 256032.0,
+              "magnitude": 6355080.0,
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 1932709.09,
+              "magnitude": 9525.0,
               "unit": "EMU"
             }
           },
@@ -681,8 +704,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 4402836.0,
-            "translateY": 2273530.91,
+            "translateX": 868680.0,
+            "translateY": 2500693.5,
             "unit": "EMU"
           }
         }
@@ -690,65 +713,15 @@
     },
     {
       "updateShapeProperties": {
-        "objectId": "wd_s6_bar_2_0",
+        "objectId": "wd_s6_grid_3",
         "shapeProperties": {
           "shapeBackgroundFill": {
             "solidFill": {
               "color": {
                 "rgbColor": {
-                  "red": 0.10980392156862745,
-                  "green": 0.596078431372549,
-                  "blue": 0.9098039215686274
-                }
-              }
-            }
-          },
-          "outline": {
-            "propertyState": "NOT_RENDERED"
-          }
-        },
-        "fields": "shapeBackgroundFill,outline"
-      }
-    },
-    {
-      "createShape": {
-        "objectId": "wd_s6_bar_2_1",
-        "shapeType": "RECTANGLE",
-        "elementProperties": {
-          "pageObjectId": "wd_s6",
-          "size": {
-            "width": {
-              "magnitude": 256032.0,
-              "unit": "EMU"
-            },
-            "height": {
-              "magnitude": 1675014.55,
-              "unit": "EMU"
-            }
-          },
-          "transform": {
-            "scaleX": 1,
-            "scaleY": 1,
-            "shearX": 0,
-            "shearY": 0,
-            "translateX": 4713732.0,
-            "translateY": 2531225.45,
-            "unit": "EMU"
-          }
-        }
-      }
-    },
-    {
-      "updateShapeProperties": {
-        "objectId": "wd_s6_bar_2_1",
-        "shapeProperties": {
-          "shapeBackgroundFill": {
-            "solidFill": {
-              "color": {
-                "rgbColor": {
-                  "red": 0.996078431372549,
+                  "red": 0.7137254901960784,
                   "green": 0.7568627450980392,
-                  "blue": 0.043137254901960784
+                  "blue": 0.8
                 }
               }
             }
@@ -762,13 +735,13 @@
     },
     {
       "createShape": {
-        "objectId": "wd_s6_cat_3",
+        "objectId": "wd_s6_tick_3",
         "shapeType": "TEXT_BOX",
         "elementProperties": {
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 1691640.0,
+              "magnitude": 530352.0,
               "unit": "EMU"
             },
             "height": {
@@ -781,8 +754,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 5532120.0,
-            "translateY": 4242816.0,
+            "translateX": 274320.0,
+            "translateY": 2377440.0,
             "unit": "EMU"
           }
         }
@@ -790,7 +763,7 @@
     },
     {
       "updateShapeProperties": {
-        "objectId": "wd_s6_cat_3",
+        "objectId": "wd_s6_tick_3",
         "shapeProperties": {
           "outline": {
             "propertyState": "NOT_RENDERED"
@@ -801,14 +774,14 @@
     },
     {
       "insertText": {
-        "objectId": "wd_s6_cat_3",
-        "text": "April",
+        "objectId": "wd_s6_tick_3",
+        "text": "15",
         "insertionIndex": 0
       }
     },
     {
       "updateTextStyle": {
-        "objectId": "wd_s6_cat_3",
+        "objectId": "wd_s6_tick_3",
         "style": {
           "fontFamily": "Archivo",
           "weightedFontFamily": {
@@ -834,6 +807,18 @@
           "type": "ALL"
         },
         "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s6_tick_3",
+        "style": {
+          "alignment": "END"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
       }
     }
   ]

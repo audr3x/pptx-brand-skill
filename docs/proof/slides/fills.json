@@ -2,12 +2,12 @@
   "phase": "fills",
   "title": "Planning workshop",
   "chrome": {
-    "coverImageId": "YOUR_COVER_IMAGE_ID",
-    "smileImageId": "YOUR_SMILE_IMAGE_ID",
-    "coverImageUrl": "https://drive.google.com/uc?export=download&id=YOUR_COVER_IMAGE_ID",
-    "smileImageUrl": "https://drive.google.com/uc?export=download&id=YOUR_SMILE_IMAGE_ID",
-    "coverText": "ink",
-    "note": "Title Slide uses createImage of cover-gradient.png when a Drive ID/URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper."
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png only when a real Drive ID or public URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper. The smile comes from the imported layouts unless --place-smile is set."
   },
   "note": "Send only the requests array to update_presentation after the createSlide batch. Slide IDs are the planned wd_sN values. Re-run with --presentation get.json if IDs differ. If you used --chunk, send fills-01, fills-02, ... in order.",
   "requests": [
@@ -31,70 +31,6 @@
       }
     },
     {
-      "createImage": {
-        "objectId": "wd_s1_cover",
-        "url": "https://drive.google.com/uc?export=download&id=YOUR_COVER_IMAGE_ID",
-        "elementProperties": {
-          "pageObjectId": "wd_s1",
-          "size": {
-            "width": {
-              "magnitude": 9144000.0,
-              "unit": "EMU"
-            },
-            "height": {
-              "magnitude": 5143500.0,
-              "unit": "EMU"
-            }
-          },
-          "transform": {
-            "scaleX": 1,
-            "scaleY": 1,
-            "shearX": 0,
-            "shearY": 0,
-            "translateX": 0.0,
-            "translateY": 0.0,
-            "unit": "EMU"
-          }
-        }
-      }
-    },
-    {
-      "updatePageElementsZOrder": {
-        "pageElementObjectIds": [
-          "wd_s1_cover"
-        ],
-        "operation": "SEND_TO_BACK"
-      }
-    },
-    {
-      "createImage": {
-        "objectId": "wd_s1_smile",
-        "url": "https://drive.google.com/uc?export=download&id=YOUR_SMILE_IMAGE_ID",
-        "elementProperties": {
-          "pageObjectId": "wd_s1",
-          "size": {
-            "width": {
-              "magnitude": 1228039.2,
-              "unit": "EMU"
-            },
-            "height": {
-              "magnitude": 580644.0,
-              "unit": "EMU"
-            }
-          },
-          "transform": {
-            "scaleX": 1,
-            "scaleY": 1,
-            "shearX": 0,
-            "shearY": 0,
-            "translateX": 611733.6,
-            "translateY": 470916.0,
-            "unit": "EMU"
-          }
-        }
-      }
-    },
-    {
       "insertText": {
         "objectId": "wd_s1_title",
         "text": "Planning workshop",
@@ -108,19 +44,19 @@
           "fontFamily": "Archivo",
           "weightedFontFamily": {
             "fontFamily": "Archivo",
-            "weight": 400
+            "weight": 700
           },
           "fontSize": {
             "magnitude": 36,
             "unit": "PT"
           },
-          "bold": false,
+          "bold": true,
           "foregroundColor": {
             "opaqueColor": {
               "rgbColor": {
-                "red": 0.058823529411764705,
-                "green": 0.1803921568627451,
-                "blue": 0.4
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
               }
             }
           }
@@ -155,9 +91,9 @@
           "foregroundColor": {
             "opaqueColor": {
               "rgbColor": {
-                "red": 0.058823529411764705,
-                "green": 0.1803921568627451,
-                "blue": 0.4
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
               }
             }
           }
@@ -231,9 +167,9 @@
           "foregroundColor": {
             "opaqueColor": {
               "rgbColor": {
-                "red": 0.058823529411764705,
-                "green": 0.1803921568627451,
-                "blue": 0.4
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
               }
             }
           }
@@ -577,7 +513,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 457200.0,
+            "translateX": 3035808.0,
             "translateY": 4818888.0,
             "unit": "EMU"
           }
@@ -686,7 +622,7 @@
             "weight": 300
           },
           "fontSize": {
-            "magnitude": 20,
+            "magnitude": 14,
             "unit": "PT"
           },
           "bold": false,
@@ -704,6 +640,110 @@
           "type": "ALL"
         },
         "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 0,
+          "endIndex": 18
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 19,
+          "endIndex": 38
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 39,
+          "endIndex": 82
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 83,
+          "endIndex": 125
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "fontSize": {
+            "magnitude": 20,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "FIXED_RANGE",
+          "startIndex": 126,
+          "endIndex": 153
+        },
+        "fields": "fontSize"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s3_body",
+        "style": {
+          "spaceAbove": {
+            "magnitude": 6,
+            "unit": "PT"
+          },
+          "spaceBelow": {
+            "magnitude": 6,
+            "unit": "PT"
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "spaceAbove,spaceBelow"
       }
     },
     {
@@ -2688,13 +2728,63 @@
     },
     {
       "createShape": {
-        "objectId": "wd_s6_cat_0",
+        "objectId": "wd_s6_grid_0",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 6355080.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 9525.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 868680.0,
+            "translateY": 4201477.5,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_grid_0",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.7137254901960784,
+                  "green": 0.7568627450980392,
+                  "blue": 0.8
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_tick_0",
         "shapeType": "TEXT_BOX",
         "elementProperties": {
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 1691640.0,
+              "magnitude": 530352.0,
               "unit": "EMU"
             },
             "height": {
@@ -2707,7 +2797,835 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 457200.0,
+            "translateX": 274320.0,
+            "translateY": 4078224.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_tick_0",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_tick_0",
+        "text": "0",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_tick_0",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 10,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s6_tick_0",
+        "style": {
+          "alignment": "END"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_grid_1",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 6355080.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 9525.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 868680.0,
+            "translateY": 3634549.5,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_grid_1",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.7137254901960784,
+                  "green": 0.7568627450980392,
+                  "blue": 0.8
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_tick_1",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 530352.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 274320.0,
+            "translateY": 3511296.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_tick_1",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_tick_1",
+        "text": "5",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_tick_1",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 10,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s6_tick_1",
+        "style": {
+          "alignment": "END"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_grid_2",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 6355080.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 9525.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 868680.0,
+            "translateY": 3067621.5,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_grid_2",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.7137254901960784,
+                  "green": 0.7568627450980392,
+                  "blue": 0.8
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_tick_2",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 530352.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 274320.0,
+            "translateY": 2944368.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_tick_2",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_tick_2",
+        "text": "10",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_tick_2",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 10,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s6_tick_2",
+        "style": {
+          "alignment": "END"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_grid_3",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 6355080.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 9525.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 868680.0,
+            "translateY": 2500693.5,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_grid_3",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.7137254901960784,
+                  "green": 0.7568627450980392,
+                  "blue": 0.8
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_tick_3",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 530352.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 274320.0,
+            "translateY": 2377440.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_tick_3",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_tick_3",
+        "text": "15",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_tick_3",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 10,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s6_tick_3",
+        "style": {
+          "alignment": "END"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_grid_4",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 6355080.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 9525.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 868680.0,
+            "translateY": 1933765.5,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_grid_4",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.7137254901960784,
+                  "green": 0.7568627450980392,
+                  "blue": 0.8
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_tick_4",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 530352.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 274320.0,
+            "translateY": 1810512.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_tick_4",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_tick_4",
+        "text": "20",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_tick_4",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 10,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s6_tick_4",
+        "style": {
+          "alignment": "END"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_grid_5",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 6355080.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 9525.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 868680.0,
+            "translateY": 1366837.5,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_grid_5",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.7137254901960784,
+                  "green": 0.7568627450980392,
+                  "blue": 0.8
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_tick_5",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 530352.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 274320.0,
+            "translateY": 1243584.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_tick_5",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s6_tick_5",
+        "text": "25",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s6_tick_5",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 10,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s6_tick_5",
+        "style": {
+          "alignment": "END"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_yaxis",
+        "shapeType": "RECTANGLE",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 9525.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 2834640.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 863917.5,
+            "translateY": 1371600.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s6_yaxis",
+        "shapeProperties": {
+          "shapeBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.7137254901960784,
+                  "green": 0.7568627450980392,
+                  "blue": 0.8
+                }
+              }
+            }
+          },
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "shapeBackgroundFill,outline"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s6_cat_0",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s6",
+          "size": {
+            "width": {
+              "magnitude": 1588770.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 256032.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 868680.0,
             "translateY": 4242816.0,
             "unit": "EMU"
           }
@@ -2786,7 +3704,7 @@
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 1546167.27,
+              "magnitude": 1360627.2,
               "unit": "EMU"
             }
           },
@@ -2795,8 +3713,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 1019556.0,
-            "translateY": 2660072.73,
+            "translateX": 1379601.0,
+            "translateY": 2845612.8,
             "unit": "EMU"
           }
         }
@@ -2836,7 +3754,7 @@
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 1159625.45,
+              "magnitude": 1020470.4,
               "unit": "EMU"
             }
           },
@@ -2845,8 +3763,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 1330452.0,
-            "translateY": 3046614.55,
+            "translateX": 1690497.0,
+            "translateY": 3185769.6,
             "unit": "EMU"
           }
         }
@@ -2882,7 +3800,7 @@
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 1691640.0,
+              "magnitude": 1588770.0,
               "unit": "EMU"
             },
             "height": {
@@ -2895,7 +3813,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 2148840.0,
+            "translateX": 2457450.0,
             "translateY": 4242816.0,
             "unit": "EMU"
           }
@@ -2974,7 +3892,7 @@
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 2319250.91,
+              "magnitude": 2040940.8,
               "unit": "EMU"
             }
           },
@@ -2983,8 +3901,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 2711196.0,
-            "translateY": 1886989.09,
+            "translateX": 2968371.0,
+            "translateY": 2165299.2,
             "unit": "EMU"
           }
         }
@@ -3024,7 +3942,7 @@
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 1803861.82,
+              "magnitude": 1587398.4,
               "unit": "EMU"
             }
           },
@@ -3033,8 +3951,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 3022092.0,
-            "translateY": 2402378.18,
+            "translateX": 3279267.0,
+            "translateY": 2618841.6,
             "unit": "EMU"
           }
         }
@@ -3070,7 +3988,7 @@
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 1691640.0,
+              "magnitude": 1588770.0,
               "unit": "EMU"
             },
             "height": {
@@ -3083,7 +4001,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 3840480.0,
+            "translateX": 4046220.0,
             "translateY": 4242816.0,
             "unit": "EMU"
           }
@@ -3162,7 +4080,7 @@
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 1932709.09,
+              "magnitude": 1700784.0,
               "unit": "EMU"
             }
           },
@@ -3171,8 +4089,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 4402836.0,
-            "translateY": 2273530.91,
+            "translateX": 4557141.0,
+            "translateY": 2505456.0,
             "unit": "EMU"
           }
         }
@@ -3212,7 +4130,7 @@
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 1675014.55,
+              "magnitude": 1474012.8,
               "unit": "EMU"
             }
           },
@@ -3221,8 +4139,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 4713732.0,
-            "translateY": 2531225.45,
+            "translateX": 4868037.0,
+            "translateY": 2732227.2,
             "unit": "EMU"
           }
         }
@@ -3258,7 +4176,7 @@
           "pageObjectId": "wd_s6",
           "size": {
             "width": {
-              "magnitude": 1691640.0,
+              "magnitude": 1588770.0,
               "unit": "EMU"
             },
             "height": {
@@ -3271,7 +4189,7 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 5532120.0,
+            "translateX": 5634990.0,
             "translateY": 4242816.0,
             "unit": "EMU"
           }
@@ -3350,7 +4268,7 @@
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 2834640.0,
+              "magnitude": 2494483.2,
               "unit": "EMU"
             }
           },
@@ -3359,8 +4277,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 6094476.0,
-            "translateY": 1371600.0,
+            "translateX": 6145911.0,
+            "translateY": 1711756.8,
             "unit": "EMU"
           }
         }
@@ -3400,7 +4318,7 @@
               "unit": "EMU"
             },
             "height": {
-              "magnitude": 2448098.18,
+              "magnitude": 2154326.4,
               "unit": "EMU"
             }
           },
@@ -3409,8 +4327,8 @@
             "scaleY": 1,
             "shearX": 0,
             "shearY": 0,
-            "translateX": 6405372.0,
-            "translateY": 1758141.82,
+            "translateX": 6456807.0,
+            "translateY": 2051913.6,
             "unit": "EMU"
           }
         }
@@ -3783,34 +4701,6 @@
           }
         },
         "fields": "pageBackgroundFill"
-      }
-    },
-    {
-      "createImage": {
-        "objectId": "wd_s7_smile",
-        "url": "https://drive.google.com/uc?export=download&id=YOUR_SMILE_IMAGE_ID",
-        "elementProperties": {
-          "pageObjectId": "wd_s7",
-          "size": {
-            "width": {
-              "magnitude": 2940710.4,
-              "unit": "EMU"
-            },
-            "height": {
-              "magnitude": 1390802.4,
-              "unit": "EMU"
-            }
-          },
-          "transform": {
-            "scaleX": 1,
-            "scaleY": 1,
-            "shearX": 0,
-            "shearY": 0,
-            "translateX": 3101644.8,
-            "translateY": 1639519.2,
-            "unit": "EMU"
-          }
-        }
       }
     },
     {
