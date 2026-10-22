@@ -57,6 +57,16 @@ class ReadbackTest(unittest.TestCase):
                                 capture_output=True).returncode
         self.assertEqual(rc, 1)
 
+    def test_pie_shows_slice_names_and_values(self):
+        from pptx import Presentation
+
+        chart = {"type": "pie", "categories": ["A", "B"], "series": [{"name": "S", "values": [60, 40]}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            _, deck = build({"slides": [{"layout": "chart", "title": "Mix", "chart": chart}]}, Path(tmp))
+            shape = next(s for s in Presentation(str(deck)).slides[0].shapes if s.has_chart)
+            self.assertTrue(shape.chart.has_legend)
+            self.assertTrue(shape.chart.series[0].data_labels.show_value)
+
     def test_slides_closing_without_caption_passes(self):
         outline = {"slides": [{"layout": "content", "title": "Goals", "bullets": ["One"]}, {"layout": "closing"}]}
         with tempfile.TemporaryDirectory() as tmp:

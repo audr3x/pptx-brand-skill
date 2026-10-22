@@ -16,7 +16,7 @@ from typing import Any
 from pptx import Presentation
 from pptx.chart.data import CategoryChartData
 from pptx.dml.color import RGBColor
-from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION, XL_TICK_LABEL_POSITION
+from pptx.enum.chart import XL_CHART_TYPE, XL_LABEL_POSITION, XL_LEGEND_POSITION, XL_TICK_LABEL_POSITION
 from pptx.enum.shapes import PP_PLACEHOLDER
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.oxml.ns import qn
@@ -430,7 +430,9 @@ def add_chart_slide(slide, spec: dict[str, Any]):
         data,
     ).chart
     chart.has_title = False
-    chart.has_legend = len(series_list) > 1
+    pie = kind_name == "pie"
+    # A pie has no category axis, so the legend is the only place its slice names appear.
+    chart.has_legend = pie or len(series_list) > 1
     if chart.has_legend:
         chart.legend.include_in_layout = True
         chart.legend.position = XL_LEGEND_POSITION.RIGHT
@@ -438,8 +440,20 @@ def add_chart_slide(slide, spec: dict[str, Any]):
         chart.legend.font.color.rgb = rgb("ink")
         chart.legend.font.name = FONT_TITLE
     plot = chart.plots[0]
-    plot.has_data_labels = False
-    for i, series in enumerate(chart.series):
+    plot.has_data_labels = pie
+    if pie:
+        chart.series[0].format.line.color.rgb = rgb("paper")
+        labels = chart.series[0].data_labels
+        labels.show_value = True
+        labels.position = XL_LABEL_POSITION.OUTSIDE_END
+        labels.font.size = Pt(12)
+        labels.font.name = FONT_BODY
+        labels.font.color.rgb = rgb("ink")
+        for i, point in enumerate(chart.series[0].points):
+            point.format.fill.solid()
+            point.format.fill.fore_color.rgb = RGBColor.from_string(CHART_SERIES[i % len(CHART_SERIES)])
+            point.format.line.color.rgb = rgb("paper")
+    for i, series in enumerate(chart.series if not pie else []):
         color = CHART_SERIES[i % len(CHART_SERIES)]
         try:
             series.format.fill.solid()
