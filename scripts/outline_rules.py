@@ -82,9 +82,9 @@ IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif"}
 TITLE_LIMITS = {
     "Title Slide": 60,
     "Section Title": 70,
-    "Title and Content": 50,
-    "Title Only": 50,
-    "Title Only_Alt": 50,
+    "Title and Content": 42,
+    "Title Only": 42,
+    "Title Only_Alt": 42,
     "1/2_Headline": 45,
     "1/2 Headline_Alt": 45,
     "Photo-Right": 45,
@@ -215,8 +215,10 @@ def _chart(spec: dict[str, Any], where: str, slides_target: bool, errors: list[s
     kind = str(chart.get("type") or "column").lower()
     if kind not in CHART_TYPES:
         errors.append(f"{where}: chart type {kind!r} not supported (column, bar, line, pie)")
-    elif slides_target and kind != "column":
-        warnings.append(f"{where}: Google Slides draws {kind!r} as clustered columns")
+    else:
+        chart["type"] = kind
+        if slides_target and kind != "column":
+            warnings.append(f"{where}: Google Slides draws {kind!r} as clustered columns")
     if len(series) > MAX_SERIES:
         warnings.append(f"{where}: {len(series)} series; colors repeat after {MAX_SERIES} and the legend gets crowded")
     if len(cats) > MAX_CATEGORIES:

@@ -95,7 +95,7 @@ The template decides, and prompts cannot change: colors, fonts, font sizes, posi
 
 ## Tone
 
-- Titles: sentence case, one line (about 45 characters), say the point ("Adoption doubled in Q2"), not the topic ("Adoption").
+- Titles: sentence case, one line (about 40 characters), say the point ("Adoption doubled in Q2"), not the topic ("Adoption").
 - Bullets: one idea each, start with a verb or the key noun, no ending periods, under about 12 words.
 - Plain language. Real numbers and names. No filler ("leverage", "synergy", "best-in-class").
 - One idea per slide. If a slide needs a second title, it is two slides.

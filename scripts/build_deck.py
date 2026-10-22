@@ -16,7 +16,7 @@ from typing import Any
 from pptx import Presentation
 from pptx.chart.data import CategoryChartData
 from pptx.dml.color import RGBColor
-from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION
+from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION, XL_TICK_LABEL_POSITION
 from pptx.enum.shapes import PP_PLACEHOLDER
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.oxml.ns import qn
@@ -464,6 +464,8 @@ def add_chart_slide(slide, spec: dict[str, Any]):
     try:
         _axis_font(chart.category_axis)
         _axis_font(chart.value_axis)
+        # Keeps category labels under the plot instead of on the zero line across negative bars.
+        chart.category_axis.tick_label_position = XL_TICK_LABEL_POSITION.LOW
     except Exception:
         pass
     try:

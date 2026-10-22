@@ -48,7 +48,7 @@ Google Slides differences: every chart draws as clustered columns (shapes, not e
 | More than 6 bullets | Split into two `content` slides |
 | Photo beside bullets | `photo-right` then `content` |
 | Logo on other slides | Decline. Cover and closing carry it |
-| A long title or a paragraph as a title | Cut to one line (about 50 characters) that states the point; move the rest to bullets |
+| A long title or a paragraph as a title | Cut to one line (about 40 characters) that states the point; move the rest to bullets |
 | A table longer than about 6 rows or wider than 6 columns | Split rows across slides; drop or merge columns |
 | A chart with more than 5 series or about 12 categories | Keep the series that matter, group categories |
 | Both `bullets` and `body` on one slide | Merge them into `bullets` |

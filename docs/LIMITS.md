@@ -26,7 +26,7 @@ The builder still runs, but the slide will not look the way the outline reads. T
 
 | Warning | What happens on the slide | What to do |
 | --- | --- | --- |
-| Title longer than the layout holds (about 60 characters on the cover, 50 on content slides, 45 on half-width layouts) | The title wraps into the content below | Shorten it, one line that states the point |
+| Title longer than the layout holds (about 60 characters on the cover, 42 on content, table, and chart slides, 45 on half-width layouts) | The title wraps into the content below | Shorten it, one line that states the point |
 | Section eyebrow over 40 characters | It runs into the title | Shorten it |
 | More than 6 bullets (sub-bullets count) | Only the first 6 are kept | Split into two slides |
 | More than 3 two-column items | Only the first 3 are kept | Split into two slides |
