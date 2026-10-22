@@ -270,6 +270,14 @@ def _table(spec: dict[str, Any], where: str, errors: list[str], warnings: list[s
         warnings.append(f"{where}: {len(headers)} columns; text gets very small past {MAX_TABLE_COLS}")
 
 
+def _leaf_text(value: Any) -> list[str]:
+    if isinstance(value, dict):
+        return [s for v in value.values() for s in _leaf_text(v)]
+    if isinstance(value, list):
+        return [s for v in value for s in _leaf_text(v)]
+    return [value] if isinstance(value, str) else []
+
+
 def prepare(outline: Any, target: str = "both", label: str = "outline") -> tuple[Any, list[str], list[str]]:
     """Normalize in place where safe. Return (outline, errors, warnings)."""
     errors: list[str] = []
@@ -374,6 +382,8 @@ def prepare(outline: Any, target: str = "both", label: str = "outline") -> tuple
             warnings.append(f"{where}: speaker notes are written to PowerPoint only")
         if slides_target and layout.startswith("Intro_") and any(spec.get(k) for k in ("name", "role", "company")):
             warnings.append(f"{where}: Google Slides fills only 'title' on intro layouts")
+        if any("TODO" in s for s in _leaf_text(spec)):
+            warnings.append(f"{where}: still has TODO text, which prints on the slide as is")
     if covers > 1:
         warnings.append(f"{label}: {covers} cover slides; a deck usually has one")
     return outline, errors, warnings

@@ -1,0 +1,17 @@
+# Ambiguous ask: "make me a QBR deck" with no numbers. The prompting skill writes TODO for
+# missing facts. Building it as is would print TODO on the slides, so the check warns.
+slides:
+  - layout: title
+    title: Quarterly business review
+    subtitle: TODO customer name
+  - layout: chart
+    title: Ticket volume by month
+    chart:
+      type: column
+      categories: [July, August, September]
+      series:
+        - name: Tickets
+          values: [0, 0, 0]
+  - layout: content
+    title: Next steps
+    bullets: [TODO owner and date, Confirm scope]

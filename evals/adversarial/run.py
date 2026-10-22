@@ -104,7 +104,7 @@ def mentioned(slide: int, messages: str) -> bool:
 
 def evaluate(case: Path, render: bool, tmp: Path) -> dict[str, Any]:
     row: dict[str, Any] = {"case": case.stem}
-    rc, out = run([sys.executable, "scripts/check_outline.py", str(case)])
+    rc, out = run([sys.executable, "scripts/check_outline.py", str(case.relative_to(ROOT))])
     row["gate"] = "FAIL" if rc else "ok"
     row["gate_msgs"] = [l for l in out.splitlines() if l.startswith(("error:", "warning:"))]
     crash = "Traceback" in out
@@ -117,11 +117,11 @@ def evaluate(case: Path, render: bool, tmp: Path) -> dict[str, Any]:
     gate_text = "\n".join(row["gate_msgs"])
 
     pptx = tmp / f"{case.stem}.pptx"
-    rc_p, out_p = run([sys.executable, "scripts/build_deck.py", str(case), "-o", str(pptx)])
+    rc_p, out_p = run([sys.executable, "scripts/build_deck.py", str(case.relative_to(ROOT)), "-o", str(pptx)])
     row["pptx"] = "CRASH" if "Traceback" in out_p else ("ok" if rc_p == 0 else "error")
     row["pptx_msg"] = out_p.strip().splitlines()[-1] if out_p.strip() else ""
     plan = tmp / f"{case.stem}.json"
-    rc_s, out_s = run([sys.executable, "scripts/build_slides.py", str(case), "--dry-run", "-o", str(plan)])
+    rc_s, out_s = run([sys.executable, "scripts/build_slides.py", str(case.relative_to(ROOT)), "--dry-run", "-o", str(plan)])
     row["slides"] = "CRASH" if "Traceback" in out_s else ("ok" if rc_s == 0 else "error")
     row["slides_msg"] = out_s.strip().splitlines()[-1] if out_s.strip() else ""
     crash = crash or row["pptx"] == "CRASH" or row["slides"] == "CRASH"

@@ -264,6 +264,8 @@ slides:
 | "Fix it" after a bad slide | Name the slide number, the field, and the new text |
 | Pasting a confidential customer deck as a style reference | The skill and BRAND.md. Do not copy sentences from reference decks |
 
+Every warning the check gives, and every limit of the builders, is listed in [LIMITS.md](LIMITS.md).
+
 ## Checklist before you send the prompt
 
 - [ ] Skill named, and target chosen (PowerPoint or Google Slides)
