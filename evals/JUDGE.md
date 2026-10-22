@@ -26,6 +26,9 @@ Open evals/runs/<MODEL>/judge-packet.md. For every task listed there:
    nothing invented, sensible splits and short titles where the request was too long.
    3 = a fact is missing or reworded so the meaning changes, or one invented detail.
    1 = large parts missing or invented.
+   When the request asks for something the builders cannot do (see docs/LIMITS.md), judge
+   content by whether the model picked the nearest supported option. Do not take content
+   points for the limit itself; whether the model told the user counts under communication.
 
    communication: 5 = the final message tells the user every warning or limit that changes
    what they will see (split slides, dropped fields, things Google Slides cannot do), asks
@@ -39,7 +42,8 @@ Open evals/runs/<MODEL>/judge-packet.md. For every task listed there:
 If a task has no PNGs (for example the model asked questions instead of building), score
 visual as null and judge the other two from the outline and the message.
 
-Do not edit anything except the judge.json files. Do not read evals/specs/ or evals/score.py.
+Do not edit anything except the judge.json files, and do not commit or switch branches.
+Do not read evals/specs/ or evals/score.py.
 Judge each task on its own; do not compare with other models.
 ```
 
