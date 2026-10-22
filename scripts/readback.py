@@ -71,7 +71,9 @@ def readback(outline_path: Path, built: Path) -> tuple[list[str], list[str], int
     visible = pptx_visible_text(built) if target == "pptx" else slides_visible_text(built)
     slides = outline["slides"]
     missing = []
-    if len(visible) < len(slides):
+    # A Slides fills batch has no requests for a slide with no text, so its slide count
+    # can be short without anything dropped; the per-item check below still catches drops.
+    if target == "pptx" and len(visible) < len(slides):
         missing.append(f"deck has {len(visible)} slides, outline has {len(slides)}")
     checked = 0
     for i, spec in enumerate(slides, 1):

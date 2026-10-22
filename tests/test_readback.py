@@ -57,6 +57,17 @@ class ReadbackTest(unittest.TestCase):
                                 capture_output=True).returncode
         self.assertEqual(rc, 1)
 
+    def test_slides_closing_without_caption_passes(self):
+        outline = {"slides": [{"layout": "content", "title": "Goals", "bullets": ["One"]}, {"layout": "closing"}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "outline.yaml"
+            src.write_text(yaml.safe_dump(outline, sort_keys=False))
+            fills = Path(tmp) / "fills.json"
+            subprocess.run([sys.executable, str(ROOT / "scripts" / "build_slides.py"), str(src),
+                            "--phase", "fills", "-o", str(fills)], check=True, capture_output=True)
+            missing, _, _ = readback(src, fills)
+        self.assertEqual(missing, [])
+
 
 class ChunkTest(unittest.TestCase):
     def test_rebuild_with_fewer_chunks_removes_stale_ones(self):
