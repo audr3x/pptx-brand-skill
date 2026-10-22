@@ -1,0 +1,1 @@
+I built the Adatum workforce planning status deck. Due to the Workday brand limits on bullet points and table rows, I split the status bullets and the milestones table across two slides each to ensure it looks great.

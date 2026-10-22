@@ -1,0 +1,927 @@
+{
+  "phase": "fills",
+  "title": "Manager training kickoff",
+  "chrome": {
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png only when a real Drive ID or public URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper. The smile comes from the imported layouts unless --place-smile is set."
+  },
+  "note": "Chunk 2 of 2. Send only the requests array to update_presentation. Send chunks in order: fills-01.json, fills-02.json.",
+  "chunk": 2,
+  "chunkCount": 2,
+  "requests": [
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 0,
+          "columnIndex": 2
+        },
+        "text": "Weeks",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 0,
+          "columnIndex": 2
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
+          "fontSize": {
+            "magnitude": 12,
+            "unit": "PT"
+          },
+          "bold": true,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s4_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 1,
+            "columnIndex": 0
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9882352941176471,
+                  "green": 0.9725490196078431,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 1,
+          "columnIndex": 0
+        },
+        "text": "Coaching basics",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 1,
+          "columnIndex": 0
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s4_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 1,
+            "columnIndex": 1
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9882352941176471,
+                  "green": 0.9725490196078431,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 1,
+          "columnIndex": 1
+        },
+        "text": "Live virtual",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 1,
+          "columnIndex": 1
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s4_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 1,
+            "columnIndex": 2
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9882352941176471,
+                  "green": 0.9725490196078431,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 1,
+          "columnIndex": 2
+        },
+        "text": "1 to 3",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 1,
+          "columnIndex": 2
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s4_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 2,
+            "columnIndex": 0
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9450980392156862,
+                  "green": 0.9529411764705882,
+                  "blue": 0.9647058823529412
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 2,
+          "columnIndex": 0
+        },
+        "text": "Performance conversations",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 2,
+          "columnIndex": 0
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s4_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 2,
+            "columnIndex": 1
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9450980392156862,
+                  "green": 0.9529411764705882,
+                  "blue": 0.9647058823529412
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 2,
+          "columnIndex": 1
+        },
+        "text": "In person",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 2,
+          "columnIndex": 1
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s4_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 2,
+            "columnIndex": 2
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9450980392156862,
+                  "green": 0.9529411764705882,
+                  "blue": 0.9647058823529412
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 2,
+          "columnIndex": 2
+        },
+        "text": "4 to 6",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 2,
+          "columnIndex": 2
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s4_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 3,
+            "columnIndex": 0
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9882352941176471,
+                  "green": 0.9725490196078431,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 3,
+          "columnIndex": 0
+        },
+        "text": "Leading through change",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 3,
+          "columnIndex": 0
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s4_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 3,
+            "columnIndex": 1
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9882352941176471,
+                  "green": 0.9725490196078431,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 3,
+          "columnIndex": 1
+        },
+        "text": "Self-paced",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 3,
+          "columnIndex": 1
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableCellProperties": {
+        "objectId": "wd_s4_table",
+        "tableRange": {
+          "location": {
+            "rowIndex": 3,
+            "columnIndex": 2
+          },
+          "rowSpan": 1,
+          "columnSpan": 1
+        },
+        "tableCellProperties": {
+          "tableCellBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.9882352941176471,
+                  "green": 0.9725490196078431,
+                  "blue": 0.9098039215686274
+                }
+              }
+            }
+          },
+          "contentAlignment": "MIDDLE"
+        },
+        "fields": "tableCellBackgroundFill,contentAlignment"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 3,
+          "columnIndex": 2
+        },
+        "text": "7 to 8",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_table",
+        "cellLocation": {
+          "rowIndex": 3,
+          "columnIndex": 2
+        },
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 300
+          },
+          "fontSize": {
+            "magnitude": 11,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateTableBorderProperties": {
+        "objectId": "wd_s4_table",
+        "borderPosition": "ALL",
+        "tableBorderProperties": {
+          "tableBorderFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.7137254901960784,
+                  "green": 0.7568627450980392,
+                  "blue": 0.8
+                }
+              }
+            }
+          },
+          "weight": {
+            "magnitude": 0.75,
+            "unit": "PT"
+          },
+          "dashStyle": "SOLID"
+        },
+        "fields": "tableBorderFill,weight,dashStyle"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s4_footer",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s4",
+          "size": {
+            "width": {
+              "magnitude": 3086100.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 274320.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 457200.0,
+            "translateY": 4818888.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s4_footer",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_footer",
+        "text": "Workday Confidential",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_footer",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
+          "fontSize": {
+            "magnitude": 8,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.49019607843137253,
+                "green": 0.5450980392156862,
+                "blue": 0.6
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updatePageProperties": {
+        "objectId": "wd_s5",
+        "pageProperties": {
+          "pageBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.058823529411764705,
+                  "green": 0.1803921568627451,
+                  "blue": 0.4
+                }
+              }
+            }
+          }
+        },
+        "fields": "pageBackgroundFill"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s5_caption",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s5",
+          "size": {
+            "width": {
+              "magnitude": 6400800.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 365760.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 1371600.0,
+            "translateY": 3273552.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s5_caption",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s5_caption",
+        "text": "Thank you",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s5_caption",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
+          "fontSize": {
+            "magnitude": 16,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s5_caption",
+        "style": {
+          "alignment": "CENTER"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    }
+  ]
+}

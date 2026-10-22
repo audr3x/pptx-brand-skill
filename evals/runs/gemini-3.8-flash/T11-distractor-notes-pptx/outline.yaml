@@ -1,0 +1,43 @@
+title: HR transformation status update
+subtitle: Fabrikam COO review
+date: "TODO"
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: HR transformation status update
+    subtitle: Fabrikam COO review
+    date: "TODO"
+
+  - layout: content
+    title: Adoption and support status
+    bullets:
+      - 61% of managers active in Workday this month
+      - 214 open support tickets
+      - Support tickets down from 390 in June
+
+  - layout: content
+    title: Budget and site deployment
+    bullets:
+      - Spent $1.42M of $2.1M program budget
+      - Sites currently live in Leeds, Porto, and Austin
+      - Denver deployment moved to phase 3
+
+  - layout: content
+    title: Key program risks
+    bullets:
+      - Payroll parallel run failed twice
+      - Third payroll parallel run scheduled next week
+      - Porto union consultation not started
+
+  - layout: two-column
+    title: Asks for COO decision
+    items:
+      - title: Payroll testers
+        body: Approve 2 extra payroll testers
+      - title: Denver timing
+        body: Confirm phase 3 timing for Denver
+      - title: Next steering
+        body: Next steering date is TODO, Hana to send date
+
+  - layout: closing
+    title: Thank you

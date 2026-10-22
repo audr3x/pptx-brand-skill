@@ -1,0 +1,1 @@
+Litware Slides batches prepared. Column chart instead of pie; notes and team photo not in Slides fills (see limits in prior pattern). Readback passed on fills. Manual photo insert still needed for “Meet the team”. Orange titles not supported.

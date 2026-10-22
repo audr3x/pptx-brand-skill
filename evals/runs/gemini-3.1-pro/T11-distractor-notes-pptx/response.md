@@ -1,0 +1,1 @@
+I built the Fabrikam HR transformation status deck for the COO. I excluded the previous quarter's adoption rate and the confidential headcount numbers, and used the corrected budget figure ($1.42M). The next steering meeting date is marked as TODO since it wasn't set.

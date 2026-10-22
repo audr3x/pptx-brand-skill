@@ -1,0 +1,74 @@
+{
+  "phase": "creates",
+  "title": "Open enrollment kickoff",
+  "chrome": {
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png only when a real Drive ID or public URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper. The smile comes from the imported layouts unless --place-smile is set."
+  },
+  "note": "Send these createSlide requests. If slideLayoutReference still has layoutName, replace it with layouts[].objectId from presentations.get (match displayName, strip space). Keep the planned objectId values (wd_s1, wd_s2, ...). Cover createImage requests are in --phase fills.",
+  "requests": [
+    {
+      "createSlide": {
+        "objectId": "wd_s1",
+        "insertionIndex": 0,
+        "placeholderIdMappings": [
+          {
+            "layoutPlaceholder": {
+              "type": "CENTERED_TITLE",
+              "index": 0
+            },
+            "objectId": "wd_s1_title"
+          },
+          {
+            "layoutPlaceholder": {
+              "type": "SUBTITLE",
+              "index": 0
+            },
+            "objectId": "wd_s1_sub"
+          }
+        ],
+        "slideLayoutReference": {
+          "layoutName": "Title Slide"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "wd_s2",
+        "insertionIndex": 1,
+        "placeholderIdMappings": [
+          {
+            "layoutPlaceholder": {
+              "type": "TITLE",
+              "index": 0
+            },
+            "objectId": "wd_s2_title"
+          },
+          {
+            "layoutPlaceholder": {
+              "type": "BODY",
+              "index": 0
+            },
+            "objectId": "wd_s2_body"
+          }
+        ],
+        "slideLayoutReference": {
+          "layoutName": "Title and Content"
+        }
+      }
+    },
+    {
+      "createSlide": {
+        "objectId": "wd_s3",
+        "insertionIndex": 2,
+        "slideLayoutReference": {
+          "layoutName": "Bumper Slide"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+title: Fabrikam HR transformation
+subtitle: Steering committee status for the COO
+date: October 2026
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Fabrikam HR transformation
+    subtitle: Steering committee status for the COO
+    date: October 2026
+  - layout: content
+    title: Adoption and sites
+    bullets:
+      - 61% of managers active in Workday this month
+      - Sites live: Leeds, Porto, and Austin
+      - Denver moved to phase 3, not live
+  - layout: content
+    title: Budget and support
+    bullets:
+      - Spent $1.42M of $2.1M program budget
+      - 214 open support tickets, down from 390 in June
+  - layout: content
+    title: Risks
+    bullets:
+      - Payroll parallel run failed twice; third run next week
+      - Porto union consultation not started
+  - layout: content
+    title: Asks for the COO
+    bullets:
+      - Approve 2 extra payroll testers
+      - Confirm Denver phase 3 timing
+      - Next steering date TODO (Hana to send)
+  - layout: closing
+    title: Thank you

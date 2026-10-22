@@ -1,0 +1,25 @@
+title: Meet your Workday team
+slides:
+- layout: title
+  title: Meet your Workday team
+  subtitle: Proseware onboarding
+  date: March 2027
+- layout: intro
+  name: Dana Whitfield
+  role: Client Partner
+  company: Workday
+  image: examples/images/sample-photo.png
+- layout: photo-right
+  title: Our Chicago office
+  image: examples/images/sample-photo.png
+- layout: two-column
+  title: How Dana will help
+  items:
+  - title: Plan
+    body: A 90 day onboarding plan agreed in week 1.
+  - title: Connect
+    body: Introductions to support, training, and the user community.
+  - title: Review
+    body: A check-in every 2 weeks for the first quarter.
+- layout: closing
+  title: Welcome to Workday

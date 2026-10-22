@@ -1,0 +1,30 @@
+title: Manager training plan
+slides:
+- layout: title
+  title: Manager training plan
+  subtitle: Spring 2027 cohort
+  date: January 2027
+- layout: content
+  title: Why we are training managers
+  bullets:
+  - 62% of new managers have had no formal training
+  - Exit interviews name the manager in 4 of 10 cases
+  - The program takes 6 hours over 3 weeks
+- layout: table
+  title: Schedule
+  headers:
+  - Week
+  - Topic
+  - Format
+  rows:
+  - - Week 1
+    - Giving feedback
+    - Workshop
+  - - Week 2
+    - Running one-on-ones
+    - Role play
+  - - Week 3
+    - Planning goals
+    - Workshop
+- layout: closing
+  title: Questions
