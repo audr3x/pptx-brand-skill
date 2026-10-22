@@ -624,7 +624,7 @@
             "weight": 300
           },
           "fontSize": {
-            "magnitude": 14,
+            "magnitude": 20,
             "unit": "PT"
           },
           "bold": false,
@@ -645,88 +645,12 @@
       }
     },
     {
-      "updateTextStyle": {
+      "createParagraphBullets": {
         "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
         "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 0,
-          "endIndex": 18
+          "type": "ALL"
         },
-        "fields": "fontSize"
-      }
-    },
-    {
-      "updateTextStyle": {
-        "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
-        "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 19,
-          "endIndex": 38
-        },
-        "fields": "fontSize"
-      }
-    },
-    {
-      "updateTextStyle": {
-        "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
-        "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 39,
-          "endIndex": 82
-        },
-        "fields": "fontSize"
-      }
-    },
-    {
-      "updateTextStyle": {
-        "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
-        "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 83,
-          "endIndex": 125
-        },
-        "fields": "fontSize"
-      }
-    },
-    {
-      "updateTextStyle": {
-        "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
-        "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 126,
-          "endIndex": 153
-        },
-        "fields": "fontSize"
+        "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE"
       }
     },
     {
@@ -740,21 +664,13 @@
           "spaceBelow": {
             "magnitude": 6,
             "unit": "PT"
-          }
+          },
+          "spacingMode": "NEVER_COLLAPSE"
         },
         "textRange": {
           "type": "ALL"
         },
-        "fields": "spaceAbove,spaceBelow"
-      }
-    },
-    {
-      "createParagraphBullets": {
-        "objectId": "wd_s3_body",
-        "textRange": {
-          "type": "ALL"
-        },
-        "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE"
+        "fields": "spaceAbove,spaceBelow,spacingMode"
       }
     },
     {
@@ -783,6 +699,91 @@
             "unit": "EMU"
           }
         }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s3_footer",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s3_footer",
+        "text": "Workday Confidential",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s3_footer",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
+          "fontSize": {
+            "magnitude": 8,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.49019607843137253,
+                "green": 0.5450980392156862,
+                "blue": 0.6
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_title",
+        "text": "Delivery model",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_title",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 700
+          },
+          "fontSize": {
+            "magnitude": 28,
+            "unit": "PT"
+          },
+          "bold": true,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 0.058823529411764705,
+                "green": 0.1803921568627451,
+                "blue": 0.4
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
       }
     }
   ]

@@ -229,7 +229,7 @@ With the Google Slides plugin in Cursor, put the `requests` array **inline** in 
 ```bash
 python3 scripts/build_slides.py examples/outline.yaml --phase creates \
   --presentation get.json \
-  -o docs/proof/slides/creates.json
+  -o out/slides/creates.json
 ```
 
 `get.json` is `read_presentation` / `presentations.get` on the imported file (or a copy). That replaces each `layoutName` with the real `layoutId`. If `creates.json` still has `layoutName`, match it to `layouts[].layoutProperties.displayName` (strip spaces, ignore case) and put `layoutId` in `slideLayoutReference` before you send the batch.
@@ -247,7 +247,7 @@ python3 scripts/build_slides.py examples/outline.yaml --phase fills \
   --presentation get.json \
   --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
   --chunk 40 \
-  -o docs/proof/slides/fills.json
+  -o out/slides/fills.json
 ```
 
 `--chunk 40` writes `fills.json` plus ordered paste files `fills-01.json`, `fills-02.json`, and so on (about 40 requests each). Send those chunks **in order**. Each call to `update_presentation` gets that file's `requests` array only.
@@ -339,7 +339,9 @@ How to ask Cursor for a deck, with copy-paste prompts: [docs/PROMPTING.md](docs/
 
 **The Slides chart is not an editable chart.** The builder draws columns, the value axis, tick labels, and gridlines as shapes, so it needs no Google Sheets link. Every chart type is drawn as clustered columns. To change the numbers, edit the outline and run phase 2 again on a fresh copy. Use PowerPoint for a native bar, line, or pie chart.
 
-**Bullets look bigger than in PowerPoint.** The builder adds 6 pt before and after each bullet and sets the end of each line smaller so the bullet dot renders smaller. If the dots still look large, select the list and pick a smaller bullet in Format > Bullets and numbering.
+**Bullet dots look bigger than in PowerPoint.** In Google Slides the dot takes the size of the text, and the Slides API has no setting to change that. The builder only sets the spacing: 6 pt before and after each bullet, with list spacing set so Slides does not collapse it. To make the dots smaller, do it by hand after the fill: click one bullet dot (Slides selects every dot in that list) and lower the font size in the toolbar, or pick a smaller bullet style in Format > Bullets and numbering.
+
+**Bullets are packed tightly together.** The fill batch is from an older build. Rebuild the fills with the current `build_slides.py` and send them again. Each bulleted box now gets an `updateParagraphStyle` request with `spacingMode` set to `NEVER_COLLAPSE`.
 
 **Layout not found.** Import `assets/template.pptx` again. Do not start from a blank Slides theme. Match layout names after stripping spaces (`Title and Content` has a trailing space in the PPTX).
 

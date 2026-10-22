@@ -37,9 +37,9 @@ pip install -r requirements.txt
 python3 scripts/build_deck.py examples/outline.yaml -o out/planning-workshop.pptx
 
 python3 scripts/build_slides.py examples/outline.yaml --phase creates \
-  --presentation get.json -o docs/proof/slides/creates.json
+  --presentation get.json -o out/slides/creates.json
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
-  --presentation get.json --chunk 40 -o docs/proof/slides/fills.json
+  --presentation get.json --chunk 40 -o out/slides/fills.json
 ```
 
 Full auth, `--upload-assets`, and Cursor chat examples are in [GETTING_STARTED.md](GETTING_STARTED.md).

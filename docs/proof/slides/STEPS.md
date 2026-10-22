@@ -61,12 +61,12 @@ Keep the `layouts` list. You need it to resolve names.
 
 ## 3. Send creates.json
 
-Rebuild so layout IDs are real:
+Rebuild so layout IDs are real. The commands below write to `out/slides/`, which git ignores, so a live run does not overwrite the checked-in reference files in this folder:
 
 ```bash
 python3 scripts/build_slides.py examples/outline.yaml --phase creates \
   --presentation get.json \
-  -o docs/proof/slides/creates.json
+  -o out/slides/creates.json
 ```
 
 Send only the `requests` array, inline, with `update_presentation` on the same file. Keep `objectId` values `wd_s1` through `wd_s7`.
@@ -80,18 +80,18 @@ Save a fresh `read_presentation` as `get.json` after the create batch. Rebuild f
 ```bash
 # Option C (no image), same as the checked-in chunks
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
-  --presentation get.json --chunk 40 -o docs/proof/slides/fills.json
+  --presentation get.json --chunk 40 -o out/slides/fills.json
 
 # Option A
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
   --presentation get.json --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
-  --chunk 40 -o docs/proof/slides/fills.json
+  --chunk 40 -o out/slides/fills.json
 
 # Option B
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
   --presentation get.json \
   --cover-image-url "https://raw.githubusercontent.com/your-org/workday-slide-assets/main/cover-gradient.png" \
-  --chunk 40 -o docs/proof/slides/fills.json
+  --chunk 40 -o out/slides/fills.json
 ```
 
 That writes `fills.json` plus `fills-01.json`, `fills-02.json`, and so on (about 40 requests each; the worked example has 6 chunks). Send the `requests` array from **each chunk, in order**, inline, to `update_presentation`.

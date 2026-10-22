@@ -622,7 +622,7 @@
             "weight": 300
           },
           "fontSize": {
-            "magnitude": 14,
+            "magnitude": 20,
             "unit": "PT"
           },
           "bold": false,
@@ -643,88 +643,12 @@
       }
     },
     {
-      "updateTextStyle": {
+      "createParagraphBullets": {
         "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
         "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 0,
-          "endIndex": 18
+          "type": "ALL"
         },
-        "fields": "fontSize"
-      }
-    },
-    {
-      "updateTextStyle": {
-        "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
-        "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 19,
-          "endIndex": 38
-        },
-        "fields": "fontSize"
-      }
-    },
-    {
-      "updateTextStyle": {
-        "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
-        "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 39,
-          "endIndex": 82
-        },
-        "fields": "fontSize"
-      }
-    },
-    {
-      "updateTextStyle": {
-        "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
-        "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 83,
-          "endIndex": 125
-        },
-        "fields": "fontSize"
-      }
-    },
-    {
-      "updateTextStyle": {
-        "objectId": "wd_s3_body",
-        "style": {
-          "fontSize": {
-            "magnitude": 20,
-            "unit": "PT"
-          }
-        },
-        "textRange": {
-          "type": "FIXED_RANGE",
-          "startIndex": 126,
-          "endIndex": 153
-        },
-        "fields": "fontSize"
+        "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE"
       }
     },
     {
@@ -738,21 +662,13 @@
           "spaceBelow": {
             "magnitude": 6,
             "unit": "PT"
-          }
+          },
+          "spacingMode": "NEVER_COLLAPSE"
         },
         "textRange": {
           "type": "ALL"
         },
-        "fields": "spaceAbove,spaceBelow"
-      }
-    },
-    {
-      "createParagraphBullets": {
-        "objectId": "wd_s3_body",
-        "textRange": {
-          "type": "ALL"
-        },
-        "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE"
+        "fields": "spaceAbove,spaceBelow,spacingMode"
       }
     },
     {
