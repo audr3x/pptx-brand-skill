@@ -1,0 +1,124 @@
+{
+  "phase": "fills",
+  "title": "Litware sales kickoff",
+  "chrome": {
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png only when a real Drive ID or public URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper. The smile comes from the imported layouts unless --place-smile is set."
+  },
+  "note": "Chunk 3 of 3. Send only the requests array to update_presentation. Send chunks in order: fills-01.json, fills-02.json, fills-03.json.",
+  "chunk": 3,
+  "chunkCount": 3,
+  "requests": [
+    {
+      "updatePageProperties": {
+        "objectId": "wd_s4",
+        "pageProperties": {
+          "pageBackgroundFill": {
+            "solidFill": {
+              "color": {
+                "rgbColor": {
+                  "red": 0.058823529411764705,
+                  "green": 0.1803921568627451,
+                  "blue": 0.4
+                }
+              }
+            }
+          }
+        },
+        "fields": "pageBackgroundFill"
+      }
+    },
+    {
+      "createShape": {
+        "objectId": "wd_s4_caption",
+        "shapeType": "TEXT_BOX",
+        "elementProperties": {
+          "pageObjectId": "wd_s4",
+          "size": {
+            "width": {
+              "magnitude": 6400800.0,
+              "unit": "EMU"
+            },
+            "height": {
+              "magnitude": 365760.0,
+              "unit": "EMU"
+            }
+          },
+          "transform": {
+            "scaleX": 1,
+            "scaleY": 1,
+            "shearX": 0,
+            "shearY": 0,
+            "translateX": 1371600.0,
+            "translateY": 3273552.0,
+            "unit": "EMU"
+          }
+        }
+      }
+    },
+    {
+      "updateShapeProperties": {
+        "objectId": "wd_s4_caption",
+        "shapeProperties": {
+          "outline": {
+            "propertyState": "NOT_RENDERED"
+          }
+        },
+        "fields": "outline"
+      }
+    },
+    {
+      "insertText": {
+        "objectId": "wd_s4_caption",
+        "text": "Thank you",
+        "insertionIndex": 0
+      }
+    },
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_caption",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
+          "fontSize": {
+            "magnitude": 16,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s4_caption",
+        "style": {
+          "alignment": "CENTER"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    }
+  ]
+}

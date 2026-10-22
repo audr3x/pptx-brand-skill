@@ -1,0 +1,1 @@
+{"attempt": 1, "time": "2026-10-22T23:33:27", "target": "pptx", "steps": [{"step": "check", "rc": 0, "errors": 0, "warnings": 1, "traceback": false, "unsourced": 0}, {"step": "build_pptx", "rc": 0, "errors": 0, "warnings": 1, "traceback": false}, {"step": "readback", "rc": 0, "errors": 0, "warnings": 0, "traceback": false, "missing": 0}], "rendered_pages": 5, "rc": 0}
