@@ -122,21 +122,17 @@ class LiveFindingTests(unittest.TestCase):
         style = next(r["updateTextStyle"]["style"] for r in requests_for("wd_s1_title") if "updateTextStyle" in r)
         self.assertEqual(style["weightedFontFamily"]["weight"], 700)
 
-    def test_bullets_have_spacing_and_small_glyph(self):
+    def test_bullets_have_spacing_that_lists_do_not_collapse(self):
         reqs = requests_for("wd_s3_body")
-        para = next(r["updateParagraphStyle"]["style"] for r in reqs if "updateParagraphStyle" in r)
-        self.assertEqual(para["spaceAbove"]["magnitude"], 6)
-        self.assertEqual(para["spaceBelow"]["magnitude"], 6)
-        styles = [r["updateTextStyle"] for r in reqs if "updateTextStyle" in r]
-        self.assertEqual(styles[0]["style"]["fontSize"]["magnitude"], bs.BULLET_GLYPH_PT)
-        words = [s for s in styles[1:] if s["textRange"]["type"] == "FIXED_RANGE"]
-        self.assertEqual(len(words), 5)
-        self.assertTrue(all(s["style"]["fontSize"]["magnitude"] == 20 for s in words))
-        text = next(r["insertText"]["text"] for r in reqs if "insertText" in r)
-        for s in words:
-            chunk = text[s["textRange"]["startIndex"]:s["textRange"]["endIndex"]]
-            self.assertNotIn("\n", chunk)
-            self.assertTrue(chunk)
+        kinds = [next(iter(r)) for r in reqs]
+        self.assertLess(kinds.index("createParagraphBullets"), kinds.index("updateParagraphStyle"))
+        para = next(r["updateParagraphStyle"] for r in reqs if "updateParagraphStyle" in r)
+        self.assertEqual(para["style"]["spacingMode"], "NEVER_COLLAPSE")
+        self.assertEqual(para["style"]["spaceAbove"]["magnitude"], 6)
+        self.assertEqual(para["style"]["spaceBelow"]["magnitude"], 6)
+        self.assertEqual(set(para["fields"].split(",")), {"spaceAbove", "spaceBelow", "spacingMode"})
+        sizes = {r["updateTextStyle"]["style"]["fontSize"]["magnitude"] for r in reqs if "updateTextStyle" in r}
+        self.assertEqual(sizes, {20})
 
     def test_chart_has_axis_ticks_and_gridlines(self):
         reqs = requests_for("wd_s6_")
@@ -147,10 +143,35 @@ class LiveFindingTests(unittest.TestCase):
         bar_first = min(i for i, r in enumerate(reqs) if r.get("createShape", {}).get("objectId", "").startswith("wd_s6_bar_"))
         self.assertLess(grid_first, bar_first)
 
-    def test_nice_scale(self):
-        self.assertEqual(bs.nice_scale(22), (5, 5))
-        self.assertEqual(bs.nice_scale(100), (20, 5))
-        self.assertEqual(bs.nice_scale(0.8), (0.2, 4))
+    def test_axis_scale(self):
+        self.assertEqual(bs.axis_scale(0, 22), (5, 0, 5))
+        self.assertEqual(bs.axis_scale(0, 100), (20, 0, 5))
+        self.assertEqual(bs.axis_scale(0, 0.8), (0.2, 0, 4))
+        self.assertEqual(bs.axis_scale(-20, -10), (5, -4, 0))
+        self.assertEqual(bs.axis_scale(-3, 10), (5, -1, 2))
+
+    def test_negative_bars_hang_below_zero(self):
+        outline = {"slides": [{"layout": "chart", "title": "Margin",
+                               "chart": {"categories": ["A", "B"], "series": [{"name": "M", "values": [10, -5]}]}}]}
+        reqs = bs.build_plan(outline, {})["requests"]
+        shapes = {r["createShape"]["objectId"]: r["createShape"]["elementProperties"] for r in reqs if "createShape" in r}
+        texts = {r["insertText"]["objectId"]: r["insertText"]["text"] for r in reqs if "insertText" in r}
+        zero_tick = next(k for k, v in texts.items() if "_tick_" in k and v == "0")
+        zero_y = shapes[zero_tick]["transform"]["translateY"] / bs.EMU_PER_INCH + 0.14
+        def box(oid):
+            e = shapes[oid]
+            y = e["transform"]["translateY"] / bs.EMU_PER_INCH
+            return y, y + e["size"]["height"]["magnitude"] / bs.EMU_PER_INCH
+        pos_top, pos_bottom = box("wd_s1_bar_0_0")
+        neg_top, neg_bottom = box("wd_s1_bar_1_0")
+        self.assertAlmostEqual(pos_bottom, zero_y, places=3)
+        self.assertAlmostEqual(neg_top, zero_y, places=3)
+        self.assertAlmostEqual((neg_bottom - neg_top) * 2, pos_bottom - pos_top, places=3)
+
+    def test_empty_footer_means_no_footer(self):
+        outline = {"slides": [{"layout": "content", "title": "T", "bullets": ["a"], "footer": ""}]}
+        reqs = bs.build_plan(outline, {})["requests"]
+        self.assertFalse(any("_footer" in json_ids(r) for r in reqs))
 
     def test_section_footer_clears_rail(self):
         footer = next(r["createShape"] for r in requests_for("wd_s2_footer") if "createShape" in r)

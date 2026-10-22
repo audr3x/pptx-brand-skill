@@ -18,6 +18,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from outline_rules import LAYOUT_ALIASES, MAX_BULLETS, load, prepare, require  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PPTX = ROOT / "assets" / "template.pptx"
 TOKENS_PATH = ROOT / "assets" / "brand-tokens.json"
@@ -54,35 +57,6 @@ CHART_SERIES = [
     CORE["ink"],
 ]
 
-LAYOUT_ALIASES = {
-    "title": "Title Slide",
-    "cover": "Title Slide",
-    "title-slide": "Title Slide",
-    "section": "Section Title",
-    "section-title": "Section Title",
-    "divider": "Section Title",
-    "content": "Title and Content",
-    "title-and-content": "Title and Content",
-    "bullets": "Title and Content",
-    "two-column": "1/2_Headline",
-    "two-col": "1/2_Headline",
-    "headline": "1/2_Headline",
-    "table": "Title Only",
-    "chart": "Title Only",
-    "closing": "Bumper Slide",
-    "bumper": "Bumper Slide",
-    "close": "Bumper Slide",
-    "intro": "Intro_One",
-    "intro-one": "Intro_One",
-    "intro-three": "Intro_Three",
-    "intro-four": "Intro_Four",
-    "blank": "Blank White Background",
-    "title-only": "Title Only",
-    "title-only-alt": "Title Only_Alt",
-    "photo-right": "Photo-Right",
-    "photos": "3-Photos",
-    "layout-1": "Layout 1",
-}
 
 PREDEFINED_FALLBACK = {
     "Title Slide": "TITLE",
@@ -114,7 +88,6 @@ LAYOUT_PLACEHOLDERS = {
 }
 
 NO_FOOTER = {"Title Slide", "Bumper Slide"}
-MAX_BULLETS = 6
 FONT_TITLE = "Archivo"
 FONT_BODY = "Archivo Light"  # logical role; the API gets Archivo + weight 300
 EMU_PER_INCH = 914400
@@ -122,7 +95,6 @@ FOOTER_LEFT_IN = 0.50
 SECTION_RAIL_WIDTH_IN = 2.743
 SECTION_FOOTER_LEFT_IN = 3.32
 BULLET_SPACE_PT = 6
-BULLET_GLYPH_PT = 14
 TITLE_PLACEHOLDER_TYPES = ("TITLE", "CENTERED_TITLE", "CENTER_TITLE")
 COVER_PNG = ROOT / "assets" / "logos" / "cover-gradient.png"
 SMILE_PNG = ROOT / "assets" / "logos" / "workday-smile.png"
@@ -189,19 +161,7 @@ def layout_name(intent: str) -> str:
 
 
 def load_outline(path: Path) -> dict[str, Any]:
-    text = path.read_text()
-    if path.suffix.lower() in {".yaml", ".yml"}:
-        try:
-            import yaml
-        except ImportError as exc:
-            raise SystemExit("PyYAML is required for .yaml outlines. pip3 install pyyaml") from exc
-        data = yaml.safe_load(text)
-    else:
-        data = json.loads(text)
-    if not isinstance(data, dict) or "slides" not in data:
-        raise SystemExit("Outline must be an object with a top-level 'slides' list.")
-    return data
-
+    return require(load(path), "slides", str(path))
 
 def font_style(font: str, size: float, bold: bool, color: str) -> tuple[dict[str, Any], str]:
     """Archivo Light is not a Google family. Send Archivo + weight 300 instead."""
@@ -292,24 +252,17 @@ def text_ops(
             }
         )
     if bullets:
-        # The API cannot size a bullet glyph. Slides draws it from the paragraph-end newline,
-        # so the whole box goes to BULLET_GLYPH_PT first and only the words go back to full size.
-        style_op["updateTextStyle"]["style"] = {**style, "fontSize": {"magnitude": BULLET_GLYPH_PT, "unit": "PT"}}
-        start = 0
-        for para in text.split("\n"):
-            end = start + len(para.encode("utf-16-le")) // 2
-            if end > start:
-                ops.append(
-                    {
-                        "updateTextStyle": {
-                            "objectId": object_id,
-                            "style": {"fontSize": {"magnitude": size, "unit": "PT"}},
-                            "textRange": {"type": "FIXED_RANGE", "startIndex": start, "endIndex": end},
-                            "fields": "fontSize",
-                        }
-                    }
-                )
-            start = end + 1
+        # Lists default to COLLAPSE_LISTS, which ignores spaceAbove/spaceBelow between items.
+        # The API has no request for the bullet glyph size; it follows the text size.
+        ops.append(
+            {
+                "createParagraphBullets": {
+                    "objectId": object_id,
+                    "textRange": {"type": "ALL"},
+                    "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE",
+                }
+            }
+        )
         ops.append(
             {
                 "updateParagraphStyle": {
@@ -317,18 +270,10 @@ def text_ops(
                     "style": {
                         "spaceAbove": {"magnitude": BULLET_SPACE_PT, "unit": "PT"},
                         "spaceBelow": {"magnitude": BULLET_SPACE_PT, "unit": "PT"},
+                        "spacingMode": "NEVER_COLLAPSE",
                     },
                     "textRange": {"type": "ALL"},
-                    "fields": "spaceAbove,spaceBelow",
-                }
-            }
-        )
-        ops.append(
-            {
-                "createParagraphBullets": {
-                    "objectId": object_id,
-                    "textRange": {"type": "ALL"},
-                    "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE",
+                    "fields": "spaceAbove,spaceBelow,spacingMode",
                 }
             }
         )
@@ -586,7 +531,7 @@ def create_rect(object_id: str, page: str, x: float, y: float, w: float, h: floa
 
 def footer_ops(slide_id: str, idx: int, text: str, layout: str) -> list[dict[str, Any]]:
     """Always draw a new box. Google does not copy PPTX footer placeholders onto new slides."""
-    if layout in NO_FOOTER:
+    if layout in NO_FOOTER or not text:
         return []
     color = "ink" if layout in {"Section Title", "Layout 1"} else "staple"
     return create_box(
@@ -721,14 +666,18 @@ def table_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
     return ops
 
 
-def nice_scale(max_value: float, max_ticks: int = 5) -> tuple[float, int]:
-    """Round axis step (1, 2, 2.5, 5 x 10^k) and tick count so the top tick covers max_value."""
-    if max_value <= 0:
-        return 1.0, 1
-    raw = max_value / max_ticks
+def axis_scale(lo: float, hi: float, max_ticks: int = 5) -> tuple[float, int, int]:
+    """Round step (1, 2, 2.5, 5 x 10^k) and tick indices k_min..k_max so the axis spans lo..hi and zero."""
+    lo, hi = min(0.0, lo), max(0.0, hi)
+    span = (hi - lo) or 1.0
+    raw = span / max_ticks
     mag = 10 ** math.floor(math.log10(raw))
     step = next(m * mag for m in (1, 2, 2.5, 5, 10) if m * mag >= raw)
-    return step, max(1, math.ceil(max_value / step - 1e-9))
+    k_min = math.floor(lo / step + 1e-9)
+    k_max = math.ceil(hi / step - 1e-9)
+    if k_max == k_min:
+        k_max += 1
+    return step, k_min, k_max
 
 
 def chart_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
@@ -740,16 +689,18 @@ def chart_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
     ops: list[dict[str, Any]] = []
     # Simple clustered columns drawn as shapes. Avoids a Sheets dependency.
     plot_x, plot_y, plot_w, plot_h = 0.95, 1.50, 6.95, 3.10
-    step, n_ticks = nice_scale(max(float(v) for series in series_list for v in (series.get("values") or [0])))
-    max_val = step * n_ticks
+    values_all = [float(v) for series in series_list for v in (series.get("values") or [0])]
+    step, k_min, k_max = axis_scale(min(values_all), max(values_all))
+    unit_h = plot_h / (k_max - k_min)
+    zero_y = plot_y + unit_h * k_max
     hairline = 0.75 / 72
-    for t in range(n_ticks + 1):
+    for t in range(k_min, k_max + 1):
         value = step * t
-        y = plot_y + plot_h - plot_h * t / n_ticks
-        ops.extend(create_rect(f"{slide_id}_grid_{t}", slide_id, plot_x, y - hairline / 2, plot_w, hairline, "desk"))
+        y = plot_y + unit_h * (k_max - t)
+        ops.extend(create_rect(f"{slide_id}_grid_{t - k_min}", slide_id, plot_x, y - hairline / 2, plot_w, hairline, "desk"))
         ops.extend(
             create_box(
-                f"{slide_id}_tick_{t}",
+                f"{slide_id}_tick_{t - k_min}",
                 slide_id,
                 0.30,
                 y - 0.14,
@@ -792,9 +743,9 @@ def chart_ops(slide_id: str, spec: dict[str, Any]) -> list[dict[str, Any]]:
         for s, series in enumerate(series_list):
             values = series.get("values") or []
             val = float(values[i]) if i < len(values) else 0
-            h = max(0.06, plot_h * (val / max_val))
+            h = max(0.02, unit_h * abs(val) / step)
             x = cluster_left + s * (bar_w + bar_gap)
-            y = plot_y + plot_h - h
+            y = zero_y - h if val >= 0 else zero_y
             ops.extend(create_rect(f"{slide_id}_bar_{i}_{s}", slide_id, x, y, bar_w, h, CHART_SERIES[s % len(CHART_SERIES)]))
     legend_x = 8.10
     for s, series in enumerate(series_list):
@@ -1031,7 +982,7 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str, chrome: dict[str, 
         requests.extend(table_ops(slide_id, spec))
     if intent.strip().lower() == "chart" or spec.get("chart"):
         requests.extend(chart_ops(slide_id, spec))
-    requests.extend(footer_ops(slide_id, index, spec.get("footer") or footer, layout))
+    requests.extend(footer_ops(slide_id, index, spec.get("footer", footer), layout))
     notes = spec.get("notes")
     return {
         "slideId": slide_id,
@@ -1044,6 +995,9 @@ def slide_plan(index: int, spec: dict[str, Any], footer: str, chrome: dict[str, 
 
 
 def build_plan(outline: dict[str, Any], chrome: dict[str, Any] | None = None) -> dict[str, Any]:
+    outline, errors, _ = prepare(outline, "slides")
+    if errors:
+        raise SystemExit("Outline has errors:\n" + "\n".join(errors))
     footer = outline.get("footer", "Workday Confidential")
     chrome = chrome or {}
     slides = [slide_plan(i, spec, footer, chrome) for i, spec in enumerate(outline.get("slides") or [])]

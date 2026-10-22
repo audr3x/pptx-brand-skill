@@ -23,6 +23,9 @@ from pptx.oxml.ns import qn
 from pptx.table import Table
 from pptx.util import Inches, Pt
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from outline_rules import LAYOUT_ALIASES, MAX_BULLETS, load, prepare, require  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TEMPLATE = ROOT / "assets" / "template.pptx"
 TOKENS_PATH = ROOT / "assets" / "brand-tokens.json"
@@ -60,37 +63,7 @@ CHART_SERIES = [
     CORE["ink"],
 ]
 
-LAYOUT_ALIASES = {
-    "title": "Title Slide",
-    "cover": "Title Slide",
-    "title-slide": "Title Slide",
-    "section": "Section Title",
-    "section-title": "Section Title",
-    "divider": "Section Title",
-    "content": "Title and Content",
-    "title-and-content": "Title and Content",
-    "bullets": "Title and Content",
-    "two-column": "1/2_Headline",
-    "two-col": "1/2_Headline",
-    "headline": "1/2_Headline",
-    "table": "Title Only",
-    "chart": "Title Only",
-    "closing": "Bumper Slide",
-    "bumper": "Bumper Slide",
-    "close": "Bumper Slide",
-    "intro": "Intro_One",
-    "intro-one": "Intro_One",
-    "intro-three": "Intro_Three",
-    "intro-four": "Intro_Four",
-    "blank": "Blank White Background",
-    "title-only": "Title Only",
-    "title-only-alt": "Title Only_Alt",
-    "photo-right": "Photo-Right",
-    "photos": "3-Photos",
-    "layout-1": "Layout 1",
-}
 
-MAX_BULLETS = 6
 FONT_TITLE = "Archivo"
 FONT_BODY = "Archivo Light"
 FONT_FALLBACK = "Arial"
@@ -109,21 +82,6 @@ def rgb(name_or_hex: str) -> RGBColor:
                 f"or one of: {', '.join(sorted(ALL_COLORS))}."
             )
     return RGBColor.from_string(h)
-
-
-def load_outline(path: Path) -> dict[str, Any]:
-    text = path.read_text()
-    if path.suffix.lower() in {".yaml", ".yml"}:
-        try:
-            import yaml
-        except ImportError as exc:
-            raise SystemExit("PyYAML is required for .yaml outlines. pip3 install pyyaml") from exc
-        data = yaml.safe_load(text)
-    else:
-        data = json.loads(text)
-    if not isinstance(data, dict) or "slides" not in data:
-        raise SystemExit("Outline must be an object with a top-level 'slides' list.")
-    return data
 
 
 def find_layout(prs: Presentation, name: str):
@@ -214,7 +172,7 @@ NO_FOOTER_LAYOUTS = {"Title Slide", "Bumper Slide"}
 
 def fill_footer(slide, text: str | None, layout_name: str):
     """python-pptx does not clone footer placeholders. Draw the brand footer ourselves."""
-    if text is None or layout_name in NO_FOOTER_LAYOUTS:
+    if not text or layout_name in NO_FOOTER_LAYOUTS:
         return
     # Staple on Paper. Ink on the gold rails so the line still reads.
     color = "ink" if layout_name in {"Section Title", "Layout 1"} else "staple"
@@ -738,6 +696,9 @@ def apply_core_props(prs: Presentation, outline: dict[str, Any]):
 
 
 def build(outline: dict[str, Any], template: Path, dest: Path):
+    outline, errors, _ = prepare(outline, "pptx")
+    if errors:
+        raise SystemExit("Outline has errors:\n" + "\n".join(errors))
     prs = Presentation(str(template))
     if len(prs.slides) != 0:
         print("warning: template already contains slides; new slides will be appended.", file=sys.stderr)
@@ -758,7 +719,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not args.template.is_file():
         raise SystemExit(f"Template not found: {args.template}")
-    outline = load_outline(args.outline)
+    outline = require(load(args.outline), "pptx", str(args.outline))
     dest = args.output
     if dest is None:
         dest = args.outline.with_suffix(".pptx")
