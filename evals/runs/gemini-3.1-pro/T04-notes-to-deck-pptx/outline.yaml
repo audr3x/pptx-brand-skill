@@ -1,0 +1,45 @@
+title: Tailspin Toys finance planning workshop
+slides:
+  - layout: title
+    title: Tailspin Toys finance planning
+    subtitle: Workshop summary
+    date: TODO
+  - layout: content
+    title: Current state and goal
+    bullets:
+      - Close process currently takes 9 days
+      - Goal is to reduce close to 5 days by end of FY27
+  - layout: table
+    title: Workstreams
+    headers:
+      - Workstream
+      - Owner
+    rows:
+      - - Automate intercompany reconciliation
+        - Priya
+      - - Standard chart of accounts across 4 entities
+        - Marco
+      - - Daily cash dashboard
+        - Lena
+  - layout: content
+    title: Budget and risks
+    bullets:
+      - Budget ask is $380k (pending CFO decision in December steering)
+      - Risk: Brazil entity on old ERP until March
+      - Risk: Audit freeze in January
+  - layout: two-column
+    title: Timeline
+    items:
+      - title: Phase 1 (Nov-Jan)
+        body: Recon and COA design
+      - title: Phase 2 (Feb-Apr)
+        body: COA rollout and dashboard
+      - title: Phase 3 (May-Jun)
+        body: Hypercare and measure close days
+  - layout: content
+    title: Next steps
+    bullets:
+      - Priya to send recon scope by Nov 14
+      - Marco to book COA review with controllers
+      - Lena to draft dashboard mock
+  - layout: closing

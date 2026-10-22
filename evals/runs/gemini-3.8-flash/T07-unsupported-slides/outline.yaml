@@ -1,0 +1,27 @@
+title: Litware sales kickoff
+date: February 2027
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Litware sales kickoff
+    date: February 2027
+    notes: Welcome to the Litware sales kickoff
+
+  - layout: chart
+    title: Pipeline by segment
+    chart:
+      type: pie
+      categories: [Enterprise, Mid-market, Small business]
+      series:
+        - name: Pipeline
+          values: [55, 30, 15]
+    notes: Pipeline breakdown across Enterprise, Mid-market, and Small business
+
+  - layout: photo-right
+    title: Meet the team
+    image: examples/images/sample-photo.png
+    notes: Team introduction
+
+  - layout: closing
+    title: Thank you
+    notes: Closing remarks
