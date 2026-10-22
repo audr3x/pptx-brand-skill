@@ -50,6 +50,24 @@ If you cannot create a venv and pip says `externally-managed-environment`, the f
 
 Open the `pptx-brand-skill` folder as the Cursor project. The skills live in `.cursor/skills/workday-pptx` and `.cursor/skills/workday-google-slides`. Cursor loads them from that folder. Restart Cursor or reopen the folder if a skill does not appear.
 
+## Use it for PowerPoint
+
+1. **Open the repo.** In Cursor, choose **File > Open Folder** and pick the `pptx-brand-skill` folder you cloned. Run the install steps above once.
+2. **Pick a model.** Open a chat (Cmd+L on Mac, Ctrl+L on Windows) and pick a model in the model menu under the message box. Claude Opus 5.5 and Gemini 3.8 Flash scored best in our tests (`evals/FINDINGS.md`).
+3. **Ask for the deck.** Name the skill, give every fact you want on the slides, and say where to save it. Example:
+
+   > Use the workday-pptx skill. Build a 5 slide deck for the Contoso payroll kickoff on May 12, 2027: cover, goals (cut payroll errors by half, one pay calendar for all 6 countries), a timeline table (Design in June, Build in July to September, Go-live in October), risks (two countries still on paper timesheets), and a closing slide. Save my request to decks/contoso-kickoff-notes.md, the outline to decks/contoso-kickoff.yaml, and the deck to out/contoso-kickoff.pptx. Use only my facts and write TODO for anything missing.
+
+4. **Find the deck.** It lands where you asked, here `out/contoso-kickoff.pptx`. If you do not name a path, the agent saves it under `out/` and tells you the file name.
+5. **Open it.** Right-click the file in the Cursor file list and choose **Reveal in Finder** (Mac) or **Reveal in File Explorer** (Windows), then double-click it to open in PowerPoint. Archivo must be installed for the type to match.
+6. **Check the readback.** The agent should run `python3 scripts/readback.py <outline> <deck>` after building and tell you the result. `ok: all N outline items are on the N slides` means every title, bullet, and table cell from the outline is on a slide. Any `missing:` line names the slide and text that did not make it. You can run it yourself:
+
+   ```bash
+   python3 scripts/readback.py decks/contoso-kickoff.yaml out/contoso-kickoff.pptx --show
+   ```
+
+   Also read the reply for every `TODO` left in the deck and any date or number it says was not in your request. Fill or remove those before you send the deck.
+
 ## PowerPoint (`workday-pptx`)
 
 The builder starts from `assets/template.pptx` (masters and layouts only) and fills slides from a YAML or JSON outline.
