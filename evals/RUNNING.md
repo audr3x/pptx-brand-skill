@@ -1,6 +1,6 @@
 # Running the eval under another model
 
-The eval runs the same 16 deck requests through a model and scores what it builds. The baseline (`evals/runs/claude-opus-5.5/`) was produced by a fresh agent that saw only the runner prompt below, the same way a cheaper model should be run. Runs from the first harness (10 tasks) are in `evals/archive/v1/`; relaunch every model on this one rather than reusing them.
+The eval runs the same 16 deck requests through a model and scores what it builds. The baseline (`evals/runs/claude-opus-5.5/`) was produced by a fresh agent that saw only the runner prompt below, the same way a cheaper model should be run. Runs from the first harness (10 tasks) are in `evals/archive/v1/`. Runs from this harness before the stricter checks (invented dates fail the build, T12 cover date, T08 no TODO build, claim checks) are in `evals/archive/v2/`. Relaunch every model rather than reusing them.
 
 ## 1. Start an agent on the model you want to measure
 
