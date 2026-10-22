@@ -1,0 +1,31 @@
+# Draft skeleton only. Not built: every slide is waiting on facts from the user.
+title: Contoso Q3 business review
+subtitle: "TODO: subtitle (audience or purpose)"
+date: "TODO: date"
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Contoso Q3 business review
+    subtitle: "TODO: subtitle (audience or purpose)"
+    date: "TODO: date"
+
+  - layout: content
+    title: "TODO: headline result for Q3"
+    bullets:
+      - "TODO: 3 to 5 Q3 highlights with real numbers"
+
+  - layout: table
+    title: "TODO: table title, for example service levels"
+    headers: ["TODO: column", "TODO: column", "TODO: column"]
+    rows:
+      - ["TODO: row", "TODO", "TODO"]
+
+  # Chart slide goes here once the user gives categories and one number per category.
+
+  - layout: content
+    title: "TODO: next quarter priorities"
+    bullets:
+      - "TODO: actions or asks for Contoso"
+
+  - layout: closing
+    title: "TODO: closing caption"
