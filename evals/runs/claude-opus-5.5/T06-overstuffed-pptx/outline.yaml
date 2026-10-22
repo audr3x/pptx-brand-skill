@@ -1,0 +1,52 @@
+title: Adatum workforce planning program status
+subtitle: Update for the steering committee
+date: October 2026
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Adatum workforce planning program status
+    subtitle: Update for the steering committee
+    date: October 2026
+
+  - layout: content
+    title: What is in place
+    bullets:
+      - Headcount plan approved for all 14 business units
+      - Scenario modeling live in finance since September 8
+      - Training completed by 85% of planners
+      - Executive dashboard draft ready for review
+      - Change champions named in every region
+      - Budget is 4% under plan
+
+  - layout: content
+    title: What is still open
+    bullets:
+      - Contractor costs are not yet included
+      - 3 business units still use spreadsheets for hiring plans
+      - Data quality issues in 2 legacy HR systems
+      - Two open roles on the program team
+      - Recruiting integration testing starts November 3
+      - Next steering meeting on December 2
+
+  - layout: table
+    title: Milestones completed
+    headers: [Milestone, Date, Status]
+    rows:
+      - [Kickoff, June 2, Done]
+      - [Requirements signed, July 14, Done]
+      - [Design complete, August 22, Done]
+      - [Build complete, October 10, Done]
+
+  - layout: table
+    title: Milestones ahead
+    headers: [Milestone, Date, Status]
+    rows:
+      - [Integration test, November 3, Next]
+      - [User testing, November 24, Planned]
+      - [Training, December 8, Planned]
+      - [Go live, January 12, Planned]
+      - [Hypercare ends, February 20, Planned]
+      - [Program close, March 6, Planned]
+
+  - layout: closing
+    title: Thank you

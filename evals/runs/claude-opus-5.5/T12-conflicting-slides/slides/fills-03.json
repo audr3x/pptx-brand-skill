@@ -1,0 +1,59 @@
+{
+  "phase": "fills",
+  "title": "Manager training kickoff",
+  "chrome": {
+    "coverImageId": null,
+    "smileImageId": null,
+    "coverImageUrl": null,
+    "smileImageUrl": null,
+    "coverText": "paper",
+    "note": "Title Slide uses createImage of cover-gradient.png only when a real Drive ID or public URL is set; otherwise pageBackgroundFill is Ballpoint and cover type is Paper. The smile comes from the imported layouts unless --place-smile is set."
+  },
+  "note": "Chunk 3 of 3. Send only the requests array to update_presentation. Send chunks in order: fills-01.json, fills-02.json, fills-03.json.",
+  "chunk": 3,
+  "chunkCount": 3,
+  "requests": [
+    {
+      "updateTextStyle": {
+        "objectId": "wd_s4_caption",
+        "style": {
+          "fontFamily": "Archivo",
+          "weightedFontFamily": {
+            "fontFamily": "Archivo",
+            "weight": 400
+          },
+          "fontSize": {
+            "magnitude": 16,
+            "unit": "PT"
+          },
+          "bold": false,
+          "foregroundColor": {
+            "opaqueColor": {
+              "rgbColor": {
+                "red": 1.0,
+                "green": 1.0,
+                "blue": 1.0
+              }
+            }
+          }
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "fontFamily,weightedFontFamily,fontSize,bold,foregroundColor"
+      }
+    },
+    {
+      "updateParagraphStyle": {
+        "objectId": "wd_s4_caption",
+        "style": {
+          "alignment": "CENTER"
+        },
+        "textRange": {
+          "type": "ALL"
+        },
+        "fields": "alignment"
+      }
+    }
+  ]
+}

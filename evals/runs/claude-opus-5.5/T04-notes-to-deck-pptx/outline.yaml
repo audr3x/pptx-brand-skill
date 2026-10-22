@@ -1,0 +1,52 @@
+title: Tailspin Toys finance planning workshop
+subtitle: Faster close plan for the CFO
+date: "TODO: date"
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Tailspin Toys finance planning workshop
+    subtitle: Faster close plan for the CFO
+    date: "TODO: date"
+
+  - layout: content
+    title: Close takes 9 days, target is 5
+    bullets:
+      - Close takes 9 days today
+      - Target is 5 days by end of FY27
+      - Finance leads agreed 3 workstreams
+      - Budget ask is $380k, CFO decides at Dec steering
+
+  - layout: two-column
+    title: Three workstreams, one owner each
+    items:
+      - title: Intercompany recon
+        body: "Automate intercompany reconciliation. Owner: Priya"
+      - title: Chart of accounts
+        body: "One standard chart of accounts across the 4 entities. Owner: Marco"
+      - title: Daily cash dashboard
+        body: "Daily view of cash. Owner: Lena"
+
+  - layout: table
+    title: Timeline in three phases
+    headers: [Phase, Months, Scope]
+    rows:
+      - [Phase 1, Nov to Jan, Recon and COA design]
+      - [Phase 2, Feb to Apr, COA rollout and dashboard]
+      - [Phase 3, May to Jun, "Hypercare, measure close days"]
+
+  - layout: content
+    title: Two risks to the timeline
+    bullets:
+      - Brazil entity stays on the old ERP until March
+      - Audit freeze in January
+
+  - layout: content
+    title: Next steps
+    bullets:
+      - Priya sends recon scope by Nov 14
+      - Marco books COA review with controllers
+      - Lena drafts dashboard mock
+      - CFO decides on the $380k budget at Dec steering
+
+  - layout: closing
+    title: Budget decision at Dec steering
