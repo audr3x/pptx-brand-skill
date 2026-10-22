@@ -1,0 +1,36 @@
+slides:
+  - layout: cover
+    title: Benefits platform update
+    subtitle: Adatum Corporation steering review
+    date: June 2026
+  - layout: two-column
+    title: What employees will see
+    items:
+      - title: New enrollment flow
+        body: Employees receive a guided checklist in Workday
+      - title: Mobile access
+        body: Elections can be changed from the Workday app
+      - title: Fewer forms
+        body: Dependents are verified once per year
+  - layout: section
+    eyebrow: Status
+    title: Where the program stands
+  - layout: content
+    title: Open risks
+    bullets:
+      - Carrier file testing is two weeks behind
+      - "Owner: Sam Patel for carrier files"
+      - Open enrollment window cannot move
+      - "Owner: Dana Reyes, review on May 6"
+  - layout: chart
+    title: Service requests by month
+    chart:
+      type: column
+      categories: [Jan, Feb, Mar, Apr]
+      series:
+        - name: Requests
+          values: [40, 52, 47, 61]
+        - name: Completed
+          values: [35, 50, 44, 59]
+  - layout: closing
+    title: Thank you
