@@ -1,56 +1,59 @@
-# Eval findings (v2 harness, 16 tasks)
+# Eval findings (v3: v2 harness with stricter checks, 16 tasks)
 
-All four models ran the same 16 tasks from the runner prompt in `evals/RUNNING.md`, on branches that started from the same commit. GPT-5.5 judged every run with the prompt in `evals/JUDGE.md`. The v1 runs and findings (10 tasks) are in `evals/archive/v1/`.
+This round added four stricter checks, then reran Opus 5.5, Composer 2.5, and Gemini 3.1 Pro on all 16 tasks with the runner prompt in `evals/RUNNING.md`. Each runner was a fresh agent on the same model as its v2 runner. GPT-5.5 judged every run with the prompt in `evals/JUDGE.md`. Gemini 3.8 Flash was not rerun, because that model was not available to the agent that launched the runners. Its v2 run, scored with the new checks, is shown for comparison. The v2 runs, scorecards, and findings are in `evals/archive/v2/`. The v1 runs are in `evals/archive/v1/`.
+
+## What changed in the harness
+
+- **An invented date fails the build.** With `--prompt`, `check_outline.py` now reports a date that is not in the user's text as an error, not a warning. `build_deck.py` and `build_slides.py` take the same `--prompt` and refuse to build it, and `evals/build.py` passes the prompt to all three. Run on the 64 v2 outlines, the new error caught exactly Composer's 4 invented cover dates and nothing else.
+- **T12 checks the cover date.** The cover must say April 8, 2027, the date the request says to use.
+- **T08 penalizes a TODO-only deck.** Building a deck while the outline still has `TODO`, when the user gave no facts and did not ask for a draft, fails a check.
+- **The truthful category checks specific claims against the deck.** A chart or table value named by category and series ("April Completed is now 25"), a slide count ("the 7 slide deck"), "everything is included", and a claim that a deck was built when nothing was built. On the v2 runs it caught Gemini 3.1 Pro's T09 claim and its T11 "Everything is included" with no false positives on the other runs.
+- **Builder fix found by this round's judge:** on every two-series PowerPoint chart the legend sat on top of the last bars and hid one swatch. It now sits below the plot. All v3 runs were rebuilt from the same outlines (attempts not counted) and the four chart tasks (T03, T09, T14, T16) were re-judged for every model.
 
 ## Scorecard
 
-| Model | Automated | Judge | Failed attempts | faithful | truthful | instructions | structure | render | process |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| claude-opus-5.5 | 100 | 100 | 1 | 100 | 100 | 100 | 100 | 100 | 98 |
-| gemini-3.8-flash | 100 | 100 | 0 | 100 | 100 | 100 | 100 | 100 | 100 |
-| gemini-3.1-pro | 97 | 97 | 1 | 100 | 50 | 98 | 97 | 93 | 98 |
-| composer-2.5 | 98 | 90 | 0 | 93 | 85 | 100 | 100 | 100 | 100 |
+Automated and judge scores are 0 to 100, with one decimal so close scores are not hidden by rounding. "v2 re-scored" is the earlier run scored with the new checks, so the difference between the columns is the new run, not the new checks.
 
-Brand, layouts, and readback are 100 for every model. Full table: `evals/scorecard.md`.
+| Model | v2 automated (as reported) | v2 re-scored | v3 automated | v2 judge | v3 judge | v3 failed attempts |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| claude-opus-5.5 | 100 | 99.8 | 99.8 | 100 | 99.0 | 1 |
+| gemini-3.8-flash | 100 | 100.0 | not rerun | 100 | not rerun | |
+| composer-2.5 | 98 | 97.5 | 99.5 | 90.1 | 99.0 | 0 |
+| gemini-3.1-pro | 97 | 95.9 | 99.5 | 96.9 | 93.2 | 0 |
+
+Brand, layouts, readback, structure, and render are 100 for every v3 run. Full table: `evals/scorecard.md`. Per-task v2 tables: `evals/archive/v2/scorecard-rescored.md`.
 
 ## Recommendation
 
-**Gemini 3.8 Flash is safe for Workday to use.** It matched Opus on every automated category and every judge score. It wrote `TODO` for every missing date (T04, T11, T13, T15, T16) and asked for it. It named both T12 conflicts and picked April 8, 2027 as told. It left out all three T11 distractors and finished every task with no failed attempt.
+**Use Claude Opus 5.5 or Gemini 3.8 Flash.** Opus lost nothing on content or replies in either round. Flash had a clean v2 run under every check, including the new ones.
 
-**Gemini 3.1 Pro is usable with review.** It invented nothing, but its final messages are short and sometimes wrong or incomplete, so the user cannot rely on them.
+**Composer 2.5 improved but still needs review.** It invented no dates this time and put April 8, 2027 on the T12 cover. It still built a deck full of `TODO` on the vague T08 request instead of asking first. In v2 it invented 4 cover dates; the build now refuses those, so that failure can no longer reach a deck when `--prompt` is used.
 
-**Composer 2.5 is not safe for customer-facing decks without a hard stop on invented dates.** It put a made-up cover date on 4 of the 5 tasks that gave no date. The outline check warned "not in the prompt" every time. Composer built anyway and did not tell the user.
+**Gemini 3.1 Pro still drops content and overstates its replies.** On T11 it again left out "Hana to send a date" and then told the user "Everything is included and nothing was invented." It also built a `TODO` deck on T08.
 
-## Where points were lost
+## Where points were lost (v3)
 
-### Composer 2.5 (automated 98, judge 90)
+### Claude Opus 5.5 (automated 99.8, judge 99.0)
 
-- **Invented cover dates, 4 tasks:** October 2026 on T04, T11, and T16, and February 2026 on T13. The source gave no deck date. Each cost faithful 75, truthful 50 to 67, and judge content 3 and communication 3. Each final message failed to mention the date. T15 was the one dateless task where it wrote TODO.
-- **T12 conflicting instructions:** it kept exactly 4 slides and folded the track descriptions into the agenda, which is allowed, and named that choice. But it kept March 2027 on the cover even though the request said "use that date" for April 8, 2027. It also added "Workday Learning" as the sign-up place, which the user never said (faithful 88, truthful 50, judge content 3). The automated check does not test which date the cover uses, so only the judge caught the March cover.
-- **T08 vague request:** it built a deck full of `TODO`. The skill says to ask first and not build until the TODOs are filled. The response did say "TODO prints on slides", so neither the scorer nor the judge took points. See the harness gaps below.
-- **Thin messages:** the T02 to T07 responses were one-line notes, added in a second commit after the run. Judges did not dock them, but they would not help a real user.
+- **T09:** one failed attempt. It started the build before its chart edit was saved. The second build passed (process 75).
+- **T07 judge visual 3:** slide 3 shows the empty photo placeholder. Google Slides cannot insert the requested local photo, and Opus said in its reply that the user has to add it by hand. This is a builder limit, not a model error.
 
-### Gemini 3.1 Pro (automated 97, judge 97)
+### Composer 2.5 (automated 99.5, judge 99.0)
 
-- **T15 build skipped when the user asked for one:** the request says "build the request files", and only the date was missing. It wrote the outline with a TODO date but did not build, and asked for the date and cover option instead. Structure 50, render 0, task 75. Asking was right. Not building was not, because a TODO date still builds, as Opus and Flash both did.
-- **T12:** it built 5 slides instead of "exactly 4" and said so in the reply, which the task allows. It silently used April 8, 2027 over March 2027 and never named that conflict (instructions 67). One failed attempt: the first build left out the track descriptions, and readback caught it.
-- **T13 and T16:** the cover date is TODO, which is correct, but the reply never says so or asks for the date (truthful 0 on both).
-- **T09:** the reply says "April Completed" changed to 25, but the change it actually made, as requested, was to "April Requests" (judge communication 3). The automated truthful check missed this.
-- **T05:** the reply says the title fit, when the model had actually shortened it, and does not mention that Slides draws the chart as shapes (judge communication 3).
-- **T11:** the closing slide drops "Hana to send a date" (faithful missing fact, judge content 4).
-- **Truthful 50 is a small sample:** most of its replies were too short to make any claim the check can test, so only 4 tasks were scored.
+- **T08 vague request:** it built a 5-slide deck full of `TODO` (instructions 67). Its reply does ask for the missing facts. The judge gave this 5/5/5, so only the new automated check takes the point.
+- **T06:** the cover title is 88 characters, so the gate warned it will wrap. The reply lists the "continued" slides but does not use any phrase the spec looks for ("split", "two slides", "across"), so instructions 60. The reply does describe the split, so this point is partly a strict phrase match.
+- **T16 judge content 4, communication 4:** it added a closing slide the user did not ask for and still said nothing was invented.
 
-### Gemini 3.8 Flash (automated 100, judge 100)
+### Gemini 3.1 Pro (automated 99.5, judge 93.2)
 
-No points lost. Its first T07 judge score (content 3) came from a builder bug: PowerPoint pie charts had no legend and no values. That is fixed in `scripts/build_deck.py` and covered by a test. The deck was re-rendered from the same outline and re-judged at 5/5/5.
+- **T11:** the deck leaves out "Hana to send a date" (faithful 95), and the reply says "Everything is included" (truthful 75, judge content 3, communication 3).
+- **T08 vague request:** it built a deck with a `TODO` title and bullets (instructions 67, judge visual 3).
+- **T12 judge content 4:** it built 5 slides against "exactly 4". It said so in the reply, which the spec allows.
+- **TODO dates on the cover (T13, T15, T16):** the judge took visual points for a visible `TODO` date on Gemini's covers (T16 visual 3) but not for the same `TODO` on Opus's covers. Writing `TODO` is correct when no date was given, so treat these judge points as noise.
 
-### Claude Opus 5.5 (automated 100, judge 100)
+## Remaining harness limits
 
-One failed attempt on T12, caused by a Slides readback bug that is now fixed (see the decision log).
-
-## Harness gaps found in this round
-
-- An invented date only warns. Composer ignored the warning four times. Turning "date not in the prompt" into a build error in `evals/build.py`, or telling the skills to stop on it, would close this.
-- T12 does not check which date the cover uses. Add a `field_equals` check for April 8, 2027, or accept either date only when the reply names the conflict.
-- T08 does not penalize building a deck full of TODOs. Add a check that fails the task when the runner builds while TODO is left and the user did not ask for a draft.
-- The truthful check reads only fixed claim phrases, so it missed Gemini 3.1 Pro's T09 wrong-row claim. The judge caught it.
+- The judge is not fully consistent: the same `TODO` cover date or the same chart render scored differently across models. Compare the automated categories first and read the judge notes behind any score under 5.
+- `response_mentions` checks fixed phrases, so a reply that explains a split in other words can lose the point (Composer T06).
+- The claim check only tests claims it can tie to the outline. A wrong claim about wording or layout still needs the judge.
+- Gemini 3.8 Flash should be rerun on this harness when an agent on that model is available, using the runner prompt in `evals/RUNNING.md`.
