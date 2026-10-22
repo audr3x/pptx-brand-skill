@@ -1,0 +1,7 @@
+target: pptx
+difficulty: medium
+slides: [5, 5]
+layouts: [title, intro, photo-right, two-column, closing]
+facts: ["Meet your Workday team", "Dana Whitfield", "Client Partner", "Our Chicago office", "90 day", "every 2 weeks", "Welcome to Workday"]
+checks:
+  - pictures: 2

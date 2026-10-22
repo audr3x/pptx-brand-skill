@@ -1,0 +1,10 @@
+target: pptx
+difficulty: medium
+slides: [5, 5]
+layouts: [title, table, chart, content, closing]
+facts: ["Fabrikam quarterly business review", "North America", "1,240", "96%", "Middle East and Africa", "89%", "4.1", "Asia Pacific", "under 4 hours", "20 new knowledge articles"]
+checks:
+  - chart: {type: column, series: 2, categories: 4}
+  - chart_values: {series: Opened, values: [2.9, 3.1, 3.4, 3.2]}
+  - chart_values: {series: Closed, values: [2.7, 3.0, 3.3, 3.3]}
+  - table_rows: 5

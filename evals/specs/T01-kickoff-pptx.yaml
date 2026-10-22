@@ -1,0 +1,8 @@
+target: pptx
+difficulty: easy
+slides: [5, 5]
+layouts: [title, section, content, two-column, closing]
+facts: ["Northwind Health HR rollout", "Project kickoff", "November 2026", "Where we start and how we work together", "4,200", "January 5", "Tuesday", "Steering group", "Core team", "Change network", "30 champions"]
+checks:
+  - field_equals: {slide: 1, path: title, value: "Northwind Health HR rollout"}
+  - field_equals: {slide: 2, path: eyebrow, value: "Agenda"}

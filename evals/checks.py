@@ -80,6 +80,20 @@ def slides_plan_problems(requests: list[dict[str, Any]]) -> dict[str, list[str]]
     return {k: sorted(set(v))[:10] for k, v in out.items()}
 
 
+def slides_text_by_slide(requests: list[dict[str, Any]]) -> list[str]:
+    """Text inserted on each wd_sN slide, without chart axis tick labels."""
+    texts: dict[int, list[str]] = {}
+    for req in requests:
+        ins = req.get("insertText")
+        if not ins or "_tick" in ins["objectId"]:
+            continue
+        m = re.match(r"wd_s(\d+)", ins["objectId"])
+        if m:
+            texts.setdefault(int(m.group(1)), []).append(ins["text"])
+    n = max(texts, default=0)
+    return [re.sub(r"\s+", " ", " ".join(texts.get(i, []))).strip() for i in range(1, n + 1)]
+
+
 def load_requests(path: Path) -> list[dict[str, Any]]:
     data = json.loads(Path(path).read_text())
     return data["requests"] if isinstance(data, dict) else data

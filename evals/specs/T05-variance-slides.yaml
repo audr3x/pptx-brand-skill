@@ -1,0 +1,8 @@
+target: slides
+difficulty: medium
+slides: [4, 4]
+layouts: [title, chart, content, closing]
+facts: ["Budget variance review", "Facilities", "Marketing", "Freeze new IT contracts until September", "40"]
+checks:
+  - chart: {type: column, series: 1, categories: 5, negative: true}
+  - chart_values: {series: Variance, values: [45, -30, 12, -18, 60]}
