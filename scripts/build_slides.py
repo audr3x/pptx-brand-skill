@@ -461,8 +461,8 @@ def probe_url(url: str, timeout: float = 6.0) -> tuple[int | None, str]:
     return None, ""
 
 
-def check_image_url(label: str, url: str | None, *, probe: bool) -> str | None:
-    """Keep a public URL. Drop a GitHub raw URL that is not public (a private repo answers 404)."""
+def check_image_url(label: str, url: str | None, *, probe: bool, has_drive_id: bool = False) -> str | None:
+    """Keep a public URL. Drop a GitHub raw URL that is not public, or any failing URL when a Drive ID can stand in."""
     if not url:
         return None
     if not probe:
@@ -479,13 +479,15 @@ def check_image_url(label: str, url: str | None, *, probe: bool) -> str | None:
         )
         return None
     if not 200 <= status < 300:
-        print(f"warning: {label} URL {url} returned HTTP {status}. Google Slides will not be able to fetch it.", file=sys.stderr)
+        problem = f"returned HTTP {status}. Google Slides will not be able to fetch it"
     elif ctype and not ctype.startswith("image/"):
-        print(
-            f"warning: {label} URL {url} returned {ctype}, not an image. "
-            "A sign-in page means the file is not public.",
-            file=sys.stderr,
-        )
+        problem = f"returned {ctype}, not an image. A sign-in page means the file is not public"
+    else:
+        return url
+    if has_drive_id:
+        print(f"warning: {label} URL {url} {problem}. Using the Drive ID instead.", file=sys.stderr)
+        return None
+    print(f"warning: {label} URL {url} {problem}.", file=sys.stderr)
     return url
 
 
@@ -1355,8 +1357,12 @@ def resolve_chrome(args: argparse.Namespace) -> dict[str, Any]:
             )
         smile_id = smile_url = None
     probe = not getattr(args, "skip_url_check", False)
-    cover_url = check_image_url("cover", cover_url, probe=probe) or (drive_download_url(cover_id) if cover_id else None)
-    smile_url = check_image_url("smile", smile_url, probe=probe) or (drive_download_url(smile_id) if smile_id else None)
+    cover_url = check_image_url("cover", cover_url, probe=probe, has_drive_id=bool(cover_id)) or (
+        drive_download_url(cover_id) if cover_id else None
+    )
+    smile_url = check_image_url("smile", smile_url, probe=probe, has_drive_id=bool(smile_id)) or (
+        drive_download_url(smile_id) if smile_id else None
+    )
     return {
         "cover_id": cover_id,
         "smile_id": smile_id,

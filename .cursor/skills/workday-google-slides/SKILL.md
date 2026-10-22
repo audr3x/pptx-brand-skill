@@ -111,7 +111,7 @@ Slides drops the Title Slide Day Crop gradient on import. The imported Title and
 `createImage` fetches the cover with no sign-in. Pick the option the user's org allows:
 
 - **A. Drive, Anyone with the link.** Upload `cover-gradient.png`, share it in the **Drive UI** as Anyone with the link: Viewer (the Drive connector cannot create that share), pass `--cover-image-id`. "Anyone in my org" is not enough.
-- **B. Public URL.** Host `cover-gradient.png` in a separate small **public** GitHub repo or any public static host (never make this repo public). Pass `--cover-image-url` or set `WORKDAY_COVER_IMAGE_URL`. The builder fetches the URL once with no sign-in: a public image is used as given and wins over a Drive ID; a GitHub raw URL answering 401/403/404 (private repo, including this one) is dropped with a warning; other failures warn. `--skip-url-check` skips the fetch.
+- **B. Public URL.** Host `cover-gradient.png` in a separate small **public** GitHub repo or any public static host (never make this repo public). Pass `--cover-image-url` or set `WORKDAY_COVER_IMAGE_URL`. The builder fetches the URL once with no sign-in: a public image is used as given and wins over a Drive ID; a GitHub raw URL answering 401/403/404 (private repo, including this one) is dropped with a warning; any other failing URL falls back to the Drive ID when one is set, otherwise it is kept with a warning. `--skip-url-check` skips the fetch.
 - **C. No image.** Pass no image option. Title slide is flat Ballpoint with Paper title, subtitle, and date; the layout smile stays. The user can add the gradient by hand: Insert > Image > Drive (private files work), 10 x 5.625 in at 0, 0, Arrange > Order > Send to back, then set title, subtitle, and date to Ink `0F2E66`.
 
 The builder ignores placeholder values such as `YOUR_COVER_IMAGE_ID` or `<cover URL>`, so default fills never contain a broken `createImage`.
@@ -162,7 +162,7 @@ Same map as the PPTX skill. Google remaps placeholder object IDs on import; reso
 | Table | `table` | Title Only | `title`, `headers`, `rows` |
 | Chart | `chart` | Title Only | `title` + on-brand clustered columns with a value axis (all `chart.type` values draw as columns) |
 | Closing | `closing` | Bumper Slide | optional caption under the smile |
-| Intro | `intro` | Intro_One | `name`, `role`, `company` |
+| Intro | `intro` | Intro_One | `title` only in Slides (`name`, `role`, `company`, and `image` are PowerPoint only) |
 | Blank | `blank` | Blank White Background | last resort |
 
 Content layout XML name is `Title and Content ` (trailing space). Match after strip.
@@ -283,7 +283,7 @@ Charts: the builder draws Water Cooler / Lunch Break columns, a Desk value axis,
 - Do not assume the cover gradient copied. Insert it (option A or B) or leave the Ballpoint fallback (option C). Do not insert the smile on the imported template
 - Do not send placeholder image IDs, or a file reference instead of an inline `requests` array
 - Do not use Paper type on the cover when the gradient image is present (Ink, like the PPTX)
-- Do not use Inter, Cursor orange, GTM LIGHT2 tiles, or any other company's tokens
+- Do not use Inter or any colors, fonts, or tiles from another brand
 - Do not commit `credentials.json`, `client_secret.json`, `.env`, or `gws` token files
 - Do not copy confidential sentences from a reference deck into examples
 

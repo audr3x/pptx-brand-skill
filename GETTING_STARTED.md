@@ -180,7 +180,7 @@ When is a GitHub raw URL OK? Only when the repository it points at is **public**
 
 - Public URL (200, an image): used as given. A URL you pass wins over a Drive ID.
 - GitHub raw URL that answers 401, 403, or 404 (a private repo): dropped with a warning. The builder falls back to the Drive ID if you gave one, otherwise to the flat cover.
-- Any other non-200 answer, or a web page instead of an image: kept, with a warning. Fix the URL before you send the batch.
+- Any other non-200 answer, or a web page instead of an image: the builder uses the Drive ID if you gave one. Otherwise it keeps the URL with a warning. Fix the URL before you send the batch.
 - No network on your machine: kept, with a warning. Add `--skip-url-check` to skip the fetch on purpose.
 
 #### Option C: no image, then add the gradient by hand

@@ -20,6 +20,8 @@ OUTLINE = bs.load_outline(ROOT / "examples" / "outline.yaml")
 def fake_probe(url: str, timeout: float = 6.0):
     if "private-repo" in url:
         return 404, "text/plain"
+    if "signin" in url:
+        return 200, "text/html"
     return 200, "image/png"
 
 
@@ -91,6 +93,13 @@ class ImageUrlTests(unittest.TestCase):
         self.assertEqual(colors["wd_s7"], bs.rgb_frac("ink"))
         self.assertEqual(title_color(plan), PAPER)
 
+    def test_failing_non_github_url_falls_back_to_drive_id(self, _):
+        bad = "https://intranet.example.com/signin/cover.png"
+        urls, _ = image_urls(bs.resolve_chrome(args(cover_image_url=bad, cover_image_id="C1")))
+        self.assertEqual(urls["wd_s1_cover"], bs.drive_download_url("C1"))
+        urls, _ = image_urls(bs.resolve_chrome(args(cover_image_url=bad)))
+        self.assertEqual(urls["wd_s1_cover"], bad)
+
     def test_skip_url_check_keeps_url_without_fetching(self, probe):
         urls, _ = image_urls(bs.resolve_chrome(args(cover_image_url=PRIVATE_RAW, skip_url_check=True)))
         self.assertEqual(urls["wd_s1_cover"], PRIVATE_RAW)
@@ -147,6 +156,15 @@ class LiveFindingTests(unittest.TestCase):
         footer = next(r["createShape"] for r in requests_for("wd_s2_footer") if "createShape" in r)
         x = footer["elementProperties"]["transform"]["translateX"] / bs.EMU_PER_INCH
         self.assertGreater(x, bs.SECTION_RAIL_WIDTH_IN)
+
+    def test_template_section_footer_placeholder_clears_rail(self):
+        from pptx import Presentation
+        from pptx.enum.shapes import PP_PLACEHOLDER
+
+        prs = Presentation(str(ROOT / "assets" / "template.pptx"))
+        layout = next(l for l in prs.slide_layouts if l.name.strip() == "Section Title")
+        footer = next(p for p in layout.placeholders if p.placeholder_format.type == PP_PLACEHOLDER.FOOTER)
+        self.assertGreater(footer.left / bs.EMU_PER_INCH, bs.SECTION_RAIL_WIDTH_IN)
 
 
 if __name__ == "__main__":
