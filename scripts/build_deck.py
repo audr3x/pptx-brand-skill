@@ -434,8 +434,8 @@ def add_chart_slide(slide, spec: dict[str, Any]):
     # A pie has no category axis, so the legend is the only place its slice names appear.
     chart.has_legend = pie or len(series_list) > 1
     if chart.has_legend:
-        chart.legend.include_in_layout = True
-        chart.legend.position = XL_LEGEND_POSITION.RIGHT
+        chart.legend.include_in_layout = False
+        chart.legend.position = XL_LEGEND_POSITION.BOTTOM
         chart.legend.font.size = Pt(10)
         chart.legend.font.color.rgb = rgb("ink")
         chart.legend.font.name = FONT_TITLE

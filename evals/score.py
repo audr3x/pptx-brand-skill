@@ -45,6 +45,7 @@ CATEGORIES = ["structure", "brand", "layouts", "faithful", "readback", "truthful
 
 # Claims a response can make, and what has to be true for the claim to hold.
 CLAIM_COMPLETE = re.compile(r"\b(all|every)\b[^.\n]{0,60}\b(included|present|covered|on the slides?|in the deck|made it|kept)\b"
+                            r"|everything (you (gave|sent)[^.\n]{0,20})?(is |was )?(included|in the deck|on the slides?|covered|there)"
                             r"|nothing (was |is )?(dropped|left out|cut|omitted|missing)")
 CLAIM_NO_INVENTION = re.compile(r"(nothing|no (new )?(numbers?|figures?|dates?|names?|facts?|details?|data))[^.\n]{0,30}"
                                 r"\b(invented|made up|added|fabricated|assumed)"
