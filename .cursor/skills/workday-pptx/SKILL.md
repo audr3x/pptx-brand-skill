@@ -18,7 +18,7 @@ For Google Slides, use [workday-google-slides](../workday-google-slides/SKILL.md
 
 ```bash
 python3 scripts/check_outline.py --target pptx --prompt out/request.md out/outline.yaml
-python3 scripts/build_deck.py out/outline.yaml -o out/deck.pptx
+python3 scripts/build_deck.py out/outline.yaml --prompt out/request.md -o out/deck.pptx
 python3 scripts/readback.py out/outline.yaml out/deck.pptx --show
 ```
 
@@ -31,7 +31,7 @@ If the outline is the wrong tool (heavy custom drawing on `Title Only`), still s
 
 - **Ask first on vague requests.** "A deck about X" with no facts gets one message asking for audience, slide count, and the real content. If the user wants a draft anyway, write `TODO` for every gap.
 - **Use only what the user gave.** Never infer or invent a date, number, name, or quote. "Next month" is not a date: write `date: "TODO: date"` and ask. Leave out figures the user marks as old, a typo, or confidential. When two instructions conflict (slide count, dates), pick one or ask, and name the conflict in your reply.
-- **Run the gate with the prompt.** `check_outline.py --prompt <file>` warns on every date or figure that is not in the user's text. Replace each one with the user's value or `TODO`.
+- **Run the gate with the prompt.** `check_outline.py --prompt <file>` fails on any date that is not in the user's text, and `build_deck.py --prompt <file>` refuses to build it. It warns on any figure that is not in the text. Replace each one with the user's value or `TODO`.
 - **Quote text that contains `: `.** `- "Risk: audit freeze in January"`. Unquoted, YAML reads it as a mapping.
 - **Read back before you report.** `scripts/readback.py` lists every outline title, bullet, item, cell, and chart label that is not on the built slides and exits 1. Fix and rebuild until it prints `ok`.
 - **Look hardest at wrapped titles and first bullets.** A title past the layout's limit wraps into the first bullet; the gate warns, and the render shows it. Shorten the title rather than accept the warning.

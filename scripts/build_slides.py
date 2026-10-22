@@ -1510,6 +1510,8 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="JSON from --upload-assets (WORKDAY_COVER_IMAGE_ID / WORKDAY_SMILE_IMAGE_ID).",
     )
+    parser.add_argument("--prompt", type=Path, action="append", default=[],
+                        help="File with the user's request or notes (repeatable). Refuses dates that are not in it")
     args = parser.parse_args(argv)
     if args.upload_assets:
         if not args.backend:
@@ -1519,6 +1521,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.outline is None:
         raise SystemExit("Pass an outline, or --upload-assets.")
     outline = load_outline(args.outline)
+    from check_outline import invented_dates
+
+    if dates := invented_dates(outline, args.prompt):
+        raise SystemExit("Outline has errors:\n" + "\n".join(dates))
     chrome = resolve_chrome(args)
     plan = build_plan(outline, chrome)
     dest = args.output

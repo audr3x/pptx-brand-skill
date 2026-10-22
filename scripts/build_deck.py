@@ -732,10 +732,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("outline", type=Path, help="JSON or YAML outline")
     parser.add_argument("-o", "--output", type=Path, default=None, help="Output .pptx path")
     parser.add_argument("--template", type=Path, default=DEFAULT_TEMPLATE, help="Masters-only template")
+    parser.add_argument("--prompt", type=Path, action="append", default=[],
+                        help="File with the user's request or notes (repeatable). Refuses dates that are not in it")
     args = parser.parse_args(argv)
     if not args.template.is_file():
         raise SystemExit(f"Template not found: {args.template}")
     outline = require(load(args.outline), "pptx", str(args.outline))
+    from check_outline import invented_dates
+
+    if dates := invented_dates(outline, args.prompt):
+        raise SystemExit("Outline has errors:\n" + "\n".join(dates))
     dest = args.output
     if dest is None:
         dest = args.outline.with_suffix(".pptx")

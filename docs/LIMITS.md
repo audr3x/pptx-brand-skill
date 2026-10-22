@@ -40,7 +40,8 @@ The builder still runs, but the slide will not look the way the outline reads. T
 | Table rows written as mappings with keys that are not headers | Those cells are dropped | Match the keys to `headers` |
 | `TODO` left in the outline | `TODO` prints on the slide | Fill in the real fact, or remove the line |
 | A bullet or item like `- Risk: audit freeze` without quotes | YAML reads it as a mapping. The gate keeps it as the text `Risk: audit freeze` (an item becomes title `Risk` with that body) | Quote text that contains `: ` |
-| With `--prompt`: a date or figure that is not in the prompt file | Builds as written | Replace it with the user's value, or `TODO` and ask |
+| With `--prompt`: a date that is not in the prompt file | Error. The gate fails and the builders refuse to build | Replace it with the user's value, or `TODO` and ask |
+| With `--prompt`: a figure that is not in the prompt file | Warning. Builds as written | Replace it with the user's value, or `TODO` and ask |
 | Cover slide not first, or more than one cover | Builds as written | Check the order |
 | A slide with no content | An empty layout | Remove the slide or add content |
 

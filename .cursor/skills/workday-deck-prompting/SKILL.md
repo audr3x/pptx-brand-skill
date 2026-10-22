@@ -17,7 +17,7 @@ The full guide for people is [docs/PROMPTING.md](../../../docs/PROMPTING.md). Th
    python3 scripts/check_outline.py --target pptx|slides --prompt <request file> <outline>
    ```
 
-   Each "is not in the prompt" warning is a date or figure you added; replace it with the user's value or `TODO`. Tell the user about each other warning that changes what they will see. Every warning and limit is explained in [docs/LIMITS.md](../../../docs/LIMITS.md).
+   A date that is not in the prompt is an error, and a figure that is not in it is a warning. Either way it is something you added: replace it with the user's value or `TODO`. Pass the same `--prompt` to `build_deck.py` or `build_slides.py` so the builder refuses an invented date too. Tell the user about each other warning that changes what they will see. Every warning and limit is explained in [docs/LIMITS.md](../../../docs/LIMITS.md).
 4. When instructions conflict (exactly 4 slides, then a fifth topic; two different dates), ask, or pick one and say which in your reply.
 5. Show the outline. Build only after the user agrees, unless they asked to build straight away.
 6. After the build, read back the visible text and fix every drop before reporting:

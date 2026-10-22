@@ -5,3 +5,5 @@ facts: []
 allowed_numbers: [3]
 checks:
   - todo_or_question: true
+  # The skill says ask first and do not build while TODO is left; the user did not ask for a draft.
+  - not_built_with_todo: true

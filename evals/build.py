@@ -88,15 +88,15 @@ def main() -> int:
     prompts = [a for s in sources_for(args.task) for a in ("--prompt", s)]
     steps: list[tuple[str, list[str]]] = [("check", [sys.executable, "scripts/check_outline.py", "--target", target, *prompts, rel])]
     if target == "pptx":
-        steps.append(("build_pptx", [sys.executable, "scripts/build_deck.py", rel, "-o", str(run_dir / "deck.pptx")]))
+        steps.append(("build_pptx", [sys.executable, "scripts/build_deck.py", rel, *prompts, "-o", str(run_dir / "deck.pptx")]))
         preview = run_dir / "deck.pptx"
         built = preview
     else:
         slides = run_dir / "slides"
-        steps.append(("build_creates", [sys.executable, "scripts/build_slides.py", rel, "--phase", "creates", "-o", str(slides / "creates.json")]))
-        steps.append(("build_fills", [sys.executable, "scripts/build_slides.py", rel, "--phase", "fills", "--chunk", "40", "-o", str(slides / "fills.json")]))
+        steps.append(("build_creates", [sys.executable, "scripts/build_slides.py", rel, *prompts, "--phase", "creates", "-o", str(slides / "creates.json")]))
+        steps.append(("build_fills", [sys.executable, "scripts/build_slides.py", rel, *prompts, "--phase", "fills", "--chunk", "40", "-o", str(slides / "fills.json")]))
         preview = run_dir / "preview.pptx"
-        steps.append(("build_preview", [sys.executable, "scripts/build_deck.py", rel, "-o", str(preview)]))
+        steps.append(("build_preview", [sys.executable, "scripts/build_deck.py", rel, *prompts, "-o", str(preview)]))
         built = slides / "fills.json"
     steps.append(("readback", [sys.executable, "scripts/readback.py", rel, str(built.relative_to(ROOT)), "--show"]))
 

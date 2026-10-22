@@ -112,11 +112,53 @@ class ProvenanceTest(unittest.TestCase):
         self.assertEqual(unsourced_names(["Owner is Priya", "Status: Green"], "priya owns it"), [])
         self.assertEqual(unsourced_names(["Owner is Marcus"], "owner TBD"), ["Marcus"])
 
-    def test_check_outline_prompt_warning(self):
+    def test_check_outline_fails_on_invented_date(self):
         outline = {"slides": [{"layout": "cover", "title": "Payroll", "date": "November 2026"}]}
-        errors, warnings = check(outline, "pptx", "o", source="Payroll kickoff deck, no date yet")
+        errors, _ = check(outline, "pptx", "o", source="Payroll kickoff deck, no date yet")
+        self.assertTrue(any("November 2026" in e and "TODO" in e for e in errors))
+        errors, _ = check(outline, "pptx", "o", source="Payroll kickoff deck for November 2026")
         self.assertEqual(errors, [])
-        self.assertTrue(any("November 2026" in w and "TODO" in w for w in warnings))
+
+    def test_builders_refuse_invented_date_with_prompt(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            src = tmp / "outline.yaml"
+            src.write_text(yaml.safe_dump({"slides": [{"layout": "cover", "title": "Payroll", "date": "November 2026"}]}))
+            prompt = tmp / "prompt.md"
+            prompt.write_text("Payroll kickoff deck, no date yet")
+            for cmd in (["build_deck.py", str(src), "-o", str(tmp / "d.pptx")],
+                        ["build_slides.py", str(src), "--phase", "fills", "-o", str(tmp / "fills.json")]):
+                r = subprocess.run([sys.executable, str(ROOT / "scripts" / cmd[0]), *cmd[1:], "--prompt", str(prompt)],
+                                   capture_output=True, text=True)
+                self.assertNotEqual(r.returncode, 0, cmd[0])
+                self.assertIn("November 2026", r.stderr)
+
+
+class ClaimTest(unittest.TestCase):
+    OUTLINE = {"slides": [{"layout": "cover", "title": "T"},
+                          {"layout": "chart", "title": "Requests", "chart": {
+                              "categories": ["March", "April"],
+                              "series": [{"name": "Requests", "values": [15, 25]}, {"name": "Completed", "values": [13, 19]}]}}]}
+
+    def claims(self, text, built=True):
+        sys.path.insert(0, str(ROOT / "evals"))
+        from score import claim_tests
+
+        return [why for why, ok in claim_tests(text, self.OUTLINE, built) if not ok]
+
+    def test_wrong_series_value_is_caught(self):
+        self.assertTrue(self.claims("I updated the April Completed chart value to 25."))
+
+    def test_true_claims_pass(self):
+        self.assertEqual(self.claims("Requests for April: 22 is now 25. Completed for April stays 19. "
+                                     "I rebuilt the 2 slide PowerPoint."), [])
+
+    def test_wrong_slide_count_is_caught(self):
+        self.assertTrue(self.claims("I built the 3-slide deck."))
+
+    def test_build_claim_without_build(self):
+        self.assertTrue(self.claims("I built the deck for you.", built=False))
+        self.assertEqual(self.claims("I haven't built the deck yet. Once you send the facts I will build the deck.", built=False), [])
 
 
 if __name__ == "__main__":

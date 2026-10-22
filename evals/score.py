@@ -274,6 +274,7 @@ def score_task(model: str, task: str) -> dict[str, Any]:
             sentences = re.split(r"(?<=[.?!])\s+|\n+", resp)
             unflagged = [x for x in added if not any(norm(x) in s and FLAG.search(s) for s in sentences)]
             tests.append((f"does not flag what it added ({', '.join(unflagged[:3])})", not unflagged))
+        tests += claim_tests(response, outline if isinstance(outline, dict) else {}, built)
         if tests:
             scores["truthful"] = mean([float(ok) for _, ok in tests])
             row["notes"].extend(f"response {why}" for why, ok in tests if not ok)
@@ -289,6 +290,76 @@ def score_task(model: str, task: str) -> dict[str, Any]:
     auto = [v for v in scores.values() if v is not None]
     row["auto"] = mean(auto)
     return row
+
+
+NUMBER = re.compile(r"(?<![\w.])-?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?(?!\w)")
+WORDS = {w: n for n, w in enumerate("zero one two three four five six seven eight nine ten eleven twelve".split())}
+SLIDE_COUNT = re.compile(r"\b(\d+|" + "|".join(WORDS) + r")[- ]slides? (?:[\w-]+ ){0,4}?(?:deck|presentation|powerpoint|google slides)\b"
+                         r"|\((\d+) slides\)"
+                         r"|\b(?:deck|presentation) (?:has|with|of) (\d+|" + "|".join(WORDS) + r") slides\b")
+BUILD_CLAIM = re.compile(r"\b(built|rebuilt|generated|created|prepared)\b[^.\n]{0,60}\b(deck|presentation|powerpoint|\.pptx|request (files|batches)|batches)\b")
+HEDGE = re.compile(r"\b(not|before|once|until|will|can|could|would|after you)\b|n't\b")
+
+
+def _num(text: str) -> float | None:
+    try:
+        return float(text.replace(",", ""))
+    except ValueError:
+        return None
+
+
+def claim_tests(response: str, outline: dict, built: bool) -> list[tuple[str, bool]]:
+    """Specific claims in the response checked against the outline that readback tied to the slides.
+
+    Labels are matched with their case as written in the outline, so "IT" is not the word "it".
+    """
+    tests = []
+    resp = norm(response)
+    lowered = [s for s in re.split(r"(?<=[.?!])\s+|\n+", resp) if s.strip()]
+    if not built:
+        claims = [s for s in lowered if BUILD_CLAIM.search(s) and not HEDGE.search(s)]
+        if claims:
+            tests.append((f"claims a build that did not happen ({claims[0][:60]!r})", False))
+        return tests
+    slides = [s for s in outline.get("slides", []) if isinstance(s, dict)]
+    counts = {int(g) if g.isdigit() else WORDS[g] for m in SLIDE_COUNT.finditer(resp) for g in m.groups() if g}
+    if counts:
+        tests.append((f"claims {sorted(counts)} slides, deck has {len(slides)}", counts == {len(slides)}))
+    # Values the response says a chart or table cell holds, e.g. "April Requests is now 25".
+    cells = []
+    for s in slides:
+        chart = s.get("chart") if isinstance(s.get("chart"), dict) else None
+        if chart:
+            series = [x for x in chart.get("series") or [] if isinstance(x, dict)]
+            for x in series:
+                for cat, val in zip(chart.get("categories") or [], x.get("values") or []):
+                    cells.append((str(cat), str(x.get("name", "")), _num(str(val))))
+        if s.get("headers") and s.get("rows"):
+            heads = [str(h) for h in s["headers"]]
+            for row in s["rows"]:
+                if isinstance(row, list) and row:
+                    for h, val in zip(heads[1:], row[1:]):
+                        cells.append((str(row[0]), h, _num(str(val).rstrip("%"))))
+    labels = sorted({c[0] for c in cells} | {c[1] for c in cells}, key=len, reverse=True)
+    names = {c[1] for c in cells}
+    wrong = []
+    for sent in re.split(r"(?<=[.?!])\s+|\n+", response.replace("*", "")):
+        bare = sent
+        for label in labels:
+            bare = re.sub(rf"\b{re.escape(label)}\b", " ", bare) if label else bare
+        nums = [n for n in (_num(m.group()) for m in NUMBER.finditer(bare)) if n is not None]
+        if not nums:
+            continue
+        mentioned = {n for n in names if n and re.search(rf"\b{re.escape(n)}\b", sent)}
+        for cat, name, val in cells:
+            if val is None or not re.search(rf"\b{re.escape(cat)}\b", sent):
+                continue
+            if mentioned == {name}:
+                if not any(abs(n - val) < 1e-9 for n in nums):
+                    wrong.append(f"{cat} {name}".strip())
+    if wrong:
+        tests.append((f"states a value the deck does not have ({', '.join(sorted(set(wrong))[:3])})", False))
+    return tests
 
 
 def _drawn(spec: dict) -> dict:
@@ -318,7 +389,11 @@ def run_check(kind: str, arg: Any, outline: Any, run_dir: Path, response: str, w
         val = get_path(slides[idx], arg["path"]) if idx < len(slides) else None
         if arg["path"].startswith("bullets.") and isinstance(val, dict):
             val = val.get("text")
-        return norm(val or "") == norm(arg["value"]), f"slide {arg['slide']} {arg['path']} is {str(val)[:40]!r}"
+        accepted = arg["value"] if isinstance(arg["value"], list) else [arg["value"]]
+        return norm(val or "") in {norm(a) for a in accepted}, f"slide {arg['slide']} {arg['path']} is {str(val)[:40]!r}"
+    if kind == "not_built_with_todo":
+        built = (run_dir / "deck.pptx").is_file() or (run_dir / "slides" / "fills.json").is_file()
+        return not (built and "TODO" in outline_path_text(run_dir)), "built a deck while the outline still has TODO"
     if kind == "date_todo_or_empty":
         idx = arg["slide"] - 1
         val = str((slides[idx].get("date") if idx < len(slides) and isinstance(slides[idx], dict) else "") or "")

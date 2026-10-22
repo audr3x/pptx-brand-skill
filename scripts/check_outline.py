@@ -9,9 +9,9 @@ Usage:
 
 Errors fail the check (exit 1); the builders refuse the same outline. Warnings print
 but pass. --target picks which builder's limits to warn about: pptx, slides, or both.
---prompt points at what the user gave you (their message saved to a file, their notes);
-dates and figures in the outline that are not in it are warned about. The rules live in
-outline_rules.py and provenance.py.
+--prompt points at what the user gave you (their message saved to a file, their notes).
+A date in the outline that is not in it is an error (write TODO and ask instead); a figure
+that is not in it is a warning. The rules live in outline_rules.py and provenance.py.
 """
 from __future__ import annotations
 
@@ -29,22 +29,31 @@ from provenance import unsourced_dates, unsourced_figures  # noqa: E402
 def check(outline: Any, target: str, label: str, source: str | None = None) -> tuple[list[str], list[str]]:
     outline, errors, warnings = prepare(outline, target, label)
     if source is not None and not errors:
-        warnings += unsourced(outline, source, label)
+        date_errors, figure_warnings = unsourced(outline, source, label)
+        errors += date_errors
+        warnings += figure_warnings
     return errors, warnings
 
 
-def unsourced(outline: dict[str, Any], source: str, label: str) -> list[str]:
-    """Dates and figures on the slides (or in notes) that the source text never mentions."""
-    out = []
+def unsourced(outline: dict[str, Any], source: str, label: str) -> tuple[list[str], list[str]]:
+    """Dates (errors) and figures (warnings) on the slides or in notes that the source text never mentions."""
+    errors, warnings = [], []
     for i, spec in enumerate(outline["slides"], 1):
         if not isinstance(spec, dict):
             continue
         text = " ".join(t for _, t in drawn_strings(spec, "pptx")) + " " + str(spec.get("notes") or "")
         for d in unsourced_dates(text, source):
-            out.append(f"{label} slide {i}: date '{d}' is not in the prompt. Write TODO and ask unless the user gave it")
+            errors.append(f"{label} slide {i}: date '{d}' is not in the prompt. Write TODO and ask unless the user gave it")
         for n in unsourced_figures(text, source):
-            out.append(f"{label} slide {i}: figure {n:g} is not in the prompt. Use only numbers the user gave")
-    return out
+            warnings.append(f"{label} slide {i}: figure {n:g} is not in the prompt. Use only numbers the user gave")
+    return errors, warnings
+
+
+def invented_dates(outline: dict[str, Any], prompts: list[Path]) -> list[str]:
+    """For the builders' --prompt: dates in a prepared outline that the prompt files never mention."""
+    if not prompts:
+        return []
+    return unsourced(outline, "\n".join(p.read_text() for p in prompts), "outline")[0]
 
 
 def markdown_outlines(path: Path) -> list[tuple[str, Any]]:
@@ -64,7 +73,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--markdown", type=Path, action="append", default=[], help="Check every yaml block with 'slides:'")
     parser.add_argument("--target", choices=("pptx", "slides", "both"), default="both")
     parser.add_argument("--prompt", type=Path, action="append", default=[],
-                        help="File with the user's request or notes (repeatable). Warns on dates and figures not in it")
+                        help="File with the user's request or notes (repeatable). Fails on dates and warns on figures not in it")
     args = parser.parse_args(argv)
     source = "\n".join(p.read_text() for p in args.prompt) if args.prompt else None
     outlines = []

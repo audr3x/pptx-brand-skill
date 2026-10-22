@@ -22,7 +22,7 @@ These rules are in all three skills. Where a script can enforce them, it does.
 | Rule | How it is checked |
 | --- | --- |
 | Ask first when the request has no real content (numbers, names, dates, rows). A draft gets `TODO` for every gap | Skills; the gate warns on every `TODO` left in the outline |
-| Never infer or invent a date, number, name, or quote. "Next month" or "our Q3 review" is not a cover date | `check_outline.py --prompt <your request saved to a file>` warns on every date and figure that is not in it |
+| Never infer or invent a date, number, name, or quote. "Next month" or "our Q3 review" is not a cover date | `check_outline.py --prompt <your request saved to a file>` fails on a date that is not in it and warns on a figure; `build_deck.py` and `build_slides.py` take the same `--prompt` and refuse the date |
 | Leave out figures you mark as old, a typo, or confidential | Skills; say it plainly in the prompt ("last quarter's 48% stays out") |
 | When two instructions conflict (exactly 4 slides, then a fifth topic; two dates), ask or pick one and say which | Skills |
 | Quote text that contains `: ` (`- "Risk: audit freeze"`) | The gate warns, and keeps the text instead of dropping it |
