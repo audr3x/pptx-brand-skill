@@ -1,0 +1,9 @@
+# A pie cannot show a negative slice. The check should refuse it.
+slides:
+  - layout: chart
+    title: Pie with a negative slice
+    chart:
+      type: pie
+      categories: [A, B, C]
+      series:
+        - {name: Share, values: [50, -10, 60]}

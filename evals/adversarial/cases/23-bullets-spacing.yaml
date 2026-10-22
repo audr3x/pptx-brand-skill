@@ -1,0 +1,14 @@
+# Live Slides rebuild: bullets kept large dots and tight spacing because lists default to
+# COLLAPSE_LISTS. The plan check (PLAN verdict) fails if any bulleted box lacks
+# NEVER_COLLAPSE spacing after createParagraphBullets.
+slides:
+  - layout: content
+    title: Three bullets
+    bullets: [Discovery workshop in week 1, Build and test in weeks 2 to 6, Go live in week 7]
+  - layout: content
+    title: One bullet
+    bullets: [A single point still gets list spacing]
+  - layout: content
+    title: Body text and bullets
+    body: Context for the list below.
+    bullets: [First, Second]

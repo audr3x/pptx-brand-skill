@@ -1,0 +1,12 @@
+# Image paths outside the repo and a non-image file.
+slides:
+  - layout: photo-right
+    title: System file
+    image: /etc/hostname
+  - layout: photo-right
+    title: Not an image
+    image: README.md
+  - layout: content
+    title: Image on a layout without a photo slot
+    bullets: [Text]
+    image: examples/images/sample-photo.png

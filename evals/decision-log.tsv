@@ -1,0 +1,6 @@
+ts	phase	decision	why	evidence	result
+2026-10-22T18:05:28Z	frame	done = hostile corpus runs with no crash or silent loss, cheap fixes tested, limits documented, evals/ runnable with score.py scorecard, baseline committed, PR updated	need a predicate I can fail	this row	open
+2026-10-22T18:05:28Z	frame	rigor medium-high, commit this decision log under evals/	other models will be compared on this harness, so task wording and scoring are hard to change later; reviewers need the trail	evals/decision-log.tsv	open
+2026-10-22T18:05:28Z	frame	baseline runner is a fresh subagent given only the runner prompt, not me	I wrote the specs; running the tasks myself would leak the answers	planned	open
+2026-10-22T18:05:28Z	frame	visual judge is GPT-5.5 for every model	a judge from the baseline family would favor the baseline; Gemini is a candidate	planned	open
+2026-10-22T18:05:28Z	frame	skip arena for the eval design	the shape (tasks, deterministic scorers, judge packet) is standard; risk is in details, handled by review	'-	open

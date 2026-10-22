@@ -1,0 +1,29 @@
+# Mismatched lengths, percent strings, nulls, unknown type, series as strings.
+slides:
+  - layout: chart
+    title: Mismatch
+    chart:
+      categories: [A, B, C]
+      series:
+        - {name: Short, values: [1, 2]}
+  - layout: chart
+    title: Percent strings
+    chart:
+      categories: [A, B]
+      series:
+        - {name: Pct, values: ["12%", "15%"]}
+  - layout: chart
+    title: Donut
+    chart:
+      type: donut
+      categories: [A]
+      series:
+        - {name: X, values: [1]}
+  - layout: chart
+    title: Series are strings
+    chart:
+      categories: [A]
+      series: [Revenue]
+  - layout: chart
+    title: Chart is a list
+    chart: [1, 2, 3]

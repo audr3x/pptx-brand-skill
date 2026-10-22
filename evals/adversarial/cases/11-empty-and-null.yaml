@@ -1,0 +1,7 @@
+# Empty slide, null title, empty bullets.
+slides:
+  - {}
+  - layout: content
+    title: null
+    bullets: []
+  - layout: section

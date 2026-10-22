@@ -1,0 +1,20 @@
+# Plausible but wrong shapes.
+title: Wrong schema
+slides:
+  - "Just a string slide"
+  - layout: content
+    title: Bullets as one string
+    bullets: "One, two, three"
+  - layout: two-column
+    title: Items as strings
+    items: [Plan, Build, Ship]
+  - layout: table
+    title: Rows without headers
+    rows: [[1, 2], [3, 4]]
+  - layout: table
+    title: Ragged rows
+    headers: [A, B, C]
+    rows: [[1], [1, 2, 3, 4, 5]]
+  - layout: content
+    heading: Wrong key for the title
+    points: [Wrong key for bullets]

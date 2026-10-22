@@ -1,0 +1,43 @@
+# 40 slides and two covers.
+title: Long deck
+slides:
+  - {layout: title, title: First cover}
+  - {layout: title, title: Second cover}
+  - {layout: content, title: Slide 3, bullets: [Point 3]}
+  - {layout: content, title: Slide 4, bullets: [Point 4]}
+  - {layout: content, title: Slide 5, bullets: [Point 5]}
+  - {layout: content, title: Slide 6, bullets: [Point 6]}
+  - {layout: content, title: Slide 7, bullets: [Point 7]}
+  - {layout: content, title: Slide 8, bullets: [Point 8]}
+  - {layout: content, title: Slide 9, bullets: [Point 9]}
+  - {layout: content, title: Slide 10, bullets: [Point 10]}
+  - {layout: content, title: Slide 11, bullets: [Point 11]}
+  - {layout: content, title: Slide 12, bullets: [Point 12]}
+  - {layout: content, title: Slide 13, bullets: [Point 13]}
+  - {layout: content, title: Slide 14, bullets: [Point 14]}
+  - {layout: content, title: Slide 15, bullets: [Point 15]}
+  - {layout: content, title: Slide 16, bullets: [Point 16]}
+  - {layout: content, title: Slide 17, bullets: [Point 17]}
+  - {layout: content, title: Slide 18, bullets: [Point 18]}
+  - {layout: content, title: Slide 19, bullets: [Point 19]}
+  - {layout: content, title: Slide 20, bullets: [Point 20]}
+  - {layout: content, title: Slide 21, bullets: [Point 21]}
+  - {layout: content, title: Slide 22, bullets: [Point 22]}
+  - {layout: content, title: Slide 23, bullets: [Point 23]}
+  - {layout: content, title: Slide 24, bullets: [Point 24]}
+  - {layout: content, title: Slide 25, bullets: [Point 25]}
+  - {layout: content, title: Slide 26, bullets: [Point 26]}
+  - {layout: content, title: Slide 27, bullets: [Point 27]}
+  - {layout: content, title: Slide 28, bullets: [Point 28]}
+  - {layout: content, title: Slide 29, bullets: [Point 29]}
+  - {layout: content, title: Slide 30, bullets: [Point 30]}
+  - {layout: content, title: Slide 31, bullets: [Point 31]}
+  - {layout: content, title: Slide 32, bullets: [Point 32]}
+  - {layout: content, title: Slide 33, bullets: [Point 33]}
+  - {layout: content, title: Slide 34, bullets: [Point 34]}
+  - {layout: content, title: Slide 35, bullets: [Point 35]}
+  - {layout: content, title: Slide 36, bullets: [Point 36]}
+  - {layout: content, title: Slide 37, bullets: [Point 37]}
+  - {layout: content, title: Slide 38, bullets: [Point 38]}
+  - {layout: content, title: Slide 39, bullets: [Point 39]}
+  - {layout: content, title: Slide 40, bullets: [Point 40]}

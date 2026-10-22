@@ -1,0 +1,11 @@
+# Long footer, empty footer, non-string notes.
+footer: "Workday Confidential. For internal planning only. Do not forward outside the review group under any circumstances."
+slides:
+  - layout: content
+    title: Footer override empty
+    footer: ""
+    bullets: [A]
+  - layout: content
+    title: Notes as a list
+    notes: [first note, second note]
+    bullets: [B]

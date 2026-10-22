@@ -1,0 +1,6 @@
+# Unquoted commas inside {...} split the text into stray keys. The check should warn.
+slides:
+  - layout: two-column
+    title: Pillars
+    items:
+      - {title: Plan, body: Scope, budget, and owners}

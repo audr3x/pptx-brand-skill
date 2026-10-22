@@ -1,0 +1,11 @@
+# Photo paths that do not exist, a directory, and a remote URL.
+slides:
+  - layout: photo-right
+    title: Missing photo
+    image: decks/images/does-not-exist.jpg
+  - layout: intro
+    name: Directory as image
+    image: examples
+  - layout: photo-right
+    title: Remote image
+    image: https://example.com/photo.jpg

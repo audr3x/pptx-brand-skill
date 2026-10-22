@@ -1,0 +1,15 @@
+# Six items, long bodies, an item without a title.
+slides:
+  - layout: two-column
+    title: Six pillars
+    items:
+      - {title: One, body: First}
+      - {title: Two, body: Second}
+      - {title: Three, body: Third}
+      - {title: Four, body: Fourth}
+      - {title: Five, body: Fifth}
+      - {title: Six, body: Sixth}
+  - layout: two-column
+    title: Long bodies
+    items:
+      - {body: "An item with no title and a body that goes on for a very long time with many clauses, examples, and asides that will not fit in the space next to the number on the right side of the slide"}
