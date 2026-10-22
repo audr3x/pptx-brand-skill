@@ -19,6 +19,8 @@ Workday Slides compliance:
 - [ ] Re-read the deck and check styles before calling it done
 ```
 
+Writing the deck content or prompt? See [docs/PROMPTING.md](../../../docs/PROMPTING.md) and the [workday-deck-prompting](../workday-deck-prompting/SKILL.md) skill. Check outlines with `python3 scripts/check_outline.py <outline>`.
+
 ## Auth (pick one). Never commit credentials
 
 ### A. Cursor Google plugins
@@ -26,8 +28,8 @@ Workday Slides compliance:
 Install and sign in to the **Google Drive** and **Google Slides** plugins with the Workday Google account. Then:
 
 1. Drive: upload `assets/template.pptx` with `convertToGoogleFormat=true` (or File > Open in the Drive UI). First run: this file is the deck. Copy only if you want a spare template.
-2. Drive: upload the two PNGs. **Share both in the Drive UI** as Anyone with the link: Viewer. The Drive connector cannot create that share. Do not use a GitHub raw URL (private repo 404).
-3. Slides `read_presentation` / `update_presentation` on that file. `update_presentation` takes the `requests` array only. Send fill chunks in order.
+2. Cover image, pick one (see "Seed the cover image" below): A, a Drive PNG shared Anyone with the link; B, a public URL; C, no image. Ask the user which one their org allows. Never place the smile on the imported template; its layouts already carry it.
+3. Slides `read_presentation` / `update_presentation` on that file. `update_presentation` takes the `requests` array only, **inline** in the call. A file path or attached file arrives as a string and fails. Send fill chunks (about 40 requests) in order.
 4. `read_presentation` again to verify
 
 If either plugin is missing or unauthenticated, stop and ask the user to connect it. Do not invent a Runtime Secret.
@@ -55,11 +57,9 @@ pip3 install -r requirements.txt
 python3 scripts/build_slides.py examples/outline.yaml --dry-run \
   -o examples/example-slides-requests.json
 
-# One-time: upload the cover gradient and smile PNGs (anyone-with-link)
+# One-time, option A: upload the PNGs and try Anyone-with-link sharing
 python3 scripts/build_slides.py --upload-assets --backend gws
-# writes workday-slide-assets.json and prints:
-#   export WORKDAY_COVER_IMAGE_ID=...
-#   export WORKDAY_SMILE_IMAGE_ID=...
+# writes workday-slide-assets.json and prints export WORKDAY_COVER_IMAGE_ID=...
 
 # Two-phase connector (Drive/Slides plugins, no gws):
 python3 scripts/build_slides.py examples/outline.yaml --phase creates \
@@ -68,10 +68,11 @@ python3 scripts/build_slides.py examples/outline.yaml --phase creates \
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
   --presentation get.json \
   --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
-  --smile-image-id "$WORKDAY_SMILE_IMAGE_ID" \
   --chunk 40 \
   -o fills.json
-# send fills-01.json, fills-02.json, ... in order (requests array only)
+# option B: --cover-image-url https://<public host>/cover-gradient.png instead of the ID
+# option C: no image option at all (flat Ballpoint cover, Paper type)
+# send fills-01.json, fills-02.json, ... in order, requests array inline
 
 # Live apply, after auth:
 python3 scripts/build_slides.py examples/outline.yaml \
@@ -82,7 +83,7 @@ python3 scripts/build_slides.py examples/outline.yaml \
 
 `--import-pptx assets/template.pptx` uploads the PPTX and converts it to a Google Slides file (first-time only). On that first run you may fill the imported file. Copying is optional. Save the ID as `WORKDAY_SLIDES_TEMPLATE_ID` for later copies.
 
-`--upload-assets` uploads [cover-gradient.png](../../../assets/logos/cover-gradient.png) and [workday-smile.png](../../../assets/logos/workday-smile.png). Save those IDs as `WORKDAY_COVER_IMAGE_ID` and `WORKDAY_SMILE_IMAGE_ID`. Slides `createImage` fetches a URL, so share each PNG in the **Drive UI** as Anyone with the link: Viewer. The Drive connector cannot create that share. Do not pass a GitHub raw URL. They are brand chrome, not deck copy.
+`--upload-assets` uploads [cover-gradient.png](../../../assets/logos/cover-gradient.png) and [workday-smile.png](../../../assets/logos/workday-smile.png) and tries to share them. If org policy blocks link sharing it keeps the IDs and points to options B and C. Only the cover ID is used unless `--place-smile` is set.
 
 ## Seed the Workday template
 
@@ -103,26 +104,24 @@ In the Drive UI: upload `assets/template.pptx`, then File > Open with Google Sli
 
 If the user already has a branded Slides file, use that ID. Do not start from `presentations.create` (blank theme) unless import failed and they said so.
 
-## Seed the cover images (one time)
+## Seed the cover image (one time)
 
-Slides drops the Title Slide Day Crop and often the smile. Upload the PNGs once, then reuse the IDs.
+Slides drops the Title Slide Day Crop gradient on import. The imported Title and Bumper layouts **keep** the white smile, so the builder does not place it (that would give two logos). `--place-smile` exists only for a template without the lockup.
+
+`createImage` fetches the cover with no sign-in. Pick the option the user's org allows:
+
+- **A. Drive, Anyone with the link.** Upload `cover-gradient.png`, share it in the **Drive UI** as Anyone with the link: Viewer (the Drive connector cannot create that share), pass `--cover-image-id`. "Anyone in my org" is not enough.
+- **B. Public URL.** Host `cover-gradient.png` in a separate small **public** GitHub repo or any public static host (never make this repo public). Pass `--cover-image-url` or set `WORKDAY_COVER_IMAGE_URL`. The builder fetches the URL once with no sign-in: a public image is used as given and wins over a Drive ID; a GitHub raw URL answering 401/403/404 (private repo, including this one) is dropped with a warning; other failures warn. `--skip-url-check` skips the fetch.
+- **C. No image.** Pass no image option. Title slide is flat Ballpoint with Paper title, subtitle, and date; the layout smile stays. The user can add the gradient by hand: Insert > Image > Drive (private files work), 10 x 5.625 in at 0, 0, Arrange > Order > Send to back, then set title, subtitle, and date to Ink `0F2E66`.
+
+The builder ignores placeholder values such as `YOUR_COVER_IMAGE_ID` or `<cover URL>`, so default fills never contain a broken `createImage`.
 
 ```bash
 # regenerate the 16:9 PNG from the PPTX SVG if needed
 python3 scripts/export_cover_assets.py
-
-# gws / API
-python3 scripts/build_slides.py --upload-assets --backend gws -o workday-slide-assets.json
 ```
 
-Drive plugin (no gws):
-
-1. `create_file` [assets/logos/cover-gradient.png](../../../assets/logos/cover-gradient.png) as `image/png`
-2. `create_file` [assets/logos/workday-smile.png](../../../assets/logos/workday-smile.png)
-3. In the Drive UI, share both as Anyone with the link: Viewer. The connector cannot do this.
-4. Save the IDs as `WORKDAY_COVER_IMAGE_ID` and `WORKDAY_SMILE_IMAGE_ID`, or write `workday-slide-assets.json` and pass `--assets-ids`. Do not use `--cover-image-url` with a GitHub raw link.
-
-Do not commit those IDs or the JSON.
+Do not commit Drive IDs or `workday-slide-assets.json`.
 
 ## Create a deck
 
@@ -144,7 +143,7 @@ Drive plugin: `copy_file` with that `fileId` and the deliverable title.
 
 5. Fill placeholders with `insertText` + `updateTextStyle`. Send `deleteText` **only** when the shape already has text. Empty new placeholders error on `deleteText ALL`.
 
-6. Draw missing chrome. Title Slide: `createImage` of the uploaded cover PNG, full-bleed, send to back; Ballpoint `pageBackgroundFill` only if no `WORKDAY_COVER_IMAGE_ID`. Place the smile at 0.669, 0.515 in when the smile ID is set. Bumper: Ink fill plus the smile at 3.39, 1.79 in. Section rail (2.743 in Tack / Keyboard / Lunch Break stack), half-headline items, footer box at **x = 0.50 in**, cover date, bumper caption. Cover type is **Ink** on the gradient, **Paper** only on the flat Ballpoint fallback.
+6. Draw missing chrome. Title Slide: Ballpoint `pageBackgroundFill`, then `createImage` of the cover full-bleed and send to back when a real cover ID or public URL is set. The smile comes from the layout. Bumper: Ink fill; the smile comes from the layout. Section rail (2.743 in Tack / Keyboard / Lunch Break stack), half-headline items, footer box at **x = 0.50 in** (x = 3.32 in on Section Title, right of the rail), cover date, bumper caption. Cover title is bold (700). Cover type is **Ink** on the gradient, **Paper** only on the flat Ballpoint fallback.
 
 7. Read the deck again. Check fonts, fills, footer, contrast.
 
@@ -161,7 +160,7 @@ Same map as the PPTX skill. Google remaps placeholder object IDs on import; reso
 | Content / bullets | `content` | Title and Content | `title`, `bullets` (max ~6) |
 | Two-column | `two-column` | 1/2_Headline | left title, up to 3 numbered `items` |
 | Table | `table` | Title Only | `title`, `headers`, `rows` |
-| Chart | `chart` | Title Only | `title` + on-brand columns (or a Sheets chart) |
+| Chart | `chart` | Title Only | `title` + on-brand clustered columns with a value axis (all `chart.type` values draw as columns) |
 | Closing | `closing` | Bumper Slide | optional caption under the smile |
 | Intro | `intro` | Intro_One | `name`, `role`, `company` |
 | Blank | `blank` | Blank White Background | last resort |
@@ -173,13 +172,13 @@ If a Workday `layoutId` is missing (import dropped it), stop and re-import. Do n
 ## Brand rules
 
 - **Colors.** Only tokens in `BRAND.md` / `assets/brand-tokens.json`. Prefer theme slots on the copied deck (`dk1` = Ink, `accent1` = Water Cooler) when they still match. Otherwise RGB from the token file. If a hex is not in that file, do not use it.
-- **Type.** `fontFamily` is always **Archivo**. Body uses `weightedFontFamily: {fontFamily: "Archivo", weight: 300}` (do not send `Archivo Light` — Google falls back to a serif). Titles use weight 400, or 700 when bold. Include `weightedFontFamily` in `fields`. Enable Archivo from Google Fonts if you can. Arial is the last-resort fallback. Never switch to Calibri, Inter, Roboto, or Proxima Nova.
-- **Sizes.** Cover 36 pt. Slide / section title 28 pt bold Ink. Body 18–20 pt. Footer 8 pt Staple `#7D8B99` at **x = 0.50 in** (Ink on the gold section rail).
-- **Title Slide.** Upload `assets/logos/cover-gradient.png` once. `createImage` it full-bleed (`10.00 × 5.625 in`) and send it to the back. Title, subtitle, and date are **Ink** (`#0F2E66`) on that gradient, matching the PPTX. If no image ID is set, keep Ballpoint `pageBackgroundFill` and switch those three runs to Paper.
-- **Bumper Slide.** Ink `pageBackgroundFill`. `createImage` the smile PNG at 3.392, 1.793, 3.216 × 1.521 in when `WORKDAY_SMILE_IMAGE_ID` is set. Paper caption under the mark.
-- **Bullets.** At most about 6. Use `createParagraphBullets` `BULLET_DISC_CIRCLE_SQUARE`. Do not type `•` into the run.
+- **Type.** `fontFamily` is always **Archivo**. Body uses `weightedFontFamily: {fontFamily: "Archivo", weight: 300}` (do not send `Archivo Light`, Google falls back to a serif). Titles use weight 400, or 700 when bold. Include `weightedFontFamily` in `fields`. Enable Archivo from Google Fonts if you can. Arial is the last-resort fallback. Never switch to Calibri, Inter, Roboto, or Proxima Nova.
+- **Sizes.** Cover 36 pt. Slide / section title 28 pt bold Ink. Body 18 to 20 pt. Footer 8 pt Staple `#7D8B99` at **x = 0.50 in**; on Section Title it is Ink at x = 3.32 in, clear of the rail.
+- **Title Slide.** `createImage` the cover full-bleed (`10.00 x 5.625 in`) and send it to the back when option A or B is set. Title (bold 700), subtitle, and date are **Ink** (`#0F2E66`) on that gradient, matching the PPTX. With no image (option C), keep Ballpoint `pageBackgroundFill` and those three runs Paper.
+- **Bumper Slide.** Ink `pageBackgroundFill`. The smile comes from the layout. Paper caption under the mark.
+- **Bullets.** At most about 6. `createParagraphBullets` `BULLET_DISC_CIRCLE_SQUARE`, 6 pt `spaceAbove` and `spaceBelow` (the PPTX spacing). The API has no bullet-size field, so the builder styles the whole box at 14 pt and the words back at 20 pt, leaving the paragraph-end newline (which Slides uses for the dot) smaller. Do not type `•` into the run.
 - **Footer.** `Workday Confidential`. No slide numbers.
-- **Logo.** White lockup (`workday-smile.png`). Re-place it with `createImage` when `WORKDAY_SMILE_IMAGE_ID` is set. Do not recolor it or drop it on Paper.
+- **Logo.** White lockup from the imported Title and Bumper layouts. Do not add a second one. Do not recolor it or drop it on Paper.
 - **Tables.** Water Cooler header, Keyboard / Business Card rows, Ink body, Desk rules.
 - **Charts.** Series order: Water Cooler, Lunch Break, Ballpoint, Blue Sky, Ink. No Google default orange / green / purple.
 - **Density.** 0.50 in side inset, including the footer. Keep copy above y = 5.20 in. One idea per slide. 16:9 (`10.00 × 5.625 in`, 720 × 405 pt).
@@ -250,7 +249,7 @@ Body / Archivo Light equivalent:
 
 `importSlides` from the Workday template is fine when adding slides to an existing copy (`preserveTheme`: `USE_DESTINATION_THEME`). Do not import from a customer deck.
 
-Images: `createImage` needs a URL Slides can fetch. Share the Drive PNGs in the Drive UI as Anyone with the link: Viewer. The Drive connector cannot create that share. When image IDs are set, use the Drive download URL only. Drop GitHub raw URLs (private repos 404). `--cover-image-url` is not a workaround for that.
+Images: `createImage` needs a URL Slides can fetch with no sign-in: a Drive file shared Anyone with the link (option A, shown below) or a public URL (option B). Never a raw URL from a private repo.
 
 ```json
 {
@@ -269,9 +268,9 @@ Images: `createImage` needs a URL Slides can fetch. Share the Drive PNGs in the 
 }
 ```
 
-Then `updatePageElementsZOrder` `SEND_TO_BACK` on `wd_s1_cover`. Do not skip this when the ID is set. The layout picture usually did not copy.
+Then `updatePageElementsZOrder` `SEND_TO_BACK` on `wd_s1_cover`. Do not skip this when a cover image is set. The layout gradient does not survive the import.
 
-Charts: the builder draws Water Cooler / Lunch Break columns so a deck does not depend on Sheets. For a live data chart, create a Sheets chart with those series colors and `createSheetsChart` / `refreshSheetsChart`.
+Charts: the builder draws Water Cooler / Lunch Break columns, a Desk value axis, tick labels on a rounded scale, and Desk gridlines behind the columns, all as shapes, so a deck does not depend on Sheets. Bar, line, and pie draw as columns in Slides. The chart is not editable as data; change the outline and re-run. For a live data chart, create a Sheets chart with those series colors and `createSheetsChart` / `refreshSheetsChart`.
 
 ## Do not
 
@@ -281,7 +280,8 @@ Charts: the builder draws Water Cooler / Lunch Break columns so a deck does not 
 - Do not send `fontFamily: "Archivo Light"`
 - Do not `deleteText` on an empty placeholder
 - Do not reuse a footer placeholder id for a new text box
-- Do not assume Title Slide or Bumper pictures copied. Insert the uploaded cover / smile PNGs. Ballpoint fill is fallback only
+- Do not assume the cover gradient copied. Insert it (option A or B) or leave the Ballpoint fallback (option C). Do not insert the smile on the imported template
+- Do not send placeholder image IDs, or a file reference instead of an inline `requests` array
 - Do not use Paper type on the cover when the gradient image is present (Ink, like the PPTX)
 - Do not use Inter, Cursor orange, GTM LIGHT2 tiles, or any other company's tokens
 - Do not commit `credentials.json`, `client_secret.json`, `.env`, or `gws` token files
@@ -289,4 +289,4 @@ Charts: the builder draws Water Cooler / Lunch Break columns so a deck does not 
 
 ## Visual check
 
-After a live apply, open `https://docs.google.com/presentation/d/<id>/edit` and look at every slide (plugin thumbnail or Drive export PDF). Confirm the title slide shows the blue → cream → gold Day Crop (not flat Ballpoint or Keyboard cream), navy Ink title/subtitle/date, and the white lockup top-left. Confirm the bumper is Ink with the centered smile. Then check Ink on Paper elsewhere, a visible gold/teal section rail, footer at the 0.50 in inset, Archivo (not a serif fallback), and no leftover master prompts. On the table slide, check Water Cooler headers, Keyboard / Business Card rows, and a closed Desk rule. Chart month labels should sit under their bar pair.
+After a live apply, open `https://docs.google.com/presentation/d/<id>/edit` and look at every slide (plugin thumbnail or Drive export PDF). With a cover image, confirm the blue to cream to gold Day Crop, bold navy Ink title, Ink subtitle and date. With no image, confirm flat Ballpoint with bold Paper title, Paper subtitle and date. Either way there is exactly one white lockup top left. Confirm the bumper is Ink with one centered smile. Then check Ink on Paper elsewhere, a visible gold/teal section rail, footer at the 0.50 in inset (3.32 in on the section slide, clear of the rail), Archivo (not a serif fallback), and no leftover master prompts. On the table slide, check Water Cooler headers, Keyboard / Business Card rows, and a closed Desk rule. Chart month labels should sit under their bar pair, with tick numbers on the left and light gridlines behind the bars.

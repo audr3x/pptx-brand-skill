@@ -1,12 +1,12 @@
 # Apply the worked example in Google Slides
 
-These steps use the JSON in this folder and the plugins (or `gws`). You need a Workday Google account. The VM that built these files cannot reach your Drive.
+These steps use the JSON in this folder and the plugins (or `gws`). You need a Workday Google account. The machine that built these files cannot reach your Drive.
 
-`update_presentation` takes the `requests` array only. Do not send `phase`, `note`, or `chrome`.
+`update_presentation` takes the `requests` array only. Do not send `phase`, `note`, or `chrome`. With the Google Slides plugin, put the array **inline** in the call. A file path or an attached JSON file reaches the plugin as a plain string, not an array, and the call fails. That is why the fills are split into chunks of about 40 requests.
 
-Image IDs are not real Drive IDs in the checked-in files (`YOUR_COVER_IMAGE_ID`). After you upload and share the PNGs, rebuild fills with your IDs.
+The checked-in fill chunks have **no images** (option C in `GETTING_STARTED.md`). They never contain placeholder image IDs, so you can send them as they are. Rebuild with a real cover ID or public URL only if you want the gradient added for you.
 
-## 0. One-time assets
+## 0. One-time setup
 
 1. Sign in to the Google Drive and Google Slides plugins (or run `gws auth login -s drive,slides`).
 2. Convert `assets/template.pptx` to Google Slides:
@@ -14,13 +14,16 @@ Image IDs are not real Drive IDs in the checked-in files (`YOUR_COVER_IMAGE_ID`)
    - Drive UI: upload the PPTX, then File > Open with Google Slides.
 3. Copy the new file ID. That is `WORKDAY_SLIDES_TEMPLATE_ID`.
 4. **First run:** you can build on this imported file. Copying it is optional.
-5. Upload `assets/logos/cover-gradient.png` and `assets/logos/workday-smile.png`.
-6. In the **Drive UI** (not the connector), share each PNG as **Anyone with the link: Viewer**. The Cursor Google Drive connector cannot create that share.
-7. Save the two IDs as `WORKDAY_COVER_IMAGE_ID` and `WORKDAY_SMILE_IMAGE_ID`.
 
-Do not use a GitHub raw URL. This repo is private, so those links 404. `--cover-image-url` will not fix that.
+The imported Title and Bumper layouts already carry the white smile. You never upload or place the smile for this template.
 
-Or from a machine with `gws`:
+### Cover image: pick one
+
+- **A. Drive, Anyone with the link.** Upload `assets/logos/cover-gradient.png`, share it in the **Drive UI** as Anyone with the link: Viewer (the Cursor Drive connector cannot create that share), and save the ID as `WORKDAY_COVER_IMAGE_ID`.
+- **B. Public URL.** If your org only allows "Anyone in my org", Slides cannot fetch the Drive file. Host `cover-gradient.png` in a separate small **public** GitHub repo or any public static host, and use that URL with `--cover-image-url`. A raw URL from this private repo returns 404. The builder checks the URL and drops a private GitHub raw URL with a warning.
+- **C. No image.** Send the checked-in chunks as they are. Add the gradient by hand afterwards (step 6).
+
+From a machine with `gws`:
 
 ```bash
 python3 scripts/build_slides.py examples/outline.yaml \
@@ -28,7 +31,7 @@ python3 scripts/build_slides.py examples/outline.yaml \
 python3 scripts/build_slides.py --upload-assets --backend gws -o workday-slide-assets.json
 ```
 
-If `--upload-assets` cannot share, still set Anyone with the link: Viewer in the Drive UI.
+If `--upload-assets` cannot share (org policy), it keeps the IDs and tells you to use option B or C.
 
 ## 1. Optional copy
 
@@ -66,34 +69,59 @@ python3 scripts/build_slides.py examples/outline.yaml --phase creates \
   -o docs/proof/slides/creates.json
 ```
 
-Send only the `requests` array with `update_presentation` on the same file. Keep `objectId` values `wd_s1` through `wd_s7`.
+Send only the `requests` array, inline, with `update_presentation` on the same file. Keep `objectId` values `wd_s1` through `wd_s7`.
 
 If a request still has `layoutName`, match `layouts[].layoutProperties.displayName` (strip spaces, ignore case) and put `layoutId` in `slideLayoutReference`.
 
 ## 4. Send fills (chunked)
 
-Save a fresh `read_presentation` as `get.json` after the create batch. Rebuild fills with `--presentation` and your image IDs:
+Save a fresh `read_presentation` as `get.json` after the create batch. Rebuild fills with `--presentation`:
 
 ```bash
+# Option C (no image), same as the checked-in chunks
+python3 scripts/build_slides.py examples/outline.yaml --phase fills \
+  --presentation get.json --chunk 40 -o docs/proof/slides/fills.json
+
+# Option A
+python3 scripts/build_slides.py examples/outline.yaml --phase fills \
+  --presentation get.json --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
+  --chunk 40 -o docs/proof/slides/fills.json
+
+# Option B
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
   --presentation get.json \
-  --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
-  --smile-image-id "$WORKDAY_SMILE_IMAGE_ID" \
-  --chunk 40 \
-  -o docs/proof/slides/fills.json
+  --cover-image-url "https://raw.githubusercontent.com/your-org/workday-slide-assets/main/cover-gradient.png" \
+  --chunk 40 -o docs/proof/slides/fills.json
 ```
 
-That writes `fills.json` plus `fills-01.json`, `fills-02.json`, and so on (about 40 requests each). Send the `requests` array from **each chunk, in order**, to `update_presentation`. Do not paste the whole `fills.json` if the connector cannot take that many requests at once.
-
-When image IDs are set, `createImage` URLs are Drive download links only. GitHub raw URLs are dropped.
+That writes `fills.json` plus `fills-01.json`, `fills-02.json`, and so on (about 40 requests each; the worked example has 6 chunks). Send the `requests` array from **each chunk, in order**, inline, to `update_presentation`.
 
 ## 5. Check
 
 `read_presentation` again. Open `https://docs.google.com/presentation/d/<file-id>/edit`.
 
-- Title slide: blue to cream to gold wash, navy title and subtitle, white lockup top left.
-- Section slide: gold/teal rail on the left, Ink statement.
-- Content, two-column, table, and chart: Ink on Paper, footer at 0.50 in.
-- Closing: Ink field, centered smile, Paper caption.
+With a cover image (option A or B):
 
-If the cover is flat blue, the fill batch did not include a working `createImage`. Share the PNGs in the Drive UI as Anyone with the link: Viewer, then rebuild and resend the fill chunks.
+- Title slide: blue to cream to gold wash, bold navy (Ink) title, navy subtitle and date, one white smile top left.
+
+With no image (option C, the checked-in chunks):
+
+- Title slide: flat Ballpoint blue, bold white (Paper) title, white subtitle and date, one white smile top left from the layout.
+
+Every option:
+
+- Section slide: gold/teal rail on the left, Ink eyebrow and statement, footer to the right of the rail (x 3.32 in).
+- Content: Ink bullets with space between them.
+- Two-column, table, and chart: Ink on Paper, footer at 0.50 in. The chart has a value axis with tick numbers and light gridlines behind the columns.
+- Closing: Ink field, one centered smile from the layout, Paper caption.
+
+Two smiles on a slide means the smile was placed on top of the layout's own lockup. Delete the extra one, and do not pass `--place-smile` with the imported template.
+
+## 6. Optional: add the gradient by hand (option C)
+
+Insert > Image > Drive works with private files.
+
+1. On the title slide, insert `cover-gradient.png`.
+2. Format options > Size and rotation: clear "Lock aspect ratio", width 10 in, height 5.625 in (25.4 x 14.29 cm). Position X 0, Y 0.
+3. Arrange > Order > Send to back.
+4. Set the title, subtitle, and date to Ink: Text color > Custom, `0F2E66`.

@@ -95,7 +95,7 @@ PNGs land in `docs/proof/pptx/` as `slide-1.png`, `slide-2.png`, and so on.
 
 ## Google Slides (`workday-google-slides`)
 
-Google Slides does not keep every layout picture when you add a new slide. Start from a Workday template (never a blank theme). The cover gradient and smile are PNGs you upload once.
+Start from the Workday template imported from `assets/template.pptx` (never a blank theme). The imported layouts keep the white smile lockup on the Title and Bumper layouts. They lose the cover gradient, so the builder adds it back as a picture, or falls back to a flat Ballpoint cover.
 
 ### First run: import the template (this file can be the deck)
 
@@ -114,45 +114,115 @@ python3 scripts/build_slides.py examples/outline.yaml \
 
 Save the file ID as `WORKDAY_SLIDES_TEMPLATE_ID`. Do not commit it. Do not start from a blank Slides theme.
 
-### One-time: upload the cover and smile images
+### One-time: the cover image (pick one option)
 
-`createImage` needs a URL Google Slides can fetch. Share each PNG in the **Drive UI** as **Anyone with the link: Viewer**. The Cursor Google Drive connector cannot create that share. These files are brand chrome (the cover wash and the lockup), not deck copy.
+The only picture the builder adds is `cover-gradient.png`, full bleed behind the title slide. It does not add the smile, because the imported Title and Bumper layouts already have it (placing it again duplicates the logo). Use `--place-smile` only with a template that has no lockup.
 
-Do not pass a GitHub raw URL (`raw.githubusercontent.com` or `github.com/.../raw/...`). This repo is private, so those URLs 404. `--cover-image-url` will not work for that. Upload the PNGs to Drive and use the file IDs.
+The builder adds the cover with `createImage`. `createImage` fetches the picture from a URL **with no sign-in**, so the PNG must be readable by anyone on the internet. It is brand chrome (the cover wash), not deck copy.
+
+| Option | Use it when | Title slide result |
+| --- | --- | --- |
+| A. Drive, Anyone with the link | Your Google Workspace allows "Anyone with the link" sharing | Real gradient, Ink type |
+| B. Public URL | Your org only allows "Anyone in my org" sharing, but you can publish the PNG somewhere public | Real gradient, Ink type |
+| C. No image | You cannot publish the PNG anywhere public | Flat Ballpoint, Paper (white) type. Add the gradient by hand if you want it |
+
+All three keep the white smile from the layout. "Anyone in my org" is not enough for A. Slides fetches the image without your sign-in, so an org-only file looks private to it.
+
+The builder never sends a placeholder such as `YOUR_COVER_IMAGE_ID` or `<cover URL>`. It ignores those, warns, and writes the no-image batch.
+
+#### Option A: Drive, Anyone with the link
 
 ```bash
 python3 scripts/build_slides.py --upload-assets --backend gws -o workday-slide-assets.json
 ```
 
-`--upload-assets` only uploads. If sharing fails (or you used the Drive plugin), open each PNG in Drive and set Anyone with the link: Viewer yourself.
-
-The command prints:
+The command uploads the PNGs and tries to share them. If your org blocks link sharing, it warns, keeps the file IDs, and points you to options B and C. It prints:
 
 ```text
 export WORKDAY_COVER_IMAGE_ID="..."
 export WORKDAY_SMILE_IMAGE_ID="..."
 ```
 
-It also writes `workday-slide-assets.json` (gitignored). Keep that file on your machine.
+It also writes `workday-slide-assets.json` (gitignored). Keep that file on your machine. You only need the cover ID unless you use `--place-smile`.
 
 Drive plugin (no `gws`):
 
 1. Upload `assets/logos/cover-gradient.png` as a PNG.
-2. Upload `assets/logos/workday-smile.png` as a PNG.
-3. In the Drive UI (not the connector), share both as Anyone with the link: Viewer.
-4. Save the two file IDs, or put them in `workday-slide-assets.json` as `WORKDAY_COVER_IMAGE_ID` and `WORKDAY_SMILE_IMAGE_ID`.
+2. In the Drive UI, share it as **Anyone with the link: Viewer**. The Cursor Google Drive connector cannot create that share. If the Drive UI only offers your org, use option B or C.
+3. Save the file ID as `WORKDAY_COVER_IMAGE_ID`, or put it in `workday-slide-assets.json`.
 
-If you skip this step, the title slide is flat Ballpoint blue with white type. After the IDs are set, the cover is the real blue-to-gold gradient with navy type, and the white lockup is placed on the title and closing slides.
+#### Option B: host the cover PNG at a public URL
+
+Put **only** brand PNGs somewhere public: `cover-gradient.png` (and `workday-smile.png` if you want it on hand). Do not make this repository public. Good hosts:
+
+- A separate, small **public** GitHub repository that holds just the PNGs (for example `your-org/workday-slide-assets`). The raw URL looks like `https://raw.githubusercontent.com/your-org/workday-slide-assets/main/cover-gradient.png`.
+- Any public static host your company already uses (a public web bucket, a CDN, a public website folder).
+
+Check with your brand team that the cover art may sit at a public address.
+
+The URL must:
+
+- Open in a private browser window with no sign-in.
+- Return the PNG itself (not a web page or a sign-in page). `curl -I <url>` should show `200` and `content-type: image/png`.
+- Use `https://`.
+
+Then pass it to phase 2 (or set `WORKDAY_COVER_IMAGE_URL`):
+
+```bash
+python3 scripts/build_slides.py examples/outline.yaml --phase fills \
+  --presentation get.json \
+  --cover-image-url "https://raw.githubusercontent.com/your-org/workday-slide-assets/main/cover-gradient.png" \
+  --chunk 40 \
+  -o fills.json
+```
+
+When is a GitHub raw URL OK? Only when the repository it points at is **public**. This skill repository is private, so its raw URLs return 404 to Google Slides. The builder fetches each image URL once, with no sign-in, before it writes the batch:
+
+- Public URL (200, an image): used as given. A URL you pass wins over a Drive ID.
+- GitHub raw URL that answers 401, 403, or 404 (a private repo): dropped with a warning. The builder falls back to the Drive ID if you gave one, otherwise to the flat cover.
+- Any other non-200 answer, or a web page instead of an image: kept, with a warning. Fix the URL before you send the batch.
+- No network on your machine: kept, with a warning. Add `--skip-url-check` to skip the fetch on purpose.
+
+#### Option C: no image, then add the gradient by hand
+
+Run phase 2 with no image options (no `--cover-image-id` or `--cover-image-url`, and no `WORKDAY_COVER_IMAGE_ID` or `WORKDAY_COVER_IMAGE_URL` set):
+
+```bash
+python3 scripts/build_slides.py examples/outline.yaml --phase fills \
+  --presentation get.json \
+  --chunk 40 \
+  -o fills.json
+```
+
+The batch has no `createImage`. The title slide gets a flat Ballpoint background with Paper (white) title, subtitle, and date, and the white smile from the layout. The closing slide gets an Ink background, the smile from the layout, and the caption. This is also what the checked-in example in `docs/proof/slides/` does (the same files are in `docs/proof/slides/noimage/`).
+
+To add the real gradient afterwards, in Google Slides (Insert > Image > Drive works with private files, because you are signed in):
+
+1. On the title slide, Insert > Image > Drive, pick `cover-gradient.png`.
+2. Open Format options > Size and rotation. Clear "Lock aspect ratio". Set width 10 in and height 5.625 in (25.4 x 14.29 cm). Under Position set X 0 and Y 0 from the top left.
+3. Arrange > Order > Send to back. The smile and the text stay on top.
+4. Switch the cover text to Ink. White type does not read on the light part of the gradient. Click the title, then Text color > Custom, enter `0F2E66`. Do the same for the subtitle and the date.
+
+Only if your template has no smile (you did not start from the imported Workday template), insert `workday-smile.png` the same way:
+
+- Title slide: size 1.343 x 0.635 in (3.41 x 1.61 cm), position X 0.669 in, Y 0.515 in (1.70 cm, 1.31 cm).
+- Closing slide: size 3.216 x 1.521 in (8.17 x 3.86 cm), position X 3.392 in, Y 1.793 in (8.62 cm, 4.55 cm).
+
+Do not add it to the imported template. That gives you two logos.
 
 ### From Cursor chat
 
 Connect the Google Drive and Google Slides plugins first. Example:
 
-> Use the workday-google-slides skill. I have Drive and Slides connected. I imported assets/template.pptx (convertToGoogleFormat). Build examples/outline.yaml on that file. Follow GETTING_STARTED.md: two-phase creates then fills, share the PNGs in the Drive UI, and use WORKDAY_COVER_IMAGE_ID and WORKDAY_SMILE_IMAGE_ID for the cover.
+> Use the workday-google-slides skill. I have Drive and Slides connected. I imported assets/template.pptx (convertToGoogleFormat). Build examples/outline.yaml on that file. Follow GETTING_STARTED.md: two-phase creates then fills, chunked at 40. For the cover use image option B with this public URL: <cover URL>.
+
+If you have no public URL, say "use image option C (no image)" instead. More prompts are in [docs/PROMPTING.md](docs/PROMPTING.md).
 
 ### Two-phase flow (plugins or `gws`)
 
 Phase 1 creates slides. Phase 2 fills them. `update_presentation` takes the `requests` array only. Do not send the wrapper keys (`phase`, `note`, `chrome`).
+
+With the Google Slides plugin in Cursor, put the `requests` array **inline** in the `update_presentation` call. Do not pass a file path or attach the JSON file. A file reference reaches the plugin as a plain string, not an array, and the call fails. That is why the builder writes chunks of about 40 requests: each one is small enough to paste inline.
 
 **Phase 1, write create requests**
 
@@ -176,25 +246,21 @@ Save a fresh `read_presentation` after the create batch as `get.json`, then:
 python3 scripts/build_slides.py examples/outline.yaml --phase fills \
   --presentation get.json \
   --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
-  --smile-image-id "$WORKDAY_SMILE_IMAGE_ID" \
   --chunk 40 \
   -o docs/proof/slides/fills.json
 ```
 
 `--chunk 40` writes `fills.json` plus ordered paste files `fills-01.json`, `fills-02.json`, and so on (about 40 requests each). Send those chunks **in order**. Each call to `update_presentation` gets that file's `requests` array only.
 
-Without image IDs, omit `--cover-image-id` and `--smile-image-id`. The fill batch still runs. The cover stays flat Ballpoint. When IDs are set, the builder uses Drive download URLs only. It drops GitHub raw URLs.
+That example uses option A (Drive ID). For option B use `--cover-image-url` instead. For option C leave the image option out. See the image options above.
 
 ### Live apply in one step (`gws` or API)
 
 ```bash
 export WORKDAY_SLIDES_TEMPLATE_ID=...
-export WORKDAY_COVER_IMAGE_ID=...
-export WORKDAY_SMILE_IMAGE_ID=...
+export WORKDAY_COVER_IMAGE_ID=...   # or WORKDAY_COVER_IMAGE_URL=https://..., or neither for option C
 python3 scripts/build_slides.py examples/outline.yaml \
   --template-id "$WORKDAY_SLIDES_TEMPLATE_ID" \
-  --cover-image-id "$WORKDAY_COVER_IMAGE_ID" \
-  --smile-image-id "$WORKDAY_SMILE_IMAGE_ID" \
   --backend gws
 ```
 
@@ -205,8 +271,9 @@ python3 scripts/build_slides.py examples/outline.yaml \
 | File | What it is |
 | --- | --- |
 | `docs/proof/slides/creates.json` | Phase 1 `createSlide` requests |
-| `docs/proof/slides/fills.json` | Full phase 2 batch |
+| `docs/proof/slides/fills.json` | Full phase 2 batch (no image, option C) |
 | `docs/proof/slides/fills-01.json` and up | Phase 2 split for `update_presentation` (send in order) |
+| `docs/proof/slides/noimage/` | The same no-image batch, kept as the option C reference |
 | `docs/proof/slides/STEPS.md` | Click-by-click plugin steps for the worked example |
 | `workday-slide-assets.json` | Your Drive image IDs (local only) |
 | Google Slides URL | Printed after a live `--backend` run |
@@ -232,6 +299,14 @@ slides:
 
 `layout` values: `title`, `section`, `content`, `two-column`, `table`, `chart`, `closing`, plus `intro`, `photo-right`, and `blank`. Details are in the skill files and `BRAND.md`.
 
+Check an outline before you build. It reports fields the builders ignore and limits per target:
+
+```bash
+python3 scripts/check_outline.py my-outline.yaml
+```
+
+How to ask Cursor for a deck, with copy-paste prompts: [docs/PROMPTING.md](docs/PROMPTING.md).
+
 ## Troubleshooting
 
 **A skill does not run.** Open this repository as the Cursor project folder. Reopen the folder after a clone. Ask for the skill by name (`workday-pptx` or `workday-google-slides`).
@@ -242,9 +317,15 @@ slides:
 
 **`PyYAML is required`.** Activate the venv and run `pip install -r requirements.txt`.
 
-**Cover is cream or flat blue.** Cream means the layout picture dropped and no page fill ran. Flat blue means fills ran without `WORKDAY_COVER_IMAGE_ID`. Upload the PNGs, share them anyone-with-link Viewer, and re-run phase 2 with the IDs.
+**Cover is cream or flat blue.** Cream means the layout picture dropped and no page fill ran. Flat blue with white type is the no-image result (option C). For the gradient, use option A or B and re-run phase 2, or insert `cover-gradient.png` by hand (option C steps).
 
-**Title text is white on the gold part of the cover, or navy on flat blue.** Navy (Ink) is correct on the gradient. White (Paper) is correct only on the Ballpoint fallback. Pass the cover image ID so the builder picks Ink.
+**Title text is white on the gold part of the cover, or navy on flat blue.** Navy (Ink) is correct on the gradient. White (Paper) is correct only on the Ballpoint fallback. After a manual cover insert, set title, subtitle, and date to `0F2E66`.
+
+**My org only allows "Anyone in my org" sharing.** Slides cannot fetch an org-only Drive file. Use option B (a public URL for the cover PNG) or option C (no image, insert by hand).
+
+**Two Workday logos on the title or closing slide.** The imported template already has the smile. Do not pass `--place-smile`, and do not insert the smile by hand on that template.
+
+**`warning: ignoring placeholder image value`.** You passed a doc placeholder such as `YOUR_COVER_IMAGE_ID`. Pass a real Drive file ID or public URL, or leave the option out.
 
 **`deleteText` errors.** Empty placeholders cannot take `deleteText ALL`. The builder skips that when the shape has no text. Do not add `deleteText` by hand on a new shape.
 
@@ -252,13 +333,17 @@ slides:
 
 **`Archivo Light` looks like a serif.** Google Slides does not have that family name. The builder sends `Archivo` plus `weightedFontFamily.weight` 300. Enable Archivo from Google Fonts in the theme if you can.
 
-**`createImage` fails.** Share each PNG in the Drive UI as Anyone with the link: Viewer. The Cursor Drive connector cannot set that. Confirm the ID. Try `https://drive.google.com/uc?export=download&id=FILE_ID` in a private window. A GitHub raw URL from this repo will 404.
+**`createImage` fails.** Slides could not fetch the cover with no sign-in. Open the URL in a private window: `https://drive.google.com/uc?export=download&id=FILE_ID` for option A, or your public URL for option B. A sign-in page means it is not public. A GitHub raw URL from this repo will 404 (the builder drops those). If you cannot make it public, use option C.
 
-**`update_presentation` rejects the file.** Send the `requests` array only, not the whole JSON. If the array is too large to paste, use `--chunk 40` and send `fills-01.json`, `fills-02.json`, ... in order.
+**`update_presentation` rejects the batch, or says `requests` is a string.** Send the `requests` array inline, not the whole JSON and not a file reference (a file arrives as a string and fails). Use `--chunk 40` and send `fills-01.json`, `fills-02.json`, ... in order.
+
+**The Slides chart is not an editable chart.** The builder draws columns, the value axis, tick labels, and gridlines as shapes, so it needs no Google Sheets link. Every chart type is drawn as clustered columns. To change the numbers, edit the outline and run phase 2 again on a fresh copy. Use PowerPoint for a native bar, line, or pie chart.
+
+**Bullets look bigger than in PowerPoint.** The builder adds 6 pt before and after each bullet and sets the end of each line smaller so the bullet dot renders smaller. If the dots still look large, select the list and pick a smaller bullet in Format > Bullets and numbering.
 
 **Layout not found.** Import `assets/template.pptx` again. Do not start from a blank Slides theme. Match layout names after stripping spaces (`Title and Content` has a trailing space in the PPTX).
 
-**Footer sits on the left edge.** The builder draws the footer at x = 0.50 in. Do not reuse a footer placeholder object ID for a new text box.
+**Footer sits on the left edge.** The builder draws the footer at x = 0.50 in, and at x = 3.32 in on section slides so it clears the gold rail. Do not reuse a footer placeholder object ID for a new text box.
 
 **Fonts look like Arial in LibreOffice.** Install Archivo on that machine and render again. The Office theme fallback is Arial.
 
