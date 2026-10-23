@@ -2,6 +2,8 @@
 
 This round added four stricter checks, then reran Opus 5.5, Composer 2.5, and Gemini 3.1 Pro on all 16 tasks with the runner prompt in `evals/RUNNING.md`. Each runner was a fresh agent on the same model as its v2 runner. GPT-5.5 judged every run with the prompt in `evals/JUDGE.md`. Gemini 3.8 Flash was not rerun, because that model was not available to the agent that launched the runners. Its v2 run, scored with the new checks, is shown for comparison. The v2 runs, scorecards, and findings are in `evals/archive/v2/`. The v1 runs are in `evals/archive/v1/`.
 
+Auto was added after the other three: one runner with Cursor's Auto model (`auto-smart`) ran all 16 tasks on the same harness and builders, and GPT-5.5 judged it with the same prompt. Neither the runner nor the agent's metadata and transcript say which model Auto routed to, so its results describe Auto as a user would get it, not a fixed model.
+
 ## What changed in the harness
 
 - **An invented date fails the build.** With `--prompt`, `check_outline.py` now reports a date that is not in the user's text as an error, not a warning. `build_deck.py` and `build_slides.py` take the same `--prompt` and refuse to build it, and `evals/build.py` passes the prompt to all three. Run on the 64 v2 outlines, the new error caught exactly Composer's 4 invented cover dates and nothing else.
@@ -20,12 +22,15 @@ Automated and judge scores are 0 to 100, with one decimal so close scores are no
 | gemini-3.8-flash | 100 | 100.0 | not rerun | 100 | not rerun | |
 | composer-2.5 | 98 | 97.5 | 99.5 | 90.1 | 99.0 | 0 |
 | gemini-3.1-pro | 97 | 95.9 | 99.5 | 96.9 | 93.2 | 0 |
+| auto | not run | not run | 99.8 | not run | 99.5 | 0 |
 
 Brand, layouts, readback, structure, and render are 100 for every v3 run. Full table: `evals/scorecard.md`. Per-task v2 tables: `evals/archive/v2/scorecard-rescored.md`.
 
 ## Recommendation
 
 **Use Claude Opus 5.5 or Gemini 3.8 Flash.** Opus lost nothing on content or replies in either round. Flash had a clean v2 run under every check, including the new ones.
+
+**Auto did as well as Opus 5.5 on this run, but pin a model when results must be repeatable.** Auto lost no real points: its only automated deduction and its only judge deduction are both scoring mistakes (see below). It asked first on the vague T08 request, put April 8, 2027 on the T12 cover, kept "Hana to send a date" on T11, and named every Google Slides limit on T07. Auto picks the model per request and does not say which, so one clean run does not promise the next. It is a safe choice for people who leave Cursor on Auto. For a team default, Opus 5.5 gives the same results with a known model.
 
 **Composer 2.5 improved but still needs review.** It invented no dates this time and put April 8, 2027 on the T12 cover. It still built a deck full of `TODO` on the vague T08 request instead of asking first. In v2 it invented 4 cover dates; the build now refuses those, so that failure can no longer reach a deck when `--prompt` is used.
 
@@ -51,9 +56,16 @@ Brand, layouts, readback, structure, and render are 100 for every v3 run. Full t
 - **T12 judge content 4:** it built 5 slides against "exactly 4". It said so in the reply, which the spec allows.
 - **TODO dates on the cover (T13, T15, T16):** the judge took visual points for a visible `TODO` date on Gemini's covers (T16 visual 3) but not for the same `TODO` on Opus's covers. Writing `TODO` is correct when no date was given, so treat these judge points as noise.
 
+### Auto (automated 99.8, judge 99.5)
+
+- **T09 truthful 67, a false positive:** the reply says "the value axis now goes up to 30" in the same sentence as "April Requests". The claim check reads 30 as the stated April Requests value. The deck and the reply both have April Requests at 25, which is what the user asked for.
+- **T07 judge communication 4, a judge mistake:** the judge said slide 3 shows a placeholder silhouette while the reply says the preview shows the photo. `examples/images/sample-photo.png` is that silhouette graphic, so the reply was right. Auto told the user the photo is not placed in Google Slides and how to add it.
+- **No failed attempts.** T05, T09, and T11 each took 2 passing builds. On T09 the first rebuild had only the chart edit, because the slide 3 edit was saved after the build started. Readback caught it, Auto rebuilt, and the reply says so.
+
 ## Remaining harness limits
 
 - The judge is not fully consistent: the same `TODO` cover date or the same chart render scored differently across models. Compare the automated categories first and read the judge notes behind any score under 5.
 - `response_mentions` checks fixed phrases, so a reply that explains a split in other words can lose the point (Composer T06).
+- The claim check takes any number in a sentence that names a chart cell, so an axis value next to a category name counts as a wrong claim (Auto T09).
 - The claim check only tests claims it can tie to the outline. A wrong claim about wording or layout still needs the judge.
 - Gemini 3.8 Flash should be rerun on this harness when an agent on that model is available, using the runner prompt in `evals/RUNNING.md`.

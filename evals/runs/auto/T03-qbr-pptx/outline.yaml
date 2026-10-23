@@ -1,0 +1,39 @@
+title: Fabrikam quarterly business review
+subtitle: Q3 2026
+date: October 2026
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Fabrikam quarterly business review
+    subtitle: Q3 2026
+    date: October 2026
+
+  - layout: table
+    title: Service levels by region
+    headers: [Region, Tickets, Resolved in SLA, Satisfaction]
+    rows:
+      - [North America, "1,240", 96%, "4.6"]
+      - [Europe, "860", 94%, "4.4"]
+      - [Asia Pacific, "610", 91%, "4.2"]
+      - [Latin America, "300", 97%, "4.7"]
+      - [Middle East and Africa, "190", 89%, "4.1"]
+
+  - layout: chart
+    title: Tickets per quarter (thousands)
+    chart:
+      type: column
+      categories: [Q4 2025, Q1 2026, Q2 2026, Q3 2026]
+      series:
+        - name: Opened
+          values: [2.9, 3.1, 3.4, 3.2]
+        - name: Closed
+          values: [2.7, 3.0, 3.3, 3.3]
+
+  - layout: content
+    title: What we will improve next quarter
+    bullets:
+      - Cut Middle East and Africa response time to under 4 hours
+      - Add a second support shift in Asia Pacific
+      - Publish 20 new knowledge articles
+
+  - layout: closing
