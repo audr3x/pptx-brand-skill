@@ -1,0 +1,45 @@
+title: Fabrikam HR transformation
+subtitle: Steering committee status for the COO
+date: "TODO: date"
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Fabrikam HR transformation
+    subtitle: Steering committee status for the COO
+    date: "TODO: date"
+
+  - layout: content
+    title: Where the program stands
+    bullets:
+      - 61% of managers active in Workday this month
+      - Spent $1.42M of the $2.1M budget
+      - 214 open support tickets, down from 390 in June
+
+  - layout: table
+    title: Three sites live, Denver in phase 3
+    headers: [Site, Status]
+    rows:
+      - [Leeds, Live]
+      - [Porto, Live]
+      - [Austin, Live]
+      - [Denver, "Moved to phase 3, not live"]
+
+  - layout: content
+    title: Two open risks
+    bullets:
+      - Payroll parallel run failed twice, third run next week
+      - Porto union consultation not started
+
+  - layout: content
+    title: Asks for the COO
+    bullets:
+      - Approve 2 extra payroll testers
+      - Confirm Denver phase 3 timing
+
+  - layout: content
+    title: Steering committee
+    bullets:
+      - Hana Ito, program lead
+      - Omar Haddad, finance
+      - Ruth Klein, HR ops
+      - "Next steering: TODO date, Hana to send"

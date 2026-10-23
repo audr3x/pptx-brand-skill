@@ -1,0 +1,45 @@
+# Draft only. Not built: every fact below is a TODO until the user supplies it.
+title: Contoso Q3 business review
+subtitle: "TODO: subtitle"
+date: "TODO: date"
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Contoso Q3 business review
+    subtitle: "TODO: subtitle"
+    date: "TODO: date"
+
+  - layout: section
+    eyebrow: Agenda
+    title: "TODO: agenda statement"
+
+  - layout: content
+    title: "TODO: Q3 highlights title"
+    bullets:
+      - "TODO: highlight with a real figure"
+      - "TODO: highlight with a real figure"
+      - "TODO: highlight with a real figure"
+
+  - layout: chart
+    title: "TODO: metric and unit"
+    chart:
+      type: column
+      categories: ["TODO: period 1", "TODO: period 2", "TODO: period 3"]
+      series:
+        - name: "TODO: series name"
+          values: [0, 0, 0]
+
+  - layout: table
+    title: "TODO: table title"
+    headers: ["TODO: column 1", "TODO: column 2", "TODO: column 3"]
+    rows:
+      - ["TODO", "TODO", "TODO"]
+
+  - layout: content
+    title: "TODO: next quarter priorities"
+    bullets:
+      - "TODO: priority"
+      - "TODO: priority"
+
+  - layout: closing
+    title: "TODO: closing caption"

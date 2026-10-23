@@ -1,0 +1,37 @@
+title: Manager training kickoff
+subtitle: Woodgrove Bank people leaders
+date: April 8, 2027
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Manager training kickoff
+    subtitle: Woodgrove Bank people leaders
+    date: April 8, 2027
+
+  - layout: content
+    title: Agenda
+    bullets:
+      - Why we are training managers
+      - The three tracks
+      - Schedule
+      - How to sign up
+
+  - layout: two-column
+    title: The three tracks
+    items:
+      - title: Coaching basics
+        body: Builds weekly 1:1 habits
+      - title: Performance conversations
+        body: Practices feedback with role play
+      - title: Leading through change
+        body: Helps managers explain the new org design
+
+  - layout: table
+    title: Schedule
+    headers: [Track, Format, Weeks]
+    rows:
+      - [Coaching basics, Live virtual, 1 to 3]
+      - [Performance conversations, In person, 4 to 6]
+      - [Leading through change, Self-paced, 7 to 8]
+
+  - layout: closing
