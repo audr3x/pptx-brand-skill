@@ -1,0 +1,54 @@
+title: Finance planning workshop
+subtitle: Tailspin Toys executive readout
+date: "TODO"
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Finance planning workshop
+    subtitle: Tailspin Toys executive readout
+    date: "TODO"
+
+  - layout: content
+    title: Targeting a 5-day close by FY27
+    bullets:
+      - Financial close currently takes 9 days
+      - Target is 5 days by end of FY27
+      - Budget request is $380k for finance transformation
+      - CFO decision scheduled in Dec steering
+
+  - layout: two-column
+    title: Three agreed workstreams
+    items:
+      - title: Intercompany recon
+        body: Automate recon across entities, owned by Priya
+      - title: Chart of accounts
+        body: Standardize COA across the 4 entities, owned by Marco
+      - title: Cash dashboard
+        body: Daily cash dashboard, owned by Lena
+
+  - layout: table
+    title: Implementation phases
+    headers:
+      - Phase
+      - Timing
+      - Scope
+    rows:
+      - [Phase 1, Nov-Jan, Recon and COA design]
+      - [Phase 2, Feb-Apr, COA rollout and dashboard]
+      - [Phase 3, May-Jun, Hypercare and measure close days]
+
+  - layout: content
+    title: Program risks to manage
+    bullets:
+      - Brazil entity remains on old ERP till March
+      - Audit freeze in Jan restricts changes
+
+  - layout: content
+    title: Immediate next steps
+    bullets:
+      - Priya sends recon scope by Nov 14
+      - Marco books COA review with controllers
+      - Lena drafts dashboard mock
+
+  - layout: closing
+    title: Thank you

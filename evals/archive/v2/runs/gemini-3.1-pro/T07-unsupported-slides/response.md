@@ -1,0 +1,1 @@
+I generated the Google Slides request files. Please note: Google Slides requires you to manually insert the image and speaker notes, and pie charts are not supported so a column chart was generated instead. Custom colors on titles are restricted by the brand template.

@@ -1,0 +1,8 @@
+# Rows as mappings with missing and extra keys.
+slides:
+  - layout: table
+    title: Dict rows
+    headers: [Name, Owner, Due]
+    rows:
+      - {Name: Data, Owner: Ana}
+      - {Name: Training, Due: Nov, Extra: "ignored?"}

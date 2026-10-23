@@ -1,0 +1,8 @@
+target: slides
+difficulty: hard
+slides: [3, 6]
+layouts_include: [title, chart, closing]
+facts: ["Litware sales kickoff", "Enterprise", "Mid-market", "Small business", "55", "30", "15", "Meet the team"]
+checks:
+  - chart_values: {series: any, values: [55, 30, 15]}
+  - response_mentions: [["pie", "column"], ["notes"], ["photo", "image", "picture"], ["orange", "color", "colour"]]

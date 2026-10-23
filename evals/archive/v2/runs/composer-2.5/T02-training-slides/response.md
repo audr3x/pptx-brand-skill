@@ -1,0 +1,1 @@
+Google Slides batches only (cover option C): `slides/creates.json`, `fills-01.json`, `fills-02.json`. Preview PNGs in `render/`. Readback passed on fills. Apply creates then fills when Slides is connected.

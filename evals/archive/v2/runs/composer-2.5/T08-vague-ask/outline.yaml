@@ -1,0 +1,29 @@
+title: Contoso Q3 business review
+subtitle: TODO
+date: TODO
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Contoso Q3 business review
+    subtitle: TODO audience and scope
+    date: TODO
+  - layout: content
+    title: Executive summary
+    bullets:
+      - TODO key metrics and outcomes for Q3
+      - TODO revenue or growth stats you want highlighted
+      - TODO operational highlights for Contoso
+  - layout: content
+    title: Performance
+    bullets:
+      - TODO financial or KPI table data
+      - TODO year-over-year comparisons
+      - TODO regional or product breakdown
+  - layout: content
+    title: Priorities next quarter
+    bullets:
+      - TODO top 3 priorities
+      - TODO risks or dependencies
+      - TODO asks of leadership
+  - layout: closing
+    title: Thank you

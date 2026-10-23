@@ -1,0 +1,6 @@
+# slides is a mapping, not a list.
+title: Not a list
+slides:
+  cover:
+    layout: title
+    title: Cover

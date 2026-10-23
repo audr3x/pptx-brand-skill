@@ -1,0 +1,10 @@
+# Layout names a user might guess.
+slides:
+  - layout: timeline
+    title: Roadmap
+  - layout: quote
+    title: What customers say
+  - layout: Title Slide
+    title: Exact layout name, different case
+  - layout: " CONTENT "
+    title: Padded and upper case

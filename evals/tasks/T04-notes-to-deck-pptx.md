@@ -1,0 +1,4 @@
+Use the workday-pptx skill. Here are my notes from the Tailspin Toys finance planning workshop. Turn them into a 6 to 8 slide deck for the CFO, using only facts from the notes. Mark anything missing as TODO instead of inventing it. Check the outline and build it.
+
+Notes:
+met w/ finance leads tues. main pain = close takes 9 days, target 5 by end of FY27. 3 workstreams agreed: (1) automate intercompany recon, owner Priya, (2) standard chart of accounts across the 4 entities, owner Marco, (3) daily cash dashboard, owner Lena. budget ask is $380k, CFO to decide in Dec steering. risks: entity in Brazil still on old ERP till March, audit freeze in Jan. next steps: Priya sends recon scope by Nov 14, Marco books COA review with controllers, Lena drafts dashboard mock. timeline: phase 1 Nov-Jan (recon + COA design), phase 2 Feb-Apr (COA rollout + dashboard), phase 3 May-Jun (hypercare, measure close days).

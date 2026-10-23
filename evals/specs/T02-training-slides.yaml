@@ -1,0 +1,7 @@
+target: slides
+difficulty: easy
+slides: [4, 4]
+layouts: [title, content, table, closing]
+facts: ["Manager training plan", "Spring 2027 cohort", "62%", "4 of 10", "6 hours", "Giving feedback", "Running one-on-ones", "Planning goals", "Role play", "Questions"]
+checks:
+  - no_images: true

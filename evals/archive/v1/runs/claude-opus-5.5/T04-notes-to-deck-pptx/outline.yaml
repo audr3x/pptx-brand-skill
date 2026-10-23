@@ -1,0 +1,60 @@
+title: Finance planning workshop
+subtitle: Tailspin Toys, readout for the CFO
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Finance planning workshop
+    subtitle: Tailspin Toys, readout for the CFO
+
+  - layout: content
+    title: Cut the close from 9 days to 5 by end of FY27
+    bullets:
+      - The close takes 9 days today
+      - Target is 5 days by the end of FY27
+      - Finance leads agreed 3 workstreams to get there
+
+  - layout: two-column
+    title: Each workstream has an owner
+    items:
+      - title: Intercompany reconciliation
+        body: "Automate intercompany reconciliation. Owner: Priya"
+      - title: Chart of accounts
+        body: "One standard chart of accounts across the 4 entities. Owner: Marco"
+      - title: Cash dashboard
+        body: "A daily cash dashboard. Owner: Lena"
+
+  - layout: table
+    title: Delivery in three phases
+    headers: [Phase, Months, Scope]
+    rows:
+      - [Phase 1, November to January, Reconciliation and chart of accounts design]
+      - [Phase 2, February to April, Chart of accounts rollout and cash dashboard]
+      - [Phase 3, May to June, Hypercare and measuring close days]
+
+  - layout: content
+    title: Two risks to the timeline
+    bullets:
+      - text: Brazil entity stays on the old ERP until March
+        children:
+          - "Mitigation and owner: TODO"
+      - text: Audit freeze in January
+        children:
+          - "Mitigation and owner: TODO"
+
+  - layout: table
+    title: Next steps
+    headers: [Owner, Action, Due]
+    rows:
+      - [Priya, Send the reconciliation scope, November 14]
+      - [Marco, Book the chart of accounts review with controllers, TODO]
+      - [Lena, Draft the cash dashboard mock, TODO]
+
+  - layout: content
+    title: "Decision for the CFO: $380k budget"
+    bullets:
+      - Budget ask is $380k
+      - CFO decides at the December steering meeting
+      - "Breakdown by workstream: TODO"
+
+  - layout: closing
+    title: Thank you

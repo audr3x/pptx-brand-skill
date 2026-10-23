@@ -1,0 +1,11 @@
+target: slides
+difficulty: hard
+slides: [4, 5]
+layouts_include: [title, table, closing]
+facts: ["Manager training kickoff", "Woodgrove", "Coaching basics", "Performance conversations", "Leading through change", "live virtual", "self-paced"]
+checks:
+  - table_rows: 3
+  # The later instruction says to use the kickoff date on the cover.
+  - field_equals: {slide: 1, path: date, value: ["April 8, 2027", "8 April 2027", "April 8 2027"]}
+  # Both conflicts (4 slides vs an extra slide, March 2027 vs April 8, 2027) are named in the response.
+  - response_mentions: [["march"], ["april"], ["4 slides", "four slides", "5 slides", "five slides", "extra slide", "fifth slide", "added a slide", "one more slide", "4-slide", "5-slide"]]

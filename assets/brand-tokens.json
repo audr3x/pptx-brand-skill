@@ -1,0 +1,86 @@
+{
+  "theme": "Workday Corporate Template",
+  "palette": "Workday Color Palette",
+  "slide": {
+    "width_in": 10.0,
+    "height_in": 5.625,
+    "aspect": "16:9"
+  },
+  "core": {
+    "after_hours": "022043",
+    "ink": "0F2E66",
+    "ballpoint": "0057AE",
+    "water_cooler": "1C98E8",
+    "blue_sky": "9ECFFF",
+    "paper": "FFFFFF",
+    "keyboard": "FCF8E8",
+    "highlighter": "FFF3A8",
+    "pencil": "FDE65E",
+    "lunch_break": "FEC10B"
+  },
+  "secondary": {
+    "tack": "6FC9D3",
+    "eraser": "FFC2FD",
+    "smoothie": "AB65D0",
+    "happy_hour": "FD7E00",
+    "thumbtack": "FC5B05",
+    "laptop": "525D6A",
+    "staple": "7D8B99",
+    "desk": "B6C1CC",
+    "business_card": "F1F3F6"
+  },
+  "theme_map": {
+    "dk1": "ink",
+    "lt1": "paper",
+    "dk2": "ballpoint",
+    "lt2": "after_hours",
+    "accent1": "water_cooler",
+    "accent2": "blue_sky",
+    "accent3": "lunch_break",
+    "accent4": "pencil",
+    "accent5": "highlighter",
+    "accent6": "keyboard",
+    "hlink": "ballpoint",
+    "folHlink": "water_cooler"
+  },
+  "fonts": {
+    "title": "Archivo",
+    "body": "Archivo Light",
+    "theme_major": "Arial",
+    "theme_minor": "Arial",
+    "fallback": "Arial"
+  },
+  "type_scale_pt": {
+    "cover_title": 36,
+    "section_title": 28,
+    "slide_title": 28,
+    "subhead": 16,
+    "body": 18,
+    "item_title": 15,
+    "item_body": 13,
+    "caption": 12,
+    "footer": 8
+  },
+  "footer": {
+    "text": "Workday Confidential",
+    "color": "7D8B99",
+    "font": "Archivo",
+    "size_pt": 8,
+    "left_in": 0.50,
+    "top_in": 5.27,
+    "width_in": 3.375,
+    "height_in": 0.3
+  },
+  "logo": {
+    "smile": "assets/logos/workday-smile.png",
+    "smile_hex": "FC5B05",
+    "cover_gradient": "assets/logos/cover-gradient.png"
+  },
+  "chart_series": [
+    "1C98E8",
+    "FEC10B",
+    "0057AE",
+    "9ECFFF",
+    "0F2E66"
+  ]
+}

@@ -1,0 +1,22 @@
+# 8 series, negative values, and an all-negative chart.
+slides:
+  - layout: chart
+    title: Margin by region
+    chart:
+      type: column
+      categories: [Q1, Q2, Q3, Q4]
+      series:
+        - {name: S1, values: [5, -3, 8, 2]}
+        - {name: S2, values: [1, 2, 3, 4]}
+        - {name: S3, values: [-1, -2, -3, -4]}
+        - {name: S4, values: [10, 0, 0, 10]}
+        - {name: S5, values: [2, 2, 2, 2]}
+        - {name: S6, values: [3, 1, 4, 1]}
+        - {name: S7, values: [5, 9, 2, 6]}
+        - {name: S8, values: [7, 7, 7, 7]}
+  - layout: chart
+    title: All losses
+    chart:
+      categories: [A, B]
+      series:
+        - {name: Loss, values: [-10, -20]}

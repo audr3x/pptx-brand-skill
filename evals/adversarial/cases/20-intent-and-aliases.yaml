@@ -1,0 +1,6 @@
+# Using intent instead of layout, and real template layout names.
+slides:
+  - {intent: cover, title: Cover via intent}
+  - {layout: Title and Content, title: Real name with space trimmed, bullets: [A]}
+  - {layout: Bumper Slide, title: Real bumper name}
+  - {layout: half-headline, title: Alias, items: [{title: A, body: B}]}

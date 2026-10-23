@@ -1,0 +1,30 @@
+title: Northwind Health HR rollout
+subtitle: Project kickoff
+date: November 2026
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Northwind Health HR rollout
+    subtitle: Project kickoff
+    date: November 2026
+  - layout: section
+    eyebrow: Agenda
+    title: Where we start and how we work together
+  - layout: content
+    title: What we will deliver
+    bullets:
+      - Core HR and payroll live for 4,200 employees
+      - Benefits enrollment opens on January 5
+      - Manager self-service in phase 2
+      - Weekly status every Tuesday
+  - layout: two-column
+    title: How we work
+    items:
+      - title: Steering group
+        body: Monthly decisions on scope and budget
+      - title: Core team
+        body: Daily work across HR, IT, and finance
+      - title: Change network
+        body: 30 champions across 6 sites
+  - layout: closing
+    title: Thank you

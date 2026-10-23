@@ -1,0 +1,11 @@
+# Control: fields the check accepts but a layout does not draw. Should show as LOSS until fixed.
+slides:
+  - layout: content
+    title: Content with a subtitle
+    subtitle: Does this appear anywhere?
+    bullets: [A]
+  - layout: table
+    title: Table with bullets
+    headers: [A]
+    rows: [[1]]
+    bullets: [Lost bullet]

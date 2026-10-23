@@ -1,0 +1,17 @@
+title: Open enrollment kickoff
+date: "TODO: kickoff date"
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Open enrollment kickoff
+    date: "TODO: kickoff date"
+
+  - layout: content
+    title: What changes this year
+    bullets:
+      - Dental moves to a new carrier
+      - The HSA employer match rises to $750
+      - Enrollment happens fully in the Workday app
+
+  - layout: closing
+    title: Thank you

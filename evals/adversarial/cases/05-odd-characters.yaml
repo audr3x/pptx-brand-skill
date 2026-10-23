@@ -1,0 +1,18 @@
+# Emoji, RTL, CJK, markup, ampersands, smart quotes, tabs, newlines, a very long word.
+title: "Odd & <chars>"
+slides:
+  - layout: title
+    title: "Q3 \U0001F680 plan & <review>"
+    subtitle: "\u201cSmart quotes\u201d and \u2018single\u2019"
+  - layout: content
+    title: "日本語のタイトル / مرحبا بالعالم"
+    bullets:
+      - "Tab\tinside and a\nnewline inside"
+      - "<script>alert(1)</script>"
+      - "Supercalifragilisticexpialidocious-antidisestablishmentarianism-pneumonoultramicroscopic"
+      - "Zero\u200bwidth and non\u00a0breaking"
+  - layout: table
+    title: "Symbols: % $ \u20ac \u00a3 \u00a5"
+    headers: ["A & B", "<C>", "\"D\""]
+    rows:
+      - ["1 < 2", "x > y", "50%"]

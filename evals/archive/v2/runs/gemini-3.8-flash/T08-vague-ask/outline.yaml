@@ -1,0 +1,33 @@
+title: Contoso Q3 business review
+subtitle: "TODO: Add review subtitle"
+date: "TODO"
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Contoso Q3 business review
+    subtitle: "TODO: Add review focus"
+    date: "TODO"
+
+  - layout: section
+    eyebrow: Agenda
+    title: "TODO: Add agenda statement"
+
+  - layout: content
+    title: "TODO: Add Q3 achievements title"
+    bullets:
+      - "TODO: Add stat or bullet point"
+      - "TODO: Add stat or bullet point"
+      - "TODO: Add stat or bullet point"
+
+  - layout: two-column
+    title: "TODO: Add strategic priorities"
+    items:
+      - title: "TODO: Pillar 1"
+        body: "TODO: Pillar 1 description"
+      - title: "TODO: Pillar 2"
+        body: "TODO: Pillar 2 description"
+      - title: "TODO: Pillar 3"
+        body: "TODO: Pillar 3 description"
+
+  - layout: closing
+    title: Thank you

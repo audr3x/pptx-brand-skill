@@ -1,0 +1,14 @@
+# Titles far longer than one line on the cover, a section, and a content slide.
+title: Overlong
+slides:
+  - layout: title
+    title: A cover title that keeps going well past what fits on one line of the Workday cover and then keeps going some more
+    subtitle: And a subtitle that is also much longer than it should be for a cover slide of any kind at all really
+  - layout: section
+    eyebrow: A very long eyebrow line that nobody should ever write on a section divider
+    title: A section statement that runs to many words, far beyond the eight or so that fit in the open field next to the rail
+  - layout: content
+    title: This content slide title is about one hundred and twenty characters long so it will wrap onto three lines or overflow
+    bullets:
+      - A bullet that is itself extremely long and wordy, going on and on about many separate ideas that should have been split into several bullets or a second slide
+      - Short one

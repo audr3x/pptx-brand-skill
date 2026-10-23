@@ -1,0 +1,9 @@
+target: pptx
+difficulty: hard
+slides: [5, 7]
+layouts_include: [title]
+facts: ["61%", "1.42", "2.1", "Leeds", "Porto", "Austin", "214", "Hana", "parallel run", "union", "payroll testers"]
+forbidden: ["48%", "1.24", "12,400", "12400", "12.4k"]
+checks:
+  - max_bullets: 6
+  - no_title_warnings: true

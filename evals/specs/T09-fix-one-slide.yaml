@@ -1,0 +1,12 @@
+target: pptx
+difficulty: medium
+slides: [7, 7]
+layouts: [title, section, content, two-column, table, chart, closing]
+facts: ["What the workshop covers", "Agree owners for each next step"]
+allowed_numbers: [2026, 12, 18, 15, 22, 25, 9, 14, 13, 19]
+checks:
+  - field_equals: {slide: 3, path: title, value: "What the workshop covers"}
+  - field_equals: {slide: 3, path: bullets.-1, value: "Agree owners for each next step"}
+  - chart_values: {series: Requests, values: [12, 18, 15, 25]}
+  - unchanged_from: {path: evals/tasks/fixtures/T09-outline.yaml, except: {3: [title, bullets], 6: [chart]}}
+  - fixture_untouched: evals/tasks/fixtures/T09-outline.yaml

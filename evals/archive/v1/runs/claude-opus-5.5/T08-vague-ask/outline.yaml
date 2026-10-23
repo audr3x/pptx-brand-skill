@@ -1,0 +1,44 @@
+# Draft only. Every TODO needs a real fact from you before this is built.
+title: Contoso Q3 business review
+subtitle: TODO audience or one-line context
+date: TODO month and year
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Contoso Q3 business review
+    subtitle: TODO audience or one-line context
+    date: TODO month and year
+
+  - layout: content
+    title: TODO the one thing Q3 showed
+    bullets:
+      - TODO highlight 1, with its number
+      - TODO highlight 2, with its number
+      - TODO highlight 3, with its number
+
+  - layout: chart
+    title: TODO metric per month (unit)
+    chart:
+      type: column
+      categories: [TODO month 1, TODO month 2, TODO month 3]
+      series:
+        - name: TODO metric name
+          values: [TODO, TODO, TODO]
+
+  - layout: table
+    title: TODO results against targets
+    headers: [Measure, Target, Q3 actual]
+    rows:
+      - [TODO, TODO, TODO]
+      - [TODO, TODO, TODO]
+      - [TODO, TODO, TODO]
+
+  - layout: content
+    title: TODO priorities for Q4
+    bullets:
+      - TODO priority 1
+      - TODO priority 2
+      - TODO priority 3
+
+  - layout: closing
+    title: Thank you

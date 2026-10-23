@@ -1,0 +1,15 @@
+# YAML turns these into numbers, booleans, and dates.
+title: 2026
+date: 2026-10-22
+slides:
+  - layout: title
+    title: 2026
+    subtitle: yes
+    date: 2026-10-22
+  - layout: content
+    title: Norway
+    bullets: [NO, on, 3.14, 1e3]
+  - layout: table
+    title: Numbers in cells
+    headers: [Year, Value]
+    rows: [[2025, 1.5], [2026, null]]

@@ -1,0 +1,14 @@
+# "- Risk: text" without quotes is a YAML mapping. Gemini 3.1 Pro lost two risk bullets this way
+# in eval T04. The bullets must reach the slide, and the check should warn.
+slides:
+  - layout: content
+    title: Budget and risks
+    bullets:
+      - Budget ask is $380k
+      - Risk: Brazil entity on old ERP until March
+      - Risk: Audit freeze in January
+  - layout: two-column
+    title: Owners
+    items:
+      - Recon: Priya sends scope
+      - {title: Dashboard, body: Lena drafts the mock}

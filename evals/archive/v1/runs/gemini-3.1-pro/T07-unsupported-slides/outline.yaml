@@ -1,0 +1,28 @@
+title: Litware sales kickoff
+slides:
+  - layout: title
+    title: Litware sales kickoff
+    date: February 2027
+    notes: Speaker notes for cover slide
+  - layout: chart
+    title: Pipeline by segment
+    notes: Speaker notes for pipeline slide
+    chart:
+      type: column
+      categories:
+        - Enterprise
+        - Mid-market
+        - Small business
+      series:
+        - name: Pipeline
+          values:
+            - 55
+            - 30
+            - 15
+  - layout: photo-right
+    title: Meet the team
+    image: examples/images/sample-photo.png
+    notes: Speaker notes for team slide
+  - layout: closing
+    title: Thank you
+    notes: Speaker notes for closing slide

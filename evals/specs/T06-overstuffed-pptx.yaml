@@ -1,0 +1,10 @@
+target: pptx
+difficulty: hard
+slides: [5, 9]
+layouts_include: [title, content, table]
+facts: ["14 business units", "September 8", "November 3", "85%", "4% under plan", "Contractor costs", "Two open roles", "December 2", "Kickoff", "Hypercare ends", "Program close", "March 6", "Go live", "January 12"]
+checks:
+  - max_bullets: 6
+  - max_table_rows: 6
+  - no_title_warnings: true
+  - response_mentions: [["split", "two slides", "across"]]

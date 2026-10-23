@@ -1,0 +1,32 @@
+title: Budget variance review
+slides:
+- layout: title
+  title: Budget variance review
+  subtitle: Operations, first half 2026
+  date: July 2026
+- layout: chart
+  title: Variance by department (USD k)
+  chart:
+    type: column
+    categories:
+    - Facilities
+    - IT
+    - HR
+    - Travel
+    - Marketing
+    series:
+    - name: Variance
+      values:
+      - 45
+      - -30
+      - 12
+      - -18
+      - 60
+- layout: content
+  title: Actions
+  bullets:
+  - Freeze new IT contracts until September
+  - Move travel approvals to directors
+  - Reinvest 40 of the marketing surplus in Q3 events
+- layout: closing
+  title: Thank you

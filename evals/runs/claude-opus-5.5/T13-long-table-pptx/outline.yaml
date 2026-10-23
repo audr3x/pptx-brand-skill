@@ -1,0 +1,39 @@
+title: Go-live readiness by site
+subtitle: Northwind Traders deployment wave 2
+footer: Workday Confidential
+slides:
+  - layout: title
+    title: Go-live readiness by site
+    subtitle: Northwind Traders deployment wave 2
+
+  - layout: table
+    title: France and Italy sites
+    headers: [Site, Country, Go-live, Status, Lead]
+    rows:
+      - [Lyon, France, Feb 2, Ready, Claire Martin]
+      - [Marseille, France, Feb 2, Ready, Claire Martin]
+      - [Turin, Italy, Feb 9, At risk, Paolo Greco]
+      - [Milan, Italy, Feb 9, Ready, Paolo Greco]
+
+  - layout: table
+    title: Spain and Portugal sites
+    headers: [Site, Country, Go-live, Status, Lead]
+    rows:
+      - [Seville, Spain, Feb 16, Ready, Lucia Ortega]
+      - [Valencia, Spain, Feb 16, Blocked, Lucia Ortega]
+      - [Porto, Portugal, Feb 23, Ready, Rui Costa]
+      - [Braga, Portugal, Feb 23, Ready, Rui Costa]
+
+  - layout: table
+    title: Belgium, Netherlands, and Austria sites
+    headers: [Site, Country, Go-live, Status, Lead]
+    rows:
+      - [Ghent, Belgium, Mar 2, At risk, Anke Peeters]
+      - [Antwerp, Belgium, Mar 2, Ready, Anke Peeters]
+      - [Utrecht, Netherlands, Mar 9, Ready, Joris Bakker]
+      - [Eindhoven, Netherlands, Mar 9, Ready, Joris Bakker]
+      - [Graz, Austria, Mar 16, Blocked, Eva Huber]
+      - [Linz, Austria, Mar 16, Ready, Eva Huber]
+
+  - layout: closing
+    title: Thank you
