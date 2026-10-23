@@ -325,6 +325,10 @@ python3 scripts/check_outline.py my-outline.yaml
 
 How to ask Cursor for a deck, with copy-paste prompts: [docs/PROMPTING.md](docs/PROMPTING.md).
 
+## Use a different brand or master deck
+
+This repo ships the Workday Corporate Template. To point it at another company’s master, logos, and palette — keeping the same outline → build flow — follow [docs/REBRAND.md](docs/REBRAND.md). Short version: replace `assets/template.pptx` **without renaming** the layouts the builders expect (`Title Slide`, `Title and Content`, `Bumper Slide`, …), then update `BRAND.md`, `assets/brand-tokens.json`, and the hardcoded color/font maps in both builders. Tokens JSON alone does not drive the builders today.
+
 ## Troubleshooting
 
 **A skill does not run.** Open this repository as the Cursor project folder. Reopen the folder after a clone. Ask for the skill by name (`workday-pptx` or `workday-google-slides`).

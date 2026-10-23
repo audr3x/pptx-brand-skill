@@ -31,6 +31,7 @@ This repository is the brand system plus two small builders. It is not a dump of
 | [.cursor/skills/workday-deck-prompting/SKILL.md](.cursor/skills/workday-deck-prompting/SKILL.md) | Brief to outline skill (what the builders support) |
 | [docs/PROMPTING.md](docs/PROMPTING.md) | Prompting guide with copy-paste prompts |
 | [docs/LIMITS.md](docs/LIMITS.md) | What the check refuses, warns about, and what the builders cannot do |
+| [docs/REBRAND.md](docs/REBRAND.md) | Swap the master deck, logos, colors, and fonts for another brand |
 | [scripts/build_deck.py](scripts/build_deck.py) | Outline to `.pptx` |
 | [scripts/build_slides.py](scripts/build_slides.py) | Outline to Slides API / `gws` (or a request plan) |
 | [scripts/check_outline.py](scripts/check_outline.py) | Checks an outline against what both builders read |
